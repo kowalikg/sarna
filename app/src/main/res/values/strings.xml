@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">sarna</string>
+    <string name="app_name">Sarna</string>
+    <string name="app_subtitle">Check how secure is your phone!</string>
+    <string name="app_options">Options</string>
+    <string name="option_root_privilege">Root methods allowed</string>
+    <string name="option_educational">Educational mode</string>
+    <string name="option_remote_server">Allow sending data to server</string>
+    <string name="option_report">Generate report</string>
+
 </resources>
