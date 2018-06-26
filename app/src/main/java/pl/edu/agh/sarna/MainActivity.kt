@@ -17,18 +17,13 @@ class MainActivity : AppCompatActivity() {
     var educationalMode:Boolean = false
     var reportMode:Boolean = false
     var serverMode:Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        // Example of a call to a native method
-        //sample_text.text = stringFromJNI()
         rootSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-            // do something, the isChecked will be
-            // true if the switch is in the On position
 
-            Log.i("DEBUG","rootswitch is " + isChecked.toString())
             rootAllowed = if (isChecked){
                 try {
                     val p = Runtime.getRuntime().exec("su")
@@ -50,12 +45,7 @@ class MainActivity : AppCompatActivity() {
         };
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
     fun onStartButtonClicked(view : View){
-        Log.i("DEBUG","CLICKED")
         educationalMode = eduSwitch.isChecked
         reportMode = reportSwitch.isChecked
         serverMode = serverSwitch.isChecked
