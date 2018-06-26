@@ -1,60 +1,47 @@
 package pl.edu.agh.sarna
 
-
 import android.Manifest
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.content.pm.PackageManager
-import android.net.wifi.WifiManager
 import android.net.NetworkInfo.DetailedState
 import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
+import android.os.Build
+import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import pl.edu.agh.sarna.utils.Input
-import java.io.File
-import java.io.FileInputStream
-import javax.xml.parsers.DocumentBuilderFactory
-import pl.edu.agh.sarna.model.NetworkEntry
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.View
 import pl.edu.agh.sarna.utils.Parser
+import pl.edu.agh.sarna.values.PermissionCode
+import pl.edu.agh.sarna.values.WifiLogsValues
+import java.io.FileInputStream
 import java.util.*
 import java.util.stream.Collectors
 
-
 class WifiPasswordActivity : AppCompatActivity() {
-    var rootState:Boolean = false
-    var eduState:Boolean = false
-    var serverState:Boolean = false
-    var reportState:Boolean = false
+    private var rootState:Boolean = false
+    private var eduState:Boolean = false
+    private var serverState:Boolean = false
+    private var reportState:Boolean = false
 
-    var wifiSSID:String = ""
+    private var wifiSSID:String = ""
 
-    val wifiFileToNougat = "wpa_supplicant.conf"
-    val wifiFileFromOreo = "WifiConfigStore.xml"
-    val cmd = "cat /data/misc/wifi/"
+    private val logsValues = WifiLogsValues()
 
-    val logFile = "/storage/emulated/0/bom.txt"
+    private var passwordFound = false
+    private var passwordContent = ""
+    private var localizationAllowed = false
+    private var connected = false
+    private var fileName = logsValues.wifiFileToNougat
 
-    var passwordFound = false
-    var passwordContent = ""
-    var localizationAllowed = false
-    var connected = false
-    var fileName = wifiFileToNougat
+    private var storageAllowed = false
 
-    val locationRequestCode = 1
-    val storageRequestCode = 2
-
-    var storageAllowed = false
-
-    val wifisAccessed:ArrayList<String> = ArrayList()
+    private val wifisAccessed:ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,30 +54,34 @@ class WifiPasswordActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     fun startWifiPasswordTaking(view : View) {
 
-        requestInternalStorageLocation()
+        requestInternalStoragePermission()
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationRequestCode);
-                }
-                else {
-                    localizationAllowed = true
-                    requestWifiSsid()
-                }
-            }
-            else {
-                requestWifiSsid()
-            }
-            fileName = wifiFileFromOreo
-            if (rootState) takePasswordFromXMLFile()
-
-
-        } else {
-            doPreOreoJob()
-        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) doPostOreoJob()
+        else doPreOreoJob()
         generateReport()
+    }
+
+    private fun doPostOreoJob() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            requestLocationPermission()
+        }
+        else {
+            requestWifiSsid()
+        }
+        fileName = logsValues.wifiFileFromOreo
+        if (rootState) takePasswordFromXMLFile()
+    }
+
+    private fun requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PermissionCode.LOCATION.ordinal);
+        }
+        else {
+            localizationAllowed = true
+        }
+        requestWifiSsid()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -121,8 +112,6 @@ class WifiPasswordActivity : AppCompatActivity() {
                     .append(wifisAccessed.stream()
                     .collect(Collectors.joining("\n")))
 
-
-
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton("OK", { _, _ ->
@@ -135,10 +124,11 @@ class WifiPasswordActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-    private fun requestInternalStorageLocation() {
+    private fun requestInternalStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), storageRequestCode);
+            ActivityCompat.requestPermissions(
+                    this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PermissionCode.STORAGE.ordinal);
         }
         else {
             storageAllowed = true
@@ -146,43 +136,37 @@ class WifiPasswordActivity : AppCompatActivity() {
     }
 
     private fun takePasswordFromXMLFile() {
-        val command = "$cmd$wifiFileFromOreo>$logFile"
-        val content = getCommandOutput(command)
-
         if (!storageAllowed) return
 
-        val `in` = FileInputStream(logFile)
+        val command = "${logsValues.cmd}${logsValues.wifiFileFromOreo}>${logsValues.logFile}"
+        execCommand(command)
+
+        val `in` = FileInputStream(logsValues.logFile)
         val parser = Parser()
         parser.parse(`in`)
         `in`.close()
 
-        for (entry in parser.getParsedEntries()) {
+        wifisAccessed.clear()
+        for (entry in parser.parsedEntries) {
             wifisAccessed.add(entry.ssid)
-            if (entry.ssid.equals(wifiSSID)){
+
+            if (entry.ssid == wifiSSID){
                 passwordFound = true
-                passwordContent = if (entry.password.isEmpty()) "none"
-                else entry.password
+                passwordContent =
+                        if (entry.password.isEmpty()) "no password"
+                        else entry.password
             }
 
-
         }
-
-
     }
 
-    private fun getCommandOutput(command: String) : String {
+    private fun execCommand(command: String) {
         val process = Runtime.getRuntime().exec("su")
-        val `in` = process.inputStream
         val out = process.outputStream
-
 
         out.write(command.toByteArray())
         out.flush()
         out.close()
-        val buffer = ByteArray(1024*1000)
-        val length = `in`.read(buffer)
-        return ""
-//        return String(buffer, 0, length)
     }
 
 
@@ -190,32 +174,21 @@ class WifiPasswordActivity : AppCompatActivity() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            locationRequestCode -> {
-                // If request is cancelled, the result arrays are empty.
+            PermissionCode.LOCATION.ordinal -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     localizationAllowed = true
-                    requestWifiSsid()
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return
             }
-            storageRequestCode -> {
+            PermissionCode.STORAGE.ordinal -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     storageAllowed = true
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
+                return
             }
-
-        }// other 'case' lines to check for other
+        }
 
     }
 
@@ -236,7 +209,6 @@ class WifiPasswordActivity : AppCompatActivity() {
     }
 
 
-
     private fun initialiseOptions() {
         rootState = intent.getBooleanExtra("root_state", false)
         eduState = intent.getBooleanExtra("edu_state", false)
@@ -244,13 +216,6 @@ class WifiPasswordActivity : AppCompatActivity() {
         reportState = intent.getBooleanExtra("report_state", false)
     }
 
-    external fun getWifiPassword(): String
-
-    companion object {
-        init {
-            System.loadLibrary("native-lib")
-        }
-    }
 
 
 }

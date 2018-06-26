@@ -2,12 +2,11 @@ package pl.edu.agh.sarna
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
-import android.widget.CompoundButton
 import java.io.DataOutputStream
 import java.io.IOException
 
