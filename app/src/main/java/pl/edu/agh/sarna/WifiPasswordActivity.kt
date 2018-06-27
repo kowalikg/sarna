@@ -16,7 +16,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import pl.edu.agh.sarna.utils.Parser
+import pl.edu.agh.sarna.utils.WPAParser
+import pl.edu.agh.sarna.utils.XMLParser
 import pl.edu.agh.sarna.values.PermissionCode
 import pl.edu.agh.sarna.values.WifiLogsValues
 import java.io.FileInputStream
@@ -58,18 +59,76 @@ class WifiPasswordActivity : AppCompatActivity() {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) doPostOreoJob()
         else doPreOreoJob()
-        generateReport()
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun doPreOreoJob() {
+        requestWifiSsid()
+        takePasswordFromWPAFile()
+        if (reportState and storageAllowed) generateReport()
+    }
+
+    private fun takePasswordFromWPAFile() {
+        if (!storageAllowed) return
+
+        val command = "${logsValues.cmd}${logsValues.wifiFileToNougat}>${logsValues.logFile}"
+        execCommand(command)
+
+        val parser = WPAParser(logsValues.logFile)
+        val parsedEntries = parser.parse()
+
+        wifisAccessed.clear()
+
+        for (entry in parsedEntries) {
+            wifisAccessed.add(entry.ssid)
+
+            if (entry.ssid == wifiSSID){
+                passwordFound = true
+                passwordContent =
+                        if (entry.password.isEmpty()) "no password"
+                        else entry.password
+            }
+
+        }
+    }
+
+    private fun takePasswordFromXMLFile() {
+        if (!storageAllowed) return
+
+        val command = "${logsValues.cmd}${logsValues.wifiFileFromOreo}>${logsValues.logFile}"
+        execCommand(command)
+
+        val `in` = FileInputStream(logsValues.logFile)
+        val parser = XMLParser()
+        parser.parse(`in`)
+        `in`.close()
+
+        wifisAccessed.clear()
+        for (entry in parser.parsedEntries) {
+            wifisAccessed.add(entry.ssid)
+
+            if (entry.ssid == wifiSSID){
+                passwordFound = true
+                passwordContent =
+                        if (entry.password.isEmpty()) "no password"
+                        else entry.password
+            }
+
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun doPostOreoJob() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
             requestLocationPermission()
         }
-        else {
-            requestWifiSsid()
-        }
+        requestWifiSsid()
         fileName = logsValues.wifiFileFromOreo
         if (rootState) takePasswordFromXMLFile()
+        if ((android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1)
+                and localizationAllowed and reportState and storageAllowed) generateReport()
+        else if (reportState and storageAllowed) generateReport()
     }
 
     private fun requestLocationPermission() {
@@ -81,7 +140,6 @@ class WifiPasswordActivity : AppCompatActivity() {
         else {
             localizationAllowed = true
         }
-        requestWifiSsid()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -135,30 +193,7 @@ class WifiPasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun takePasswordFromXMLFile() {
-        if (!storageAllowed) return
 
-        val command = "${logsValues.cmd}${logsValues.wifiFileFromOreo}>${logsValues.logFile}"
-        execCommand(command)
-
-        val `in` = FileInputStream(logsValues.logFile)
-        val parser = Parser()
-        parser.parse(`in`)
-        `in`.close()
-
-        wifisAccessed.clear()
-        for (entry in parser.parsedEntries) {
-            wifisAccessed.add(entry.ssid)
-
-            if (entry.ssid == wifiSSID){
-                passwordFound = true
-                passwordContent =
-                        if (entry.password.isEmpty()) "no password"
-                        else entry.password
-            }
-
-        }
-    }
 
     private fun execCommand(command: String) {
         val process = Runtime.getRuntime().exec("su")
@@ -169,10 +204,6 @@ class WifiPasswordActivity : AppCompatActivity() {
         out.close()
     }
 
-
-    private fun doPreOreoJob() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {

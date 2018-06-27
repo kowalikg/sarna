@@ -16,7 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import pl.edu.agh.sarna.model.NetworkEntry;
 
-public class Parser {
+public class XMLParser {
 
     private static final String TAG_NAME = "WifiConfiguration";
 
@@ -34,7 +34,7 @@ public class Parser {
 
     private Collection<NetworkEntry> parsedEntries = new ArrayList<>();
 
-    public Parser() {
+    public XMLParser() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             builder = factory.newDocumentBuilder();
