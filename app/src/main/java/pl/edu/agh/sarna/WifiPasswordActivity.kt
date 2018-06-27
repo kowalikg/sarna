@@ -65,7 +65,7 @@ class WifiPasswordActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun doPreOreoJob() {
         requestWifiSsid()
-        takePasswordFromWPAFile()
+        if (rootState) takePasswordFromWPAFile()
         if (reportState and storageAllowed) generateReport()
     }
 

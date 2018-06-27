@@ -45,15 +45,16 @@ public class WPAParser {
             if( ssidMatcher.find() ) {
 
                 String ssid = ssidMatcher.group();
-                String passwd = "[ERROR]";
+                String passwd = "no password";
 
                 Matcher passwordMatcher = passwordPattern.matcher(tmp);
                 if(passwordMatcher.find()) {
                     passwd = passwordMatcher.group();
                 }
 
-                entries.add(new NetworkEntry(ssid, passwd));
-                System.out.println(ssid + ": " + passwd);
+                entries.add(new NetworkEntry(
+                        ssid.replaceAll("\"", "").replaceAll("ssid=", ""),
+                        passwd.replaceAll("\"", "").replaceAll("psk=", "")));
             }
         }
 
