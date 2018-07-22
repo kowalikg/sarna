@@ -25,19 +25,81 @@
 \section{\SectionTitleProjectVision}
 \label{sec:cel-wizja}
 \emph{Charakterystyka problemu, motywacja projektu (w tym przegl±d
-  istniej±cych rozwi±zañ prowadz±ca do uzasadnienia celu prac),
-  wizja produktu i analiza zagro¿eñ.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+	istniej±cych rozwi±zañ prowadz±ca do uzasadnienia celu prac),
+	wizja produktu i analiza zagro¿eñ.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\subsection{Dziedzina problemu}
+Bezpieczeñstwo najpopularniejszego systemu mobilnego, Androida.
+Pod uwagi wziête wersje od 4.0 (ICS) do najnowszego dostêpnego.
+\subsection{Minimal viable product}
+Aplikacja (aplikacje) demonstruj±ce kilka technik dostêpu do danych bez uprawnieñ roota oraz kilka technik dostêpu do danych z przydzielonymi uprawnieniami roota.
+\subsection{Analiza ryzyka}
+\begin{tabular}{|c|c|c|}
+	\hline
+	\textbf{Zagro¿enie} & \textbf{Prawdopodobieñstwo} & \textbf{Skutki} \\ 
+	\hline
+	Wydawane aktualizacje bezpieczeñstwa mog± blokowaæ\\
+	dostêpne wektory ataku, szczególnie w przypadku\\
+	podatno¶ci krytycznych & 6 & 10 \\
+	\hline
+	Dostarczane przez poszczególnych producentów\\
+	platformy mog± znacz±co	odbiegaæ od oficjalnych\\
+	specyfikacji systemu Android np. konfiguracja\\
+	polityki bezpieczeñstwa, zmodyfikowany firmware\\
+	/ bootloader / aplikacje. & 5 & 8 \\
+	\hline
+	Dostêpno¶æ urz±dzeñ oraz poszczególnych wersji\\
+	systemu Android & 4 & 5 \\
+	\hline
+	Operacje wykradania danych s± zazwyczaj z³o¿one i\\
+	oparte na nietypowych "trikach". Z tego powodu nie\\
+	s± przewidziane ani udokumentowane przez producenta\\
+	systemu i mo¿e brakowaæ odpowiednich ¼róde³ wiedzy\\
+	umo¿liwiaj±cych ich odtworzenie. & 4 & 6 \\
+	\hline
+\end{tabular}
 
 \section{\SectionTitleScope}
 \label{sec:zakres-funkcjonalnosci}
 \emph{Kontekst u¿ytkowania produktu (aktorzy, wspó³pracuj±ce systemy)
   oraz specyfikacja wymagañ funkcjonalnych i niefunkcjonalnych.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\subsection{Wymagania funkcjonalne}
+\begin{tabular}{|c|c|}
+	\hline
+	\textbf{Wymagania funkcjonalne} & \textbf{Priorytet} \\ 
+	\hline
+	Demonstracja eskalacji uprawnieñ roota & 10 \\
+	\hline
+	Uzyskiwanie dostêpu do danych chronionych &	10 \\
+	\hline
+	Funkcjonalno¶æ sk³adowania uzyskanych danych na zdalnych serwerach & 6 \\
+	\hline
+	Implementacja rozwi±zania zapewniaj±cego zdalny dostêp do atakowanego urz±dzenia & 4 \\
+	\hline
+	Demonstracja socjotechnik wykorzystuj±cych b³êdy u¿ytkownika & 2 \\
+	\hline
+\end{tabular}
+\subsection{Wymagania niefunkcjonalne}
+\begin{tabular}{|c|}
+	\hline
+	\textbf{Wymagania niefunkcjonalne} \\ 
+	\hline
+	Ograniczenie zakresu testów do dopuszczalnych przypadków prawnych. \\
+	\hline
+	Wykorzystanie mo¿liwe najnowszych wersji systemu Android. \\
+	\hline
+	Zastosowanie technologii Java / Kotlin + Android SDK oraz Android NDK + C/C++\\dla zabudowy natywnego kodu dla platformy docelowej. \\
+	\hline
+\end{tabular} 
+
 
 \section{\SectionTitleRealizationAspects}
 \label{sec:wybrane-aspekty-realizacji}
 \emph{Przyjête za³o¿enia, struktura i zasada dzia³ania systemu,
   wykorzystane rozwi±zania technologiczne wraz z uzasadnieniem
   ich wyboru, istotne mechanizmy i zastosowane algorytmy.} % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\subsection{Wykorzystanie zewnêtrznych systemów i aplikacji}
+Android Debug Bridge\\
+Android API
 
 \section{\SectionTitleWorkOrganization}
 \label{sec:organizacja-pracy}
