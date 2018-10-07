@@ -1,14 +1,20 @@
 package pl.edu.agh.sarna
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.edu.agh.sarna.db.DbHelper
+import pl.edu.agh.sarna.db.Process
 import java.io.DataOutputStream
 import java.io.IOException
+import java.time.LocalTime
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,12 +54,35 @@ class MainActivity : AppCompatActivity() {
         educationalMode = eduSwitch.isChecked
         reportMode = reportSwitch.isChecked
         serverMode = serverSwitch.isChecked
+
+        val processID  = launchDatabaseConnection()
+
         startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
             putExtra("root_state", rootAllowed)
             putExtra("edu_state", educationalMode)
             putExtra("report_state", reportMode)
             putExtra("server_state", serverMode)
+            putExtra("process_id", processID)
         })
+    }
+
+    private fun launchDatabaseConnection() : Long? {
+        val dbHelper = DbHelper.getInstance(this)
+        val db = dbHelper!!.writableDatabase
+
+        val values = ContentValues().apply {
+            put(Process.ProcessEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().toString())
+            put(Process.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION, Build.VERSION.SDK_INT)
+            put(Process.ProcessEntry.COLUMN_NAME_EDUCATIONAL, if (educationalMode) 1 else 0)
+            put(Process.ProcessEntry.COLUMN_NAME_REPORT, if (reportMode) 1 else 0)
+            put(Process.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, if (serverMode) 1 else 0)
+            put(Process.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, if (rootAllowed) 1 else 0)
+        }
+
+        val processID = db?.insert(Process.ProcessEntry.TABLE_NAME, null, values)
+        Log.i("ID", "New process ID = $processID")
+
+        return processID
     }
 
     private fun showDeclineAlert(description: Int) {
