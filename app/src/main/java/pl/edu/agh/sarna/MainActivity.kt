@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         val db = dbHelper!!.writableDatabase
 
         val values = ContentValues().apply {
-            put(Process.ProcessEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().toString())
+            put(Process.ProcessEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
             put(Process.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION, Build.VERSION.SDK_INT)
             put(Process.ProcessEntry.COLUMN_NAME_EDUCATIONAL, if (educationalMode) 1 else 0)
             put(Process.ProcessEntry.COLUMN_NAME_REPORT, if (reportMode) 1 else 0)
@@ -89,9 +89,9 @@ class MainActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this)
         dialogBuilder.setTitle(R.string.root_denied)
         dialogBuilder.setMessage(description)
-        dialogBuilder.setPositiveButton("OK", { _, _ ->
+        dialogBuilder.setPositiveButton("OK") { _, _ ->
             Log.i("FAILED_ROOT", "Cannot get root, not rooted device")
-        })
+        }
         dialogBuilder.create().show()
     }
 

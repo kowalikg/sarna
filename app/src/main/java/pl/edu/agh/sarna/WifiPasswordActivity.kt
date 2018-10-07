@@ -16,6 +16,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import pl.edu.agh.sarna.db.DbHelper
+import pl.edu.agh.sarna.db.Process
 import pl.edu.agh.sarna.utils.WPAParser
 import pl.edu.agh.sarna.utils.XMLParser
 import pl.edu.agh.sarna.values.PermissionCode
@@ -23,12 +25,16 @@ import pl.edu.agh.sarna.values.WifiLogsValues
 import java.io.FileInputStream
 import java.util.*
 import java.util.stream.Collectors
+import android.content.ContentValues
+import android.provider.BaseColumns
+
 
 class WifiPasswordActivity : AppCompatActivity() {
     private var rootState:Boolean = false
     private var eduState:Boolean = false
     private var serverState:Boolean = false
     private var reportState:Boolean = false
+    private var processID:Long = 0
 
     private var wifiSSID:String = ""
 
@@ -60,6 +66,51 @@ class WifiPasswordActivity : AppCompatActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) doPostOreoJob()
         else doPreOreoJob()
 
+        updateProcess()
+
+    }
+
+    private fun updateProcess() {
+        val db = DbHelper.getInstance(this)
+
+        val cv = ContentValues()
+        cv.put(Process.ProcessEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+        db!!.writableDatabase.update(Process.ProcessEntry.TABLE_NAME, cv, "_id = ?", arrayOf(processID.toString()));
+
+        val dbReadable = db.readableDatabase
+
+        val projection = arrayOf(
+                BaseColumns._ID,
+                Process.ProcessEntry.COLUMN_NAME_START_TIME,
+                Process.ProcessEntry.COLUMN_NAME_END_TIME,
+                Process.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION,
+                Process.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED
+        )
+
+
+        val selection = "_id = ?"
+        val selectionArgs = arrayOf(processID.toString())
+
+        val cursor = dbReadable.query(
+                Process.ProcessEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+               null               // The sort order
+        )
+
+        with(cursor) {
+            while (moveToNext()) {
+                val itemId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                val start = getString(getColumnIndexOrThrow(Process.ProcessEntry.COLUMN_NAME_START_TIME))
+                val end = getString(getColumnIndexOrThrow(Process.ProcessEntry.COLUMN_NAME_END_TIME))
+                val system = getFloat(getColumnIndexOrThrow(Process.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION))
+                val root = getInt(getColumnIndexOrThrow(Process.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED))
+                Log.i("ID: ", "$itemId $start $end $system $root" )
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -245,6 +296,7 @@ class WifiPasswordActivity : AppCompatActivity() {
         eduState = intent.getBooleanExtra("edu_state", false)
         serverState = intent.getBooleanExtra("server_state", false)
         reportState = intent.getBooleanExtra("report_state", false)
+        processID = intent.getLongExtra("process_id", 0)
     }
 
 
