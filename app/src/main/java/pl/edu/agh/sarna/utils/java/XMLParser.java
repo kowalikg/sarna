@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.utils;
+package pl.edu.agh.sarna.utils.java;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.utils;
+package pl.edu.agh.sarna.utils.java;
 
 import java.io.File;
 import java.io.FileInputStream;

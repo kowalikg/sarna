@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.DbHelper
-import pl.edu.agh.sarna.db.Process
+import pl.edu.agh.sarna.db.model.Processes
 import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
@@ -70,15 +70,15 @@ class MainActivity : AppCompatActivity() {
         val db = dbHelper!!.writableDatabase
 
         val values = ContentValues().apply {
-            put(Process.ProcessEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
-            put(Process.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION, Build.VERSION.SDK_INT)
-            put(Process.ProcessEntry.COLUMN_NAME_EDUCATIONAL, if (educationalMode) 1 else 0)
-            put(Process.ProcessEntry.COLUMN_NAME_REPORT, if (reportMode) 1 else 0)
-            put(Process.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, if (serverMode) 1 else 0)
-            put(Process.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, if (rootAllowed) 1 else 0)
+            put(Processes.ProcessEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
+            put(Processes.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION, Build.VERSION.SDK_INT)
+            put(Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL, if (educationalMode) 1 else 0)
+            put(Processes.ProcessEntry.COLUMN_NAME_REPORT, if (reportMode) 1 else 0)
+            put(Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, if (serverMode) 1 else 0)
+            put(Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, if (rootAllowed) 1 else 0)
         }
 
-        val processID = db?.insert(Process.ProcessEntry.TABLE_NAME, null, values)
+        val processID = db?.insert(Processes.ProcessEntry.TABLE_NAME, null, values)
         Log.i("ID", "New process ID = $processID")
 
         return processID

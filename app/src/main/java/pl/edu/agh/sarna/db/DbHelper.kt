@@ -7,12 +7,14 @@ import android.database.sqlite.SQLiteOpenHelper
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(DbScripts.SQL_CREATE_ENTRIES)
+        db.execSQL(DbQueries.CREATE_PROCESS)
+        db.execSQL(DbQueries.CREATE_WIFI_PASSWORDS)
+        db.execSQL(DbQueries.CREATE_WIFI_UTILS)
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(DbScripts.SQL_DELETE_ENTRIES)
+        db.execSQL(DbQueries.SQL_DELETE_ENTRIES)
         onCreate(db)
     }
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -31,5 +33,6 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             }
             return instance
         }
+
     }
 }

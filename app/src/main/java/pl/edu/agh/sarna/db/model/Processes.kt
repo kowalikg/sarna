@@ -1,10 +1,10 @@
-package pl.edu.agh.sarna.db
+package pl.edu.agh.sarna.db.model
 
 import android.provider.BaseColumns
 
-object Process {
+object Processes {
     object ProcessEntry : BaseColumns {
-        const val TABLE_NAME = "Process"
+        const val TABLE_NAME = "Processes"
         const val COLUMN_NAME_START_TIME = "StartTime"
         const val COLUMN_NAME_END_TIME = "EndTime"
         const val COLUMN_NAME_EXTERNAL_SERVER = "ExternalServer"
