@@ -62,14 +62,17 @@ class WifiPasswordActivity : AppCompatActivity() {
         processID = intent.getLongExtra("process_id", 0)
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
+    @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     fun startWifiPasswordTaking(view: View) {
         runID = DbScripts.insertWifiQuery(this, processID)!!
         if (!checkPermissions())
             requestSelectedPermissions()
-        else
+        else {
+            permissionsGranted = true
             doJob()
+        }
+
 
     }
 
@@ -93,19 +96,19 @@ class WifiPasswordActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            10, 20 ->
-                if (hasAllPermissionsGranted(grantResults)) {
-                    permissionsGranted = true
-                    doJob()
-
-                } else {
-                }
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 10) {
+            locationPermissionGranted = checkLocationPermision(this)
+            storagePermissionGranted = checkStoragePermission(this)
+            permissionsGranted = locationPermissionGranted and storagePermissionGranted
         }
+        else if (requestCode == 20){
+            storagePermissionGranted = checkStoragePermission(this)
+            permissionsGranted = storagePermissionGranted
 
+        }
+        doJob()
     }
 
     private fun doJob() {

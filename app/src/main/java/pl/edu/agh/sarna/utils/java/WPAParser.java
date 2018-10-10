@@ -26,7 +26,7 @@ public class WPAParser {
         File file = new File(pathToFile);
         FileInputStream in = new FileInputStream(file);
 
-        byte[] data = new byte[(int)file.length()];
+        byte[] data = new byte[8192];
         in.read(data);
         in.close();
 

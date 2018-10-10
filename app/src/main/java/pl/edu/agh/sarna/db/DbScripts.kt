@@ -54,9 +54,10 @@ object DbScripts {
     }
     fun updateWifiMethod(context: Context, runID: Long, status: Boolean) {
         val db = DbHelper.getInstance(context)
-        val cv = ContentValues()
-        cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
-        cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS, if (status) 1 else 0)
+        val cv = ContentValues().apply {
+            put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+            put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS, booleanToInt(status))
+        }
         db!!.writableDatabase.update(WifiPasswords.WifiPasswordsEntry.TABLE_NAME, cv, "_id = ?", arrayOf(runID.toString()));
     }
 }
