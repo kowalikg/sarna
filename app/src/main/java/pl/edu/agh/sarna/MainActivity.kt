@@ -11,6 +11,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.Processes
+import pl.edu.agh.sarna.wifi_passwords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
 import java.util.*
