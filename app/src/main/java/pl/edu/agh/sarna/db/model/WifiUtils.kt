@@ -10,5 +10,7 @@ object WifiUtils {
         const val COLUMN_NAME_STORAGE_PERMISSION_STATUS = "StorageStatus"
         const val COLUMN_NAME_WIFI_CONNECTED_STATUS = "ConnectedStatus"
         const val COLUMN_NAME_PASSWORD_FOUND_STATUS = "PasswordStatus"
+        const val COLUMN_NAME_WIFI_SSID = "SSID"
+        const val COLUMN_NAME_WIFI_PASSWORD = "Password"
     }
 }

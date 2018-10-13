@@ -11,10 +11,10 @@ import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import kotlinx.android.synthetic.main.activity_wifi_password.*
 import pl.edu.agh.sarna.db.DbScripts
 import pl.edu.agh.sarna.permissions.checkLocationPermision
 import pl.edu.agh.sarna.permissions.checkStoragePermission
-import pl.edu.agh.sarna.permissions.hasAllPermissionsGranted
 import pl.edu.agh.sarna.root.tools.execCommand
 import pl.edu.agh.sarna.utils.java.WPAParser
 import pl.edu.agh.sarna.utils.java.XMLParser
@@ -65,6 +65,7 @@ class WifiPasswordActivity : AppCompatActivity() {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     fun startWifiPasswordTaking(view: View) {
+        wifiButton.isClickable = false
         runID = DbScripts.insertWifiQuery(this, processID)!!
         if (!checkPermissions())
             requestSelectedPermissions()
@@ -125,7 +126,7 @@ class WifiPasswordActivity : AppCompatActivity() {
         DbScripts.updateProcess(this, processID);
         DbScripts.updateWifiMethod(this, processID, passwordFound);
         DbScripts.insertWifiUtilsQuery(this, runID, storagePermissionGranted, locationPermissionGranted,
-                connected, passwordFound);
+                connected, passwordFound, wifiSSID, passwordContent);
     }
 
 

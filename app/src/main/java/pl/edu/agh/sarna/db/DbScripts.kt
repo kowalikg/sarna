@@ -34,8 +34,8 @@ object DbScripts {
         return runID
     }
 
-    fun insertWifiUtilsQuery(context: Context, runID: Long, storagePermissionGranted : Boolean,
-                             locationPermissionGranted : Boolean, connected : Boolean, passwordFound : Boolean) {
+    fun insertWifiUtilsQuery(context: Context, runID: Long, storagePermissionGranted: Boolean,
+                             locationPermissionGranted: Boolean, connected: Boolean, passwordFound: Boolean, wifiSSID: String, passwordContent: String) {
         val dbHelper = DbHelper.getInstance(context)
         val db = dbHelper!!.writableDatabase
         val values = ContentValues().apply {
@@ -47,6 +47,9 @@ object DbScripts {
 
             put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS, booleanToInt(connected))
             put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_PASSWORD_FOUND_STATUS, booleanToInt(passwordFound))
+
+            if (connected) put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID, wifiSSID)
+            if (passwordFound) put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD, passwordContent)
         }
 
         val tryID = db?.insert(WifiUtils.WifiUtilsEntry.TABLE_NAME, null, values)

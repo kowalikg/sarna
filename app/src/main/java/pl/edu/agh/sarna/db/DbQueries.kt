@@ -25,6 +25,8 @@ object DbQueries {
                     "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_LOCATION_PERMISSION_STATUS} integer DEFAULT 0, " +
                     "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS} integer DEFAULT 0, " +
                     "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_PASSWORD_FOUND_STATUS} integer DEFAULT 0, " +
+                    "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID} text, " +
+                    "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD} text, " +
                     "FOREIGN KEY (${WifiUtils.WifiUtilsEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${WifiPasswords.WifiPasswordsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
