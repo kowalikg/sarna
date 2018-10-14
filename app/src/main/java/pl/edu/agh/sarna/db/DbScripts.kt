@@ -2,12 +2,13 @@ package pl.edu.agh.sarna.db
 
 import android.content.ContentValues
 import android.content.Context
+import android.provider.BaseColumns
 import android.util.Log
 import pl.edu.agh.sarna.db.model.Processes
 import pl.edu.agh.sarna.db.model.WifiPasswords
 import pl.edu.agh.sarna.db.model.WifiUtils
-import pl.edu.agh.sarna.utils.kotlin.booleanToInt
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
+import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
 object DbScripts {
@@ -41,26 +42,26 @@ object DbScripts {
         val values = ContentValues().apply {
             put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_RUN_ID, runID)
 
-            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_STORAGE_PERMISSION_STATUS, booleanToInt(storagePermissionGranted))
+            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_STORAGE_PERMISSION_STATUS, storagePermissionGranted.toInt())
             if (isOreo8_1())
-                put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_LOCATION_PERMISSION_STATUS, booleanToInt(locationPermissionGranted))
+                put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_LOCATION_PERMISSION_STATUS, locationPermissionGranted.toInt())
 
-            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS, booleanToInt(connected))
-            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_PASSWORD_FOUND_STATUS, booleanToInt(passwordFound))
+            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS, connected.toInt())
+            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_PASSWORD_FOUND_STATUS, passwordFound.toInt())
 
-            if (connected) put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID, wifiSSID)
-            if (passwordFound) put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD, passwordContent)
+            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID, wifiSSID)
+            put(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD, passwordContent)
         }
 
         val tryID = db?.insert(WifiUtils.WifiUtilsEntry.TABLE_NAME, null, values)
         Log.i("ID", "New runutils ID = $tryID")
     }
     fun updateWifiMethod(context: Context, runID: Long, status: Boolean) {
-        val db = DbHelper.getInstance(context)
-        val cv = ContentValues().apply {
-            put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
-            put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS, booleanToInt(status))
-        }
-        db!!.writableDatabase.update(WifiPasswords.WifiPasswordsEntry.TABLE_NAME, cv, "_id = ?", arrayOf(runID.toString()));
+        val db = DbHelper.getInstance(context)!!.writableDatabase
+        val cv = ContentValues()
+        cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+        cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS, status.toInt())
+
+        db.update(WifiPasswords.WifiPasswordsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
     }
 }

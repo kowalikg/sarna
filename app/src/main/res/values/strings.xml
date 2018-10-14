@@ -12,7 +12,7 @@
     <string name="wifi_button">Launch</string>
     <string name="root_denied">Cannot get root privilleges</string>
     <string name="unrooted_device">Your device is not rooted</string>
-    <string name="root_declined">Your have not granted root privileges</string>
+    <string name="root_declined">You have not granted root privileges</string>
     <string name="report_title">Report</string>
 
 </resources>

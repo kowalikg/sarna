@@ -7,8 +7,8 @@ import android.content.Context
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.util.Log
 import pl.edu.agh.sarna.db.DbScripts
+import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.root.tools.execCommand
 import pl.edu.agh.sarna.utils.java.WPAParser
 import pl.edu.agh.sarna.utils.java.XMLParser
@@ -18,14 +18,14 @@ import java.io.FileInputStream
 import java.util.ArrayList
 
 
-class WifiPasswordTask(val context: Activity, private val response: AsyncResponse, val processID: Long, private var permissionsGranted: Boolean = false, private var locationPermissionGranted: Boolean = false, private var storagePermissionGranted: Boolean = false) : AsyncTask<Void, Void, Int>() {
+class WifiPasswordTask(val context: Activity, private val response: AsyncResponse, val processID: Long, val rootState: Boolean, private var permissionsGranted: Boolean = false, private var locationPermissionGranted: Boolean = false, private var storagePermissionGranted: Boolean = false) : AsyncTask<Void, Void, Int>() {
     private val progDailog = ProgressDialog(context)
     private var runID: Long = 0
 
     private var connected = false
-    private var wifiSSID: String = ""
+    private var wifiSSID: String = "-"
     private var passwordFound = false
-    private var passwordContent = ""
+    private var passwordContent = "-"
 
     private val logsValues = WifiLogsValues()
     private val wifisAccessed: ArrayList<String> = ArrayList()
@@ -43,9 +43,11 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
         runID = DbScripts.insertWifiQuery(context, processID)!!
         requestWifiSsid()
 
-        if (isOreo8_0()) {
-            takePasswordFromXMLFile()
-        } else takePasswordFromWPAFile()
+        if (rootState and permissionsGranted){
+            if (isOreo8_0()) {
+                takePasswordFromXMLFile()
+            } else takePasswordFromWPAFile()
+        }
 
         updateDatabase();
         Thread.sleep(1000)
@@ -59,10 +61,9 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     private fun updateDatabase() {
-        DbScripts.updateProcess(context, processID);
-        DbScripts.updateWifiMethod(context, processID, passwordFound);
         DbScripts.insertWifiUtilsQuery(context.applicationContext, runID, storagePermissionGranted, locationPermissionGranted,
-                connected, passwordFound, wifiSSID, passwordContent);
+                connected, passwordFound, wifiSSID, passwordContent)
+        DbScripts.updateWifiMethod(context.applicationContext, processID, passwordFound)
     }
     private fun requestWifiSsid() {
         val manager = this.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -80,8 +81,6 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     private fun takePasswordFromWPAFile() {
-        if (!permissionsGranted) return
-
         val command = "${logsValues.cmd}${logsValues.wifiFileToNougat}>${logsValues.logFile}"
         execCommand(command)
 
@@ -104,8 +103,6 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     private fun takePasswordFromXMLFile() {
-        if (!permissionsGranted) return
-
         val command = "${logsValues.cmd}${logsValues.wifiFileFromOreo}>${logsValues.logFile}"
         execCommand(command)
 
