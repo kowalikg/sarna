@@ -9,10 +9,10 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.model.AsyncResponse
-import pl.edu.agh.sarna.permissions.checkLocationPermision
+import pl.edu.agh.sarna.permissions.checkLocationPermission
 import pl.edu.agh.sarna.permissions.checkStoragePermission
-import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 
 
@@ -59,7 +59,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     private fun checkPermissions(): Boolean {
         storagePermissionGranted = checkStoragePermission(this)
         if (isOreo8_1()) {
-            locationPermissionGranted = checkLocationPermision(this)
+            locationPermissionGranted = checkLocationPermission(this)
             return storagePermissionGranted and locationPermissionGranted
         }
         return storagePermissionGranted
@@ -78,7 +78,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == 10) {
-            locationPermissionGranted = checkLocationPermision(this)
+            locationPermissionGranted = checkLocationPermission(this)
             storagePermissionGranted = checkStoragePermission(this)
             permissionsGranted = locationPermissionGranted and storagePermissionGranted
         }
@@ -94,7 +94,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
         WifiPasswordTask(this, this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
     }
     override fun processFinish(output: Any) {
-        if (output == 0) startActivity(Intent(this, ReportActivity::class.java).apply {
+        if (output == 0) startActivity(Intent(this, MetadataActivity::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)

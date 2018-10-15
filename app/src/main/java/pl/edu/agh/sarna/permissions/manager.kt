@@ -11,8 +11,15 @@ import android.support.annotation.RequiresApi
 fun checkStoragePermission(context: Context) : Boolean {
     return context.checkCallingOrSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
 }
-fun checkLocationPermision(context: Context) : Boolean {
+fun checkLocationPermission(context: Context) : Boolean {
     return context.checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+}
+@RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+fun checkCallLogsPermission(context: Context) : Boolean {
+    return context.checkCallingOrSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED
+}
+fun checkContactsPermission(context: Context) : Boolean {
+    return context.checkCallingOrSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 }
 fun hasAllPermissionsGranted(@NonNull grantResults: IntArray) : Boolean {
     for (grantResult in grantResults) {

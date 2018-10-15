@@ -8,12 +8,15 @@
     <string name="option_report">Generate report</string>
     <string name="start_app">Start testing</string>
     <string name="wifi_title">WiFi password</string>
-    <string name="wifi_description">Grant root privileges to let app take password to your wifi</string>
+    <string name="wifi_description">Grant privileges to let app take password to your wifi</string>
     <string name="wifi_button">Launch</string>
-    <string name="root_denied">Cannot get root privilleges</string>
+    <string name="root_denied">Cannot get root privileges</string>
     <string name="unrooted_device">Your device is not rooted</string>
     <string name="root_declined">You have not granted root privileges</string>
     <string name="report_title">Report</string>
     <string name="exit_button">Exit</string>
+    <string name="metadata_title">Call metadata</string>
+    <string name="metadata_description">Grant permission to let app take your calls\' metadata</string>
+    <string name="metadata_button">Launch</string>
 
 </resources>

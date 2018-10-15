@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-feature android:name="android.hardware.location.gps" />
 
@@ -17,7 +19,8 @@
         android:roundIcon="@mipmap/sarna_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,10 +28,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".wifi_passwords.WifiPasswordActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".report.ReportActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".wifi_passwords.WifiPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".report.ReportActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".metadata.MetadataActivity"></activity>
     </application>
 
 </manifest>
