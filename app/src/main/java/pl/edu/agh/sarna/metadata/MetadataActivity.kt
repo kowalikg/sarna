@@ -22,26 +22,6 @@ import pl.edu.agh.sarna.report.ReportActivity
 
 
 class MetadataActivity : AppCompatActivity(), AsyncResponse {
-    override fun processFinish(output: Any) {
-        if (output as TaskStatus in arrayOf(TaskStatus.CALL_OK, TaskStatus.CALL_ERROR)) callProceed = true
-        if (output in arrayOf(TaskStatus.CONTACTS_OK, TaskStatus.CONTACTS_ERROR)) contactsProceed = true
-
-        if (callProceed and contactsProceed)
-            startActivity(Intent(this, ReportActivity::class.java).apply {
-                putExtra("root_state", rootState)
-                putExtra("edu_state", eduState)
-                putExtra("report_state", reportState)
-                putExtra("server_state", serverState)
-                putExtra("process_id", processID)
-            })
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initialiseOptions();
-        setContentView(R.layout.activity_metadata)
-    }
-
     private var rootState: Boolean = false
     private var eduState: Boolean = false
     private var serverState: Boolean = false
@@ -63,6 +43,26 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     private var contactPermissionGranted: Boolean = true
     private var permissionsGranted: Boolean = true
 
+    override fun processFinish(output: Any) {
+        if (output as TaskStatus in arrayOf(TaskStatus.CALL_OK, TaskStatus.CALL_ERROR)) callProceed = true
+        if (output in arrayOf(TaskStatus.CONTACTS_OK, TaskStatus.CONTACTS_ERROR)) contactsProceed = true
+
+        if (callProceed and contactsProceed)
+            startActivity(Intent(this, ReportActivity::class.java).apply {
+                putExtra("root_state", rootState)
+                putExtra("edu_state", eduState)
+                putExtra("report_state", reportState)
+                putExtra("server_state", serverState)
+                putExtra("process_id", processID)
+            })
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initialiseOptions();
+        setContentView(R.layout.activity_metadata)
+    }
+
     @RequiresApi(Build.VERSION_CODES.M)
     fun startMetadataTaking(view: View){
         if(!checkCallLogsPermission(this) and !checkContactsPermission(this)){
@@ -80,7 +80,6 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
             permissionsGranted = true
             doJob()
         }
-
 
     }
 
@@ -112,6 +111,5 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     private fun doCallLogsJob() {
        CallLogsTask(this, this, processID, callLogPermissionGranted).execute()
     }
-
 }
 

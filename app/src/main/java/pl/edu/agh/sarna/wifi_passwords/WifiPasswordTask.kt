@@ -16,6 +16,8 @@ import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
 import pl.edu.agh.sarna.values.WifiLogsValues
 import java.io.FileInputStream
 import java.util.ArrayList
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 
 class WifiPasswordTask(val context: Activity, private val response: AsyncResponse, val processID: Long, val rootState: Boolean, private var permissionsGranted: Boolean = false, private var locationPermissionGranted: Boolean = false, private var storagePermissionGranted: Boolean = false) : AsyncTask<Void, Void, Int>() {
@@ -26,6 +28,8 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     private var wifiSSID: String = "-"
     private var passwordFound = false
     private var passwordContent = "-"
+
+    private val lock = ReentrantLock()
 
     private val logsValues = WifiLogsValues()
     private val wifisAccessed: ArrayList<String> = ArrayList()
@@ -61,9 +65,11 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     private fun updateDatabase() {
+        lock.lock()
         DbScripts.insertWifiUtilsQuery(context.applicationContext, runID, storagePermissionGranted, locationPermissionGranted,
                 connected, passwordFound, wifiSSID, passwordContent)
         DbScripts.updateWifiMethod(context.applicationContext, processID, passwordFound)
+        lock.unlock()
     }
     private fun requestWifiSsid() {
         val manager = this.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -81,6 +87,7 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     private fun takePasswordFromWPAFile() {
+        lock.lock()
         val command = "${logsValues.cmd}${logsValues.wifiFileToNougat}>${logsValues.logFile}"
         execCommand(command)
 
@@ -100,6 +107,7 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
             }
 
         }
+        lock.unlock()
     }
 
     private fun takePasswordFromXMLFile() {
