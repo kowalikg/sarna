@@ -38,7 +38,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
         setContentView(R.layout.activity_report)
         initialiseLayout()
         initialiseOptions()
-        DbReportTask(this, this, processID).execute()
+        DbReportTask(this, this, processID, rootState).execute()
 
     }
 
@@ -47,7 +47,6 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             when(view.tag) {
                 getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
             }
-
         }
     }
 

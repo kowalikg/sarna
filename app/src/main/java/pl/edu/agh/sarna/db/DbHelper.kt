@@ -7,7 +7,14 @@ import android.database.sqlite.SQLiteOpenHelper
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(DbQueries.SQL_CREATE_ENTRIES)
+        db.execSQL(DbQueries.CREATE_PROCESS)
+        db.execSQL(DbQueries.CREATE_WIFI_PASSWORDS)
+        db.execSQL(DbQueries.CREATE_WIFI_UTILS)
+        db.execSQL(DbQueries.CREATE_CALLS_DETAILS)
+        db.execSQL(DbQueries.CREATE_CALLS_LOG_INFO)
+        db.execSQL(DbQueries.CREATE_CALLS_LOGS)
+        db.execSQL(DbQueries.CREATE_CONTACTS_INFO)
+        db.execSQL(DbQueries.CREATE_CONTACTS)
 
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

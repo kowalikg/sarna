@@ -13,7 +13,7 @@ import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 
-class DbReportTask(val context: Context, val response: AsyncResponse, val processID: Long)  : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>()  {
+class DbReportTask(val context: Context, val response: AsyncResponse, val processID: Long, val rootAllowed: Boolean)  : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>()  {
     private var progDailog = ProgressDialog(context)
     override fun onPreExecute() {
         progDailog.setMessage("Loading...")
@@ -27,7 +27,7 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
         val list = ArrayList<SubtaskStatus>()
 
         val db = DbHelper.getInstance(context)!!.readableDatabase
-        list.add(wifiPassword(db)!!)
+        if (rootAllowed)list.add(wifiPassword(db)!!)
         return list
     }
 

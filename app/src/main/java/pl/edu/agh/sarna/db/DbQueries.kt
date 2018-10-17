@@ -7,6 +7,8 @@ import pl.edu.agh.sarna.db.model.WifiUtils
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
 import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
+import pl.edu.agh.sarna.db.model.contacts.Contacts
+import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 
 object DbQueries {
     const val CREATE_PROCESS =
@@ -69,9 +71,27 @@ object DbQueries {
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME} text, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} text, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE} integer, " +
-                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TIME} integer, " +
+                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TIME} text, " +
                     "FOREIGN KEY (${CallsLogs.CallsLogsEntry.COLUMN_NAME_TRY_ID}) " +
                     "REFERENCES ${CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val CREATE_CONTACTS_INFO =
+            "CREATE TABLE ${ContactsInfo.ContactsInfoEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID} integer, " +
+                    "${ContactsInfo.ContactsInfoEntry.COLUMN_NAME_CONTACTS_PERMISSION} integer DEFAULT 0, " +
+                    "${ContactsInfo.ContactsInfoEntry.COLUMN_NAME_FOUND} integer DEFAULT 0, " +
+                    "FOREIGN KEY (${ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val CREATE_CONTACTS =
+            "CREATE TABLE ${Contacts.ContactsEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${Contacts.ContactsEntry.COLUMN_NAME_TRY_ID} integer, " +
+                    "${Contacts.ContactsEntry.COLUMN_NAME_NAME} text, " +
+                    "${Contacts.ContactsEntry.COLUMN_NAME_NUMBER} text, " +
+                    "FOREIGN KEY (${Contacts.ContactsEntry.COLUMN_NAME_TRY_ID}) " +
+                    "REFERENCES ${ContactsInfo.ContactsInfoEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
     const val SQL_DELETE_ENTRIES = "" +
             "DROP TABLE IF EXISTS ${Processes.ProcessEntry.TABLE_NAME}" +

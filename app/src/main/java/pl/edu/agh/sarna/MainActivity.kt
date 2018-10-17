@@ -11,6 +11,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.Processes
+import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.wifi_passwords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
@@ -18,18 +19,18 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-    var rootAllowed:Boolean = false
-    var educationalMode:Boolean = false
-    var reportMode:Boolean = false
-    var serverMode:Boolean = false
+    var rootAllowed: Boolean = false
+    var educationalMode: Boolean = false
+    var reportMode: Boolean = false
+    var serverMode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        rootSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        rootSwitch.setOnCheckedChangeListener { _, isChecked ->
 
-            rootAllowed = if (isChecked){
+            rootAllowed = if (isChecked) {
                 try {
                     val p = Runtime.getRuntime().exec("su")
                     val os = DataOutputStream(p.outputStream)
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
                     p.waitFor()
                     p.exitValue() == 0
-                } catch (e: IOException){
+                } catch (e: IOException) {
                     showDeclineAlert(R.string.unrooted_device)
                     rootSwitch.isChecked = false
                     false
@@ -48,25 +49,49 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         };
+        serverSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked){
+                val dialogBuilder = AlertDialog.Builder(this)
+                dialogBuilder.setTitle("Warning!")
+                        .setMessage(R.string.external_server_warning)
+                        .setPositiveButton("OK") { _, _ ->
+                            serverMode = true
+                        }
+                        .setNegativeButton("Cancel") { _, _ ->
+                            serverSwitch.isChecked = false
+                        }
+                dialogBuilder.create().show()
+            }
+
+        }
     }
 
-    fun onStartButtonClicked(view : View){
+    fun onStartButtonClicked(view: View) {
         educationalMode = eduSwitch.isChecked
         reportMode = reportSwitch.isChecked
         serverMode = serverSwitch.isChecked
 
-        val processID  = launchDatabaseConnection()
+        val processID = launchDatabaseConnection()
 
-        startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
+        if (rootAllowed) startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
             putExtra("root_state", rootAllowed)
             putExtra("edu_state", educationalMode)
             putExtra("report_state", reportMode)
             putExtra("server_state", serverMode)
             putExtra("process_id", processID)
         })
+        else {
+            startActivity(Intent(this, MetadataActivity::class.java).apply {
+                putExtra("root_state", rootAllowed)
+                putExtra("edu_state", educationalMode)
+                putExtra("report_state", reportMode)
+                putExtra("server_state", serverMode)
+                putExtra("process_id", processID)
+            })
+        }
     }
 
-    private fun launchDatabaseConnection() : Long? {
+    private fun launchDatabaseConnection(): Long? {
         val dbHelper = DbHelper.getInstance(this)
         val db = dbHelper!!.writableDatabase
 
