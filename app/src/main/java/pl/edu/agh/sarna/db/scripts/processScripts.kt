@@ -3,14 +3,14 @@ package pl.edu.agh.sarna.db.scripts
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import pl.edu.agh.sarna.db.model.Processes
-import java.util.*
 import android.os.Build
 import android.provider.BaseColumns
+import android.util.Log
 import pl.edu.agh.sarna.db.DbHelper
+import pl.edu.agh.sarna.db.model.Processes
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
+import java.util.*
 
 fun launchDatabaseConnection(context: Context, educationalMode: Boolean,
                              reportMode: Boolean, serverMode: Boolean, rootAllowed: Boolean): Long? {

@@ -1,22 +1,17 @@
 package pl.edu.agh.sarna
 
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
-import pl.edu.agh.sarna.db.DbHelper
-import pl.edu.agh.sarna.db.model.Processes
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.wifi_passwords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {

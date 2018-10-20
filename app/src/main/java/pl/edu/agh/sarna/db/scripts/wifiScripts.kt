@@ -5,8 +5,8 @@ import android.content.Context
 import android.provider.BaseColumns
 import android.util.Log
 import pl.edu.agh.sarna.db.DbHelper
-import pl.edu.agh.sarna.db.model.WifiPasswords
-import pl.edu.agh.sarna.db.model.WifiUtils
+import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
+import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*

@@ -1,19 +1,17 @@
-package pl.edu.agh.sarna.report
+package pl.edu.agh.sarna.report.asynctask
 
 import android.app.ProgressDialog
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.AsyncTask
-import android.provider.BaseColumns
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
-import pl.edu.agh.sarna.db.model.WifiPasswords
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
+import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.scripts.singleMethodReport
 import pl.edu.agh.sarna.db.scripts.updateProcess
-import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.model.SubtaskStatus
-import pl.edu.agh.sarna.utils.kotlin.toBoolean
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import java.util.*
 
 class DbReportTask(val context: Context, val response: AsyncResponse, val processID: Long, val rootAllowed: Boolean)  : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>()  {

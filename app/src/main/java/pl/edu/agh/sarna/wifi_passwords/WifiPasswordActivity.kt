@@ -10,10 +10,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.metadata.MetadataActivity
-import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.permissions.checkLocationPermission
 import pl.edu.agh.sarna.permissions.checkStoragePermission
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
+import pl.edu.agh.sarna.wifi_passwords.asynctask.WifiPasswordTask
 
 
 class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {

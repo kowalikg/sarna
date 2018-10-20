@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.db.model
+package pl.edu.agh.sarna.db.model.wifi
 
 import android.provider.BaseColumns
 

@@ -1,14 +1,14 @@
-package pl.edu.agh.sarna.wifi_passwords
+package pl.edu.agh.sarna.wifi_passwords.asynctask
 
 import android.app.ProgressDialog
 import android.content.Context
 import android.database.Cursor
 import android.os.AsyncTask
 import android.util.Log
-import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.db.DbHelper
-import pl.edu.agh.sarna.db.model.WifiUtils
-import pl.edu.agh.sarna.model.AsyncResponse
+import pl.edu.agh.sarna.db.model.wifi.WifiUtils
+import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 

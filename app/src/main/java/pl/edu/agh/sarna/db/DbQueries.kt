@@ -2,13 +2,13 @@ package pl.edu.agh.sarna.db
 
 import android.provider.BaseColumns
 import pl.edu.agh.sarna.db.model.Processes
-import pl.edu.agh.sarna.db.model.WifiPasswords
-import pl.edu.agh.sarna.db.model.WifiUtils
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
 import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
+import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
+import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 
 object DbQueries {
     const val CREATE_PROCESS =

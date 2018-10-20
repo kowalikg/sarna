@@ -1,26 +1,23 @@
 package pl.edu.agh.sarna.report
 
 import android.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_report.*
 import android.graphics.Color
-import android.os.Build
-import android.support.annotation.RequiresApi
-import android.util.Log
-import android.widget.*
-import android.widget.LinearLayout
-import android.view.ViewGroup
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
+import android.os.Bundle
+import android.support.annotation.RequiresApi
+import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.activity_report.*
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.db.model.Processes
-import pl.edu.agh.sarna.metadata.MetadataTask
 import pl.edu.agh.sarna.model.SubtaskStatus
-import pl.edu.agh.sarna.model.AsyncResponse
+import pl.edu.agh.sarna.report.asynctask.DbReportTask
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.wifi_passwords.MetadataReportTask
-import pl.edu.agh.sarna.wifi_passwords.WifiPasswordsReportTask
-import java.lang.StringBuilder
+import pl.edu.agh.sarna.wifi_passwords.asynctask.WifiPasswordsReportTask
 
 
 class ReportActivity : AppCompatActivity(), AsyncResponse {

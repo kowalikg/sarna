@@ -8,10 +8,11 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.model.AsyncResponse
+import pl.edu.agh.sarna.metadata.asynctask.MetadataTask
 import pl.edu.agh.sarna.permissions.checkCallLogsPermission
 import pl.edu.agh.sarna.permissions.checkContactsPermission
 import pl.edu.agh.sarna.report.ReportActivity
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 
 
 class MetadataActivity : AppCompatActivity(), AsyncResponse {

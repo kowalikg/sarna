@@ -12,8 +12,8 @@ import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 import pl.edu.agh.sarna.db.scripts.callLogsAmount
 import pl.edu.agh.sarna.db.scripts.contactsAmount
 import pl.edu.agh.sarna.db.scripts.mostFrequentContact
-import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 
 class MetadataReportTask(val context: Context, val response: AsyncResponse, val runID: Long) : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>() {

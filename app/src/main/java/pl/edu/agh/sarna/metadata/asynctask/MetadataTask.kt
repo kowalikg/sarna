@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.metadata
+package pl.edu.agh.sarna.metadata.asynctask
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
@@ -8,10 +8,10 @@ import android.provider.CallLog
 import android.provider.ContactsContract
 import android.util.Log
 import pl.edu.agh.sarna.db.scripts.*
-import pl.edu.agh.sarna.model.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 
 class MetadataTask(val context: Context, val response: AsyncResponse, val processID: Long,
-    val callLogsPermissionGranted : Boolean, val contactsPermissionGranted : Boolean) : AsyncTask<Void, Void, Int>() {
+                   val callLogsPermissionGranted : Boolean, val contactsPermissionGranted : Boolean) : AsyncTask<Void, Void, Int>() {
 
     private val progDailog = ProgressDialog(context)
     private var runID : Long = 0
@@ -30,7 +30,7 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         return 0
     }
 
-    private fun doContactsJob() : TaskStatus{
+    private fun doContactsJob() : TaskStatus {
         insertContactsInfoQuery(context, runID, contactsPermissionGranted)
         if (contactsPermissionGranted)
             if (getAccessToContacts(runID) == TaskStatus.CONTACTS_ERROR) {
