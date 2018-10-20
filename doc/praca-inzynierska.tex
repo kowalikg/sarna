@@ -1,22 +1,20 @@
 \documentclass[polish,12pt]{aghthesis}
-% \documentclass[english,12pt]{aghthesis} dla pracy w jêzyku angielskim. Uwaga, w przypadku strony tytu³owej zmiana jêzyka dotyczy tylko kolejno¶ci wersji jêzykowych tytu³u pracy. 
-
 % Szablon przystosowany jest do druku dwustronnego. 
 
-\usepackage[latin2]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{url}
 
-\author{Gabriela Kowalik, Mateusz Olczyk, Rafa³ Pietruszka}
+\author{Gabriela Kowalik, Mateusz Olczyk, RafaÅ‚ Pietruszka}
 
-\titlePL{Aplikacja demonstruj±ca mo¿liwo¶ci eskalacji uprawnieñ i wydobywania danych chronionych w systemie Android}
-\titleEN{Application demonstrating possibilities of escalating permissions and extracting protected data in the Android system}
+\titlePL{Aplikacja demonstrujÄ…ca moÅ¼liwoÅ›ci eskalacji uprawnieÅ„ i wydobywania danych chronionych w systemie Android}
+\titleEN{Application demonstrating possibilities of escalating permissions and extracting protected data in the Android
+    system}
 
 \fieldofstudy{Informatyka}
 
-\supervisor{dr hab.\ in¿.\ Krzysztof Iksiñski, prof.\ nadzw.\ AGH}
+\supervisor{dr hab.\ inÅ¼.\ Krzysztof IksiÅ„ski, prof.\ nadzw.\ AGH}
 
 \date{\the\year}
-
 
 \begin{document}
 
@@ -24,100 +22,101 @@
 
 \section{\SectionTitleProjectVision}
 \label{sec:cel-wizja}
-\emph{Charakterystyka problemu, motywacja projektu (w tym przegl±d
-	istniej±cych rozwi±zañ prowadz±ca do uzasadnienia celu prac),
-	wizja produktu i analiza zagro¿eñ.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\emph{Charakterystyka problemu, motywacja projektu (w tym przeglÄ…d
+    istniejÄ…cych rozwiÄ…zaÅ„ prowadzÄ…ca do uzasadnienia celu prac),
+    wizja produktu i analiza zagroÅ¼eÅ„.}  % niniejsza linijka to tylko komentarz, ktÃ³ry naleÅ¼y usunÄ…Ä‡
 \subsection{Dziedzina problemu}
-Bezpieczeñstwo najpopularniejszego systemu mobilnego, Androida.
-Pod uwagi wziête wersje od 4.0 (ICS) do najnowszego dostêpnego.
+BezpieczeÅ„stwo najpopularniejszego systemu mobilnego, Androida.
+Pod uwagi wziÄ™te wersje od 4.0 (ICS) do najnowszego dostÄ™pnego.
 \subsection{Minimal viable product}
-Aplikacja (aplikacje) demonstruj±ce kilka technik dostêpu do danych bez uprawnieñ roota oraz kilka technik dostêpu do danych z przydzielonymi uprawnieniami roota.
+Aplikacja (aplikacje) demonstrujÄ…ce kilka technik dostÄ™pu do danych bez uprawnieÅ„ roota oraz kilka technik dostÄ™pu do danych z przydzielonymi uprawnieniami roota.
 \subsection{Analiza ryzyka}
 \begin{tabular}{|c|c|c|}
-	\hline
-	\textbf{Zagro¿enie} & \textbf{Prawdopodobieñstwo} & \textbf{Skutki} \\ 
-	\hline
-	Wydawane aktualizacje bezpieczeñstwa mog± blokowaæ\\
-	dostêpne wektory ataku, szczególnie w przypadku\\
-	podatno¶ci krytycznych & 6 & 10 \\
-	\hline
-	Dostarczane przez poszczególnych producentów\\
-	platformy mog± znacz±co	odbiegaæ od oficjalnych\\
-	specyfikacji systemu Android np. konfiguracja\\
-	polityki bezpieczeñstwa, zmodyfikowany firmware\\
-	/ bootloader / aplikacje. & 5 & 8 \\
-	\hline
-	Dostêpno¶æ urz±dzeñ oraz poszczególnych wersji\\
-	systemu Android & 4 & 5 \\
-	\hline
-	Operacje wykradania danych s± zazwyczaj z³o¿one i\\
-	oparte na nietypowych "trikach". Z tego powodu nie\\
-	s± przewidziane ani udokumentowane przez producenta\\
-	systemu i mo¿e brakowaæ odpowiednich ¼róde³ wiedzy\\
-	umo¿liwiaj±cych ich odtworzenie. & 4 & 6 \\
-	\hline
+    \hline
+    \textbf{ZagroÅ¼enie} & \textbf{PrawdopodobieÅ„stwo} & \textbf{Skutki} \\ 
+    \hline
+    Wydawane aktualizacje bezpieczeÅ„stwa mogÄ… blokowaÄ‡\\
+    dostÄ™pne wektory ataku, szczegÃ³lnie w przypadku\\
+    podatnoÅ›ci krytycznych & 6 & 10 \\
+    \hline
+    Dostarczane przez poszczegÃ³lnych producentÃ³w\\
+    platformy mogÄ… znaczÄ…co	odbiegaÄ‡ od oficjalnych\\
+    specyfikacji systemu Android np. konfiguracja\\
+    polityki bezpieczeÅ„stwa, zmodyfikowany firmware\\
+    / bootloader / aplikacje. & 5 & 8 \\
+    \hline
+    DostÄ™pnoÅ›Ä‡ urzÄ…dzeÅ„ oraz poszczegÃ³lnych wersji\\
+    systemu Android & 4 & 5 \\
+    \hline
+    Operacje wykradania danych sÄ… zazwyczaj zÅ‚oÅ¼one i\\
+    oparte na nietypowych "trikach". Z tego powodu nie\\
+    sÄ… przewidziane ani udokumentowane przez producenta\\
+    systemu i moÅ¼e brakowaÄ‡ odpowiednich ÅºrÃ³deÅ‚ wiedzy\\
+    umoÅ¼liwiajÄ…cych ich odtworzenie. & 4 & 6 \\
+    \hline
 \end{tabular}
 
 \section{\SectionTitleScope}
 \label{sec:zakres-funkcjonalnosci}
-\emph{Kontekst u¿ytkowania produktu (aktorzy, wspó³pracuj±ce systemy)
-  oraz specyfikacja wymagañ funkcjonalnych i niefunkcjonalnych.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\emph{Kontekst uÅ¼ytkowania produktu (aktorzy, wspÃ³Å‚pracujÄ…ce systemy)
+  oraz specyfikacja wymagaÅ„ funkcjonalnych i niefunkcjonalnych.}  % niniejsza linijka to tylko komentarz, ktÃ³ry naleÅ¼y usunÄ…Ä‡
 \subsection{Wymagania funkcjonalne}
 \begin{tabular}{|c|c|}
-	\hline
-	\textbf{Wymagania funkcjonalne} & \textbf{Priorytet} \\ 
-	\hline
-	Demonstracja eskalacji uprawnieñ roota & 10 \\
-	\hline
-	Uzyskiwanie dostêpu do danych chronionych &	10 \\
-	\hline
-	Funkcjonalno¶æ sk³adowania uzyskanych danych na zdalnych serwerach & 6 \\
-	\hline
-	Implementacja rozwi±zania zapewniaj±cego zdalny dostêp do atakowanego urz±dzenia & 4 \\
-	\hline
-	Demonstracja socjotechnik wykorzystuj±cych b³êdy u¿ytkownika & 2 \\
-	\hline
+    \hline
+    \textbf{Wymagania funkcjonalne} & \textbf{Priorytet} \\ 
+    \hline
+    Demonstracja eskalacji uprawnieÅ„ roota & 10 \\
+    \hline
+    Uzyskiwanie dostÄ™pu do danych chronionych &	10 \\
+    \hline
+    FunkcjonalnoÅ›Ä‡ skÅ‚adowania uzyskanych danych na zdalnych serwerach & 6 \\
+    \hline
+    Implementacja rozwiÄ…zania zapewniajÄ…cego zdalny dostÄ™p do atakowanego urzÄ…dzenia & 4 \\
+    \hline
+    Demonstracja socjotechnik wykorzystujÄ…cych bÅ‚Ä™dy uÅ¼ytkownika & 2 \\
+    \hline
 \end{tabular}
 \subsection{Wymagania niefunkcjonalne}
 \begin{tabular}{|c|}
-	\hline
-	\textbf{Wymagania niefunkcjonalne} \\ 
-	\hline
-	Ograniczenie zakresu testów do dopuszczalnych przypadków prawnych. \\
-	\hline
-	Wykorzystanie mo¿liwe najnowszych wersji systemu Android. \\
-	\hline
-	Zastosowanie technologii Java / Kotlin + Android SDK oraz Android NDK + C/C++\\dla zabudowy natywnego kodu dla platformy docelowej. \\
-	\hline
+    \hline
+    \textbf{Wymagania niefunkcjonalne} \\ 
+    \hline
+    Ograniczenie zakresu testÃ³w do dopuszczalnych przypadkÃ³w prawnych. \\
+    \hline
+    Wykorzystanie moÅ¼liwe najnowszych wersji systemu Android. \\
+    \hline
+    Zastosowanie technologii Java / Kotlin + Android SDK oraz Android NDK + C/C++\\dla zabudowy natywnego kodu dla
+    platformy docelowej. \\
+    \hline
 \end{tabular} 
 
 
 \section{\SectionTitleRealizationAspects}
 \label{sec:wybrane-aspekty-realizacji}
-\emph{Przyjête za³o¿enia, struktura i zasada dzia³ania systemu,
-  wykorzystane rozwi±zania technologiczne wraz z uzasadnieniem
-  ich wyboru, istotne mechanizmy i zastosowane algorytmy.} % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
-\subsection{Wykorzystanie zewnêtrznych systemów i aplikacji}
+\emph{PrzyjÄ™te zaÅ‚oÅ¼enia, struktura i zasada dziaÅ‚ania systemu,
+  wykorzystane rozwiÄ…zania technologiczne wraz z uzasadnieniem
+  ich wyboru, istotne mechanizmy i zastosowane algorytmy.} % niniejsza linijka to tylko komentarz, ktÃ³ry naleÅ¼y usunÄ…Ä‡
+\subsection{Wykorzystanie zewnÄ™trznych systemÃ³w i aplikacji}
 Android Debug Bridge\\
 Android API
 
 \section{\SectionTitleWorkOrganization}
 \label{sec:organizacja-pracy}
-\emph{Struktura zespo³u (role poszczególnych osób), krótki opis i
-  uzasadnienie przyjêtej metodyki i/lub kolejno¶ci prac, planowane i
-  zrealizowane etapy prac ze wskazaniem udzia³u poszczególnych
-  cz³onków zespo³u, wykorzystane praktyki i narzêdzia w zarz±dzaniu
-  projektem.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\emph{Struktura zespoÅ‚u (role poszczegÃ³lnych osÃ³b), krÃ³tki opis i
+  uzasadnienie przyjÄ™tej metodyki i/lub kolejnoÅ›ci prac, planowane i
+  zrealizowane etapy prac ze wskazaniem udziaÅ‚u poszczegÃ³lnych
+  czÅ‚onkÃ³w zespoÅ‚u, wykorzystane praktyki i narzÄ™dzia w zarzÄ…dzaniu
+  projektem.}  % niniejsza linijka to tylko komentarz, ktÃ³ry naleÅ¼y usunÄ…Ä‡
 
 \section{\SectionTitleResults}
 \label{sec:wyniki-projektu}
-\emph{Wskazanie wyników projektu (co konkretnie uda³o siê uzyskaæ:
-  oprogramowanie, dokumentacja, raporty z testów/wdro¿enia, itd.), prezentacja wyników
-  i ocena ich u¿yteczno¶ci (jak zosta³o to zweryfikowane --- np.\ wnioski
-  klienta/u¿ytkownika, zrealizowane testy wydajno¶ciowe, itd.),
-  istniej±ce ograniczenia i propozycje dalszych prac.}  % niniejsza linijka to tylko komentarz, który nale¿y usun±æ
+\emph{Wskazanie wynikÃ³w projektu (co konkretnie udaÅ‚o siÄ™ uzyskaÄ‡:
+  oprogramowanie, dokumentacja, raporty z testÃ³w/wdroÅ¼enia, itd.), prezentacja wynikÃ³w
+  i ocena ich uÅ¼ytecznoÅ›ci (jak zostaÅ‚o to zweryfikowane --- np.\ wnioski
+  klienta/uÅ¼ytkownika, zrealizowane testy wydajnoÅ›ciowe, itd.),
+  istniejÄ…ce ograniczenia i propozycje dalszych prac.}  % niniejsza linijka to tylko komentarz, ktÃ³ry naleÅ¼y usunÄ…Ä‡
 
-% o ile to mo¿liwe proszê uzywaæ odwo³añ \cite w konkretnych miejscach a nie \nocite
+% o ile to moÅ¼liwe proszÄ™ uzywaÄ‡ odwoÅ‚aÅ„ \cite w konkretnych miejscach a nie \nocite
 
 \nocite{artykul2011,ksiazka2011,narzedzie2011,projekt2011}
 
