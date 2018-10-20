@@ -19,5 +19,10 @@
     <string name="metadata_title">Call metadata</string>
     <string name="metadata_description">Grant permission to let app take your calls\' metadata</string>
     <string name="metadata_button">Launch</string>
+    <string name="contacts_amount">Contacts amount</string>
+    <string name="call_logs_amount">Call logs amount</string>
+    <string name="most_frequent_contact">Most frequent contact</string>
+    <string name="not_in_contacts">not saved in contacts</string>
+    <string name="not_found">"not found"</string>
 
 </resources>

@@ -1,24 +1,16 @@
 package pl.edu.agh.sarna.metadata
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.annotation.RequiresApi
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
-import android.provider.CallLog
-import android.support.annotation.RequiresApi
-import android.util.Log
+import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.permissions.checkCallLogsPermission
 import pl.edu.agh.sarna.permissions.checkContactsPermission
-import android.widget.Toast
-import android.provider.ContactsContract
-import pl.edu.agh.sarna.db.DbScripts
-import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.report.ReportActivity
 
 
@@ -28,11 +20,6 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     private var serverState: Boolean = false
     private var reportState: Boolean = false
     private var processID: Long = 0
-    private var runID: Long = 0
-    private var callProceed = false
-    private var contactsProceed = false
-    private var callStatus = false
-    private var contactsStatus = false
 
     private fun initialiseOptions() {
         rootState = intent.getBooleanExtra("root_state", false)
@@ -47,18 +34,9 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     private var permissionsGranted: Boolean = true
 
     override fun processFinish(output: Any) {
-        if (output as TaskStatus in arrayOf(TaskStatus.CALL_OK, TaskStatus.CALL_ERROR)){
-            callProceed = true
-            callStatus = output == TaskStatus.CALL_OK
-        }
-        else if (output in arrayOf(TaskStatus.CONTACTS_OK, TaskStatus.CONTACTS_ERROR)){
-            contactsProceed = true
-            contactsStatus = output == TaskStatus.CONTACTS_OK
-        }
-
-        if ((callProceed or !callLogPermissionGranted) and (contactsProceed or !contactPermissionGranted))
-            DbScripts.updateCallsMethod(this, runID, callStatus and contactsStatus)
+        if (output as Int == 0){
             runReport()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,11 +81,7 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        runID = DbScripts.insertCallsQuery(this, processID)!!
-        if (callLogPermissionGranted) doCallLogsJob()
-        if (contactPermissionGranted) doContactsJob()
-        else runReport()
-
+        MetadataTask(this, this, processID, callLogPermissionGranted, contactPermissionGranted).execute()
     }
 
     private fun runReport() {
@@ -120,12 +94,6 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
         })
     }
 
-    private fun doContactsJob() {
-        ContactsTask(this, this, runID, contactPermissionGranted).execute()
-    }
-
-    private fun doCallLogsJob() {
-       CallLogsTask(this, this, runID, callLogPermissionGranted).execute()
-    }
+    override fun onBackPressed() {}
 }
 

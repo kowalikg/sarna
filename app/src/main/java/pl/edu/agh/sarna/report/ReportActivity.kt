@@ -15,8 +15,10 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.model.Processes
+import pl.edu.agh.sarna.metadata.MetadataTask
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.model.AsyncResponse
+import pl.edu.agh.sarna.wifi_passwords.MetadataReportTask
 import pl.edu.agh.sarna.wifi_passwords.WifiPasswordsReportTask
 import java.lang.StringBuilder
 
@@ -46,8 +48,14 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
         return View.OnClickListener {view ->
             when(view.tag) {
                 getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
+                getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
             }
         }
+    }
+
+    private fun generateExtendMetadataReport(runID: Long) {
+        MetadataReportTask(this, this, runID).execute()
+
     }
 
     private fun generateExtendedWifiReport(runID: Long) {

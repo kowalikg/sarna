@@ -7,7 +7,9 @@ import android.content.Context
 import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import pl.edu.agh.sarna.db.DbScripts
+import pl.edu.agh.sarna.db.scripts.insertWifiQuery
+import pl.edu.agh.sarna.db.scripts.insertWifiUtilsQuery
+import pl.edu.agh.sarna.db.scripts.updateWifiMethod
 import pl.edu.agh.sarna.model.AsyncResponse
 import pl.edu.agh.sarna.root.tools.execCommand
 import pl.edu.agh.sarna.utils.java.WPAParser
@@ -16,7 +18,6 @@ import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
 import pl.edu.agh.sarna.values.WifiLogsValues
 import java.io.FileInputStream
 import java.util.ArrayList
-import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 
@@ -44,7 +45,7 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     override fun doInBackground(vararg params: Void?): Int? {
-        runID = DbScripts.insertWifiQuery(context, processID)!!
+        runID = insertWifiQuery(context, processID)!!
         requestWifiSsid()
 
         if (rootState and permissionsGranted){
@@ -66,9 +67,9 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
 
     private fun updateDatabase() {
         lock.lock()
-        DbScripts.insertWifiUtilsQuery(context.applicationContext, runID, storagePermissionGranted, locationPermissionGranted,
+        insertWifiUtilsQuery(context.applicationContext, runID, storagePermissionGranted, locationPermissionGranted,
                 connected, passwordFound, wifiSSID, passwordContent)
-        DbScripts.updateWifiMethod(context.applicationContext, processID, passwordFound)
+        updateWifiMethod(context.applicationContext, processID, passwordFound)
         lock.unlock()
     }
     private fun requestWifiSsid() {

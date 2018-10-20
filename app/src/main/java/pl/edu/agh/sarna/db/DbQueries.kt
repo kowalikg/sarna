@@ -67,13 +67,13 @@ object DbQueries {
     const val CREATE_CALLS_LOGS =
             "CREATE TABLE ${CallsLogs.CallsLogsEntry.TABLE_NAME} (" +
                     "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TRY_ID} integer, " +
+                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} integer, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME} text, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} text, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE} integer, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TIME} text, " +
-                    "FOREIGN KEY (${CallsLogs.CallsLogsEntry.COLUMN_NAME_TRY_ID}) " +
-                    "REFERENCES ${CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME} (${BaseColumns._ID}))"
+                    "FOREIGN KEY (${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
     const val CREATE_CONTACTS_INFO =
             "CREATE TABLE ${ContactsInfo.ContactsInfoEntry.TABLE_NAME} (" +
@@ -87,11 +87,14 @@ object DbQueries {
     const val CREATE_CONTACTS =
             "CREATE TABLE ${Contacts.ContactsEntry.TABLE_NAME} (" +
                     "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "${Contacts.ContactsEntry.COLUMN_NAME_TRY_ID} integer, " +
+                    "${Contacts.ContactsEntry.COLUMN_NAME_RUN_ID} integer, " +
                     "${Contacts.ContactsEntry.COLUMN_NAME_NAME} text, " +
                     "${Contacts.ContactsEntry.COLUMN_NAME_NUMBER} text, " +
-                    "FOREIGN KEY (${Contacts.ContactsEntry.COLUMN_NAME_TRY_ID}) " +
-                    "REFERENCES ${ContactsInfo.ContactsInfoEntry.TABLE_NAME} (${BaseColumns._ID}))"
+                    "FOREIGN KEY (${Contacts.ContactsEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val MOST_FREQUENT_CONTACT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY ile DESC LIMIT 1"
 
     const val SQL_DELETE_ENTRIES = "" +
             "DROP TABLE IF EXISTS ${Processes.ProcessEntry.TABLE_NAME}" +

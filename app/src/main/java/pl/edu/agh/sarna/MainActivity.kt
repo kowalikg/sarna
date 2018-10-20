@@ -11,6 +11,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.Processes
+import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.wifi_passwords.WifiPasswordActivity
 import java.io.DataOutputStream
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         reportMode = reportSwitch.isChecked
         serverMode = serverSwitch.isChecked
 
-        val processID = launchDatabaseConnection()
+        val processID = launchDatabaseConnection(this, educationalMode, reportMode, serverMode, rootAllowed)
 
         if (rootAllowed) startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
             putExtra("root_state", rootAllowed)
@@ -91,24 +92,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun launchDatabaseConnection(): Long? {
-        val dbHelper = DbHelper.getInstance(this)
-        val db = dbHelper!!.writableDatabase
 
-        val values = ContentValues().apply {
-            put(Processes.ProcessEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
-            put(Processes.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION, Build.VERSION.SDK_INT)
-            put(Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL, if (educationalMode) 1 else 0)
-            put(Processes.ProcessEntry.COLUMN_NAME_REPORT, if (reportMode) 1 else 0)
-            put(Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, if (serverMode) 1 else 0)
-            put(Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, if (rootAllowed) 1 else 0)
-        }
-
-        val processID = db?.insert(Processes.ProcessEntry.TABLE_NAME, null, values)
-        Log.i("ID", "New process ID = $processID")
-
-        return processID
-    }
 
     private fun showDeclineAlert(description: Int) {
         val dialogBuilder = AlertDialog.Builder(this)

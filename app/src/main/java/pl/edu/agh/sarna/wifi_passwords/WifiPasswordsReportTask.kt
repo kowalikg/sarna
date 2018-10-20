@@ -73,10 +73,10 @@ class WifiPasswordsReportTask(val context: Context, val response: AsyncResponse,
                 WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID
                     ->
 
-                    list.add(SubtaskStatus(0,
+                    list.add(SubtaskStatus(
                         task.replace("_", " "),
                         cursor!!.getString(cursor.getColumnIndex(task))))
-                else -> list.add(SubtaskStatus(0,
+                else -> list.add(SubtaskStatus(
                         task.replace("_", " "),
                         cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
             }
