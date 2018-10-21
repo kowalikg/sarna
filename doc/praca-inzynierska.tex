@@ -5,15 +5,11 @@
 \usepackage{url}
 
 \author{Gabriela Kowalik, Mateusz Olczyk, Rafał Pietruszka}
-
 \titlePL{Aplikacja demonstrująca możliwości eskalacji uprawnień i wydobywania danych chronionych w systemie Android}
 \titleEN{Application demonstrating possibilities of escalating permissions and extracting protected data in the Android
     system}
-
 \fieldofstudy{Informatyka}
-
-\supervisor{dr hab.\ inż.\ Krzysztof Iksiński, prof.\ nadzw.\ AGH}
-
+\supervisor{mgr \ inż.\ Łukasz Faber}
 \date{\the\year}
 
 \begin{document}
@@ -22,104 +18,41 @@
 
 \section{\SectionTitleProjectVision}
 \label{sec:cel-wizja}
-\emph{Charakterystyka problemu, motywacja projektu (w tym przegląd
-    istniejących rozwiązań prowadząca do uzasadnienia celu prac),
-    wizja produktu i analiza zagrożeń.}  % niniejsza linijka to tylko komentarz, który należy usunąć
-\subsection{Dziedzina problemu}
-Bezpieczeństwo najpopularniejszego systemu mobilnego, Androida.
-Pod uwagi wzięte wersje od 4.0 (ICS) do najnowszego dostępnego.
-\subsection{Minimal viable product}
-Aplikacja (aplikacje) demonstrujące kilka technik dostępu do danych bez uprawnień roota oraz kilka technik dostępu do danych z przydzielonymi uprawnieniami roota.
-\subsection{Analiza ryzyka}
-\begin{tabular}{|c|c|c|}
-    \hline
-    \textbf{Zagrożenie} & \textbf{Prawdopodobieństwo} & \textbf{Skutki} \\ 
-    \hline
-    Wydawane aktualizacje bezpieczeństwa mogą blokować\\
-    dostępne wektory ataku, szczególnie w przypadku\\
-    podatności krytycznych & 6 & 10 \\
-    \hline
-    Dostarczane przez poszczególnych producentów\\
-    platformy mogą znacząco	odbiegać od oficjalnych\\
-    specyfikacji systemu Android np. konfiguracja\\
-    polityki bezpieczeństwa, zmodyfikowany firmware\\
-    / bootloader / aplikacje. & 5 & 8 \\
-    \hline
-    Dostępność urządzeń oraz poszczególnych wersji\\
-    systemu Android & 4 & 5 \\
-    \hline
-    Operacje wykradania danych są zazwyczaj złożone i\\
-    oparte na nietypowych "trikach". Z tego powodu nie\\
-    są przewidziane ani udokumentowane przez producenta\\
-    systemu i może brakować odpowiednich źródeł wiedzy\\
-    umożliwiających ich odtworzenie. & 4 & 6 \\
-    \hline
-\end{tabular}
+% Charakterystyka problemu, motywacja projektu (w tym przegląd istniejących rozwiązań prowadząca do uzasadnienia celu
+% prac), wizja produktu i analiza zagrożeń.
+\input{dziedzina-problemu.tex}
+\input{minimum-viable-product.tex}
+\input{analiza-ryzyka.tex}
 
 \section{\SectionTitleScope}
 \label{sec:zakres-funkcjonalnosci}
-\emph{Kontekst użytkowania produktu (aktorzy, współpracujące systemy)
-  oraz specyfikacja wymagań funkcjonalnych i niefunkcjonalnych.}  % niniejsza linijka to tylko komentarz, który należy usunąć
-\subsection{Wymagania funkcjonalne}
-\begin{tabular}{|c|c|}
-    \hline
-    \textbf{Wymagania funkcjonalne} & \textbf{Priorytet} \\ 
-    \hline
-    Demonstracja eskalacji uprawnień roota & 10 \\
-    \hline
-    Uzyskiwanie dostępu do danych chronionych &	10 \\
-    \hline
-    Funkcjonalność składowania uzyskanych danych na zdalnych serwerach & 6 \\
-    \hline
-    Implementacja rozwiązania zapewniającego zdalny dostęp do atakowanego urządzenia & 4 \\
-    \hline
-    Demonstracja socjotechnik wykorzystujących błędy użytkownika & 2 \\
-    \hline
-\end{tabular}
-\subsection{Wymagania niefunkcjonalne}
-\begin{tabular}{|c|}
-    \hline
-    \textbf{Wymagania niefunkcjonalne} \\ 
-    \hline
-    Ograniczenie zakresu testów do dopuszczalnych przypadków prawnych. \\
-    \hline
-    Wykorzystanie możliwe najnowszych wersji systemu Android. \\
-    \hline
-    Zastosowanie technologii Java / Kotlin + Android SDK oraz Android NDK + C/C++\\dla zabudowy natywnego kodu dla
-    platformy docelowej. \\
-    \hline
-\end{tabular} 
-
+% Kontekst użytkowania produktu (aktorzy, współpracujące systemy) oraz specyfikacja wymagań funkcjonalnych i
+% niefunkcjonalnych.
+\input{wymagania-funkcjonalne.tex}
+\input{wymagania-niefunkcjonalne.tex}
 
 \section{\SectionTitleRealizationAspects}
 \label{sec:wybrane-aspekty-realizacji}
-\emph{Przyjęte założenia, struktura i zasada działania systemu,
-  wykorzystane rozwiązania technologiczne wraz z uzasadnieniem
-  ich wyboru, istotne mechanizmy i zastosowane algorytmy.} % niniejsza linijka to tylko komentarz, który należy usunąć
-\subsection{Wykorzystanie zewnętrznych systemów i aplikacji}
-Android Debug Bridge\\
-Android API
+% Przyjęte założenia, struktura i zasada działania systemu, wykorzystane rozwiązania technologiczne wraz z uzasadnieniem
+% ich wyboru, istotne mechanizmy i zastosowane algorytmy.
+\input{wykorzystanie-zewnetrznych-systemow.tex}
 
 \section{\SectionTitleWorkOrganization}
 \label{sec:organizacja-pracy}
-\emph{Struktura zespołu (role poszczególnych osób), krótki opis i
-  uzasadnienie przyjętej metodyki i/lub kolejności prac, planowane i
-  zrealizowane etapy prac ze wskazaniem udziału poszczególnych
-  członków zespołu, wykorzystane praktyki i narzędzia w zarządzaniu
-  projektem.}  % niniejsza linijka to tylko komentarz, który należy usunąć
+% Struktura zespołu (role poszczególnych osób), krótki opis i uzasadnienie przyjętej metodyki i/lub kolejności prac,
+% planowane i zrealizowane etapy prac ze wskazaniem udziału poszczególnych członków zespołu, wykorzystane praktyki i
+% narzędzia w zarządzaniu projektem.
+\input{organizacja-pracy.tex}
 
 \section{\SectionTitleResults}
 \label{sec:wyniki-projektu}
-\emph{Wskazanie wyników projektu (co konkretnie udało się uzyskać:
-  oprogramowanie, dokumentacja, raporty z testów/wdrożenia, itd.), prezentacja wyników
-  i ocena ich użyteczności (jak zostało to zweryfikowane --- np.\ wnioski
-  klienta/użytkownika, zrealizowane testy wydajnościowe, itd.),
-  istniejące ograniczenia i propozycje dalszych prac.}  % niniejsza linijka to tylko komentarz, który należy usunąć
+% Wskazanie wyników projektu (co konkretnie udało się uzyskać: oprogramowanie, dokumentacja, raporty z testów/wdrożenia,
+% itd.), prezentacja wyników i ocena ich użyteczności (jak zostało to zweryfikowane - np. wnioski klienta/użytkownika,
+% zrealizowane testy wydajnościowe, itd.), istniejące ograniczenia i propozycje dalszych prac.
+\input{wyniki-projektu.tex}
 
-% o ile to możliwe proszę uzywać odwołań \cite w konkretnych miejscach a nie \nocite
-
-\nocite{artykul2011,ksiazka2011,narzedzie2011,projekt2011}
-
+\nocite{article_mobile_os_market_stats,
+        book_android_podrecznik_hackera}
 \bibliography{bibliografia}
 
 \end{document}
