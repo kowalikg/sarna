@@ -102,6 +102,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
             putExtra("server_state", serverState)
             putExtra("process_id", processID)
         })
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
 
     override fun onBackPressed() {}

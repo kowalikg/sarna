@@ -93,7 +93,7 @@ object DbQueries {
                     "FOREIGN KEY (${Contacts.ContactsEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
-    const val MOST_FREQUENT_CONTACT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+    const val MOST_FREQUENT_CONTACT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(*) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
             "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY ile DESC LIMIT 1"
 
     const val SQL_DELETE_ENTRIES = "" +

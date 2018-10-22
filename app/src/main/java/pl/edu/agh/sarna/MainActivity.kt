@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra("server_state", serverMode)
                 putExtra("process_id", processID)
             })
+            overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         }
     }
 
