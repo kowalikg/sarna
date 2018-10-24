@@ -1,0 +1,58 @@
+\documentclass[polish,12pt]{aghthesis}
+% Szablon przystosowany jest do druku dwustronnego. 
+
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+
+\author{Gabriela Kowalik, Mateusz Olczyk, Rafał Pietruszka}
+\titlePL{Aplikacja demonstrująca możliwości eskalacji uprawnień i wydobywania danych chronionych w systemie Android}
+\titleEN{Application demonstrating possibilities of escalating permissions and extracting protected data in the Android
+    system}
+\fieldofstudy{Informatyka}
+\supervisor{mgr \ inż.\ Łukasz Faber}
+\date{\the\year}
+
+\begin{document}
+
+\maketitle
+
+\section{\SectionTitleProjectVision}
+\label{sec:cel-wizja}
+% Charakterystyka problemu, motywacja projektu (w tym przegląd istniejących rozwiązań prowadząca do uzasadnienia celu
+% prac), wizja produktu i analiza zagrożeń.
+\input{dziedzina-problemu.tex}
+\input{minimum-viable-product.tex}
+\input{analiza-ryzyka.tex}
+
+\section{\SectionTitleScope}
+\label{sec:zakres-funkcjonalnosci}
+% Kontekst użytkowania produktu (aktorzy, współpracujące systemy) oraz specyfikacja wymagań funkcjonalnych i
+% niefunkcjonalnych.
+\input{wymagania-funkcjonalne.tex}
+\input{wymagania-niefunkcjonalne.tex}
+
+\section{\SectionTitleRealizationAspects}
+\label{sec:wybrane-aspekty-realizacji}
+% Przyjęte założenia, struktura i zasada działania systemu, wykorzystane rozwiązania technologiczne wraz z uzasadnieniem
+% ich wyboru, istotne mechanizmy i zastosowane algorytmy.
+\input{wykorzystanie-zewnetrznych-systemow.tex}
+
+\section{\SectionTitleWorkOrganization}
+\label{sec:organizacja-pracy}
+% Struktura zespołu (role poszczególnych osób), krótki opis i uzasadnienie przyjętej metodyki i/lub kolejności prac,
+% planowane i zrealizowane etapy prac ze wskazaniem udziału poszczególnych członków zespołu, wykorzystane praktyki i
+% narzędzia w zarządzaniu projektem.
+\input{organizacja-pracy.tex}
+
+\section{\SectionTitleResults}
+\label{sec:wyniki-projektu}
+% Wskazanie wyników projektu (co konkretnie udało się uzyskać: oprogramowanie, dokumentacja, raporty z testów/wdrożenia,
+% itd.), prezentacja wyników i ocena ich użyteczności (jak zostało to zweryfikowane - np. wnioski klienta/użytkownika,
+% zrealizowane testy wydajnościowe, itd.), istniejące ograniczenia i propozycje dalszych prac.
+\input{wyniki-projektu.tex}
+
+\nocite{article_mobile_os_market_stats,
+        book_android_podrecznik_hackera}
+\bibliography{bibliografia}
+
+\end{document}

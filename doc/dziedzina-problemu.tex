@@ -1,0 +1,30 @@
+\subsection{Dziedzina problemu}
+Według statystyk firmy \emph{StatCounter} \cite{article_mobile_os_market_stats} z września 2018 roku na rynku mobilnych
+systemów operacyjnych dominuje system \emph{Android} z wynikiem 76,61\%.
+Na drugim miejscu plasuje się system \emph{iOS} z wynikiem 20,66\%.
+Oznacza to, że Android ma znaczącą przewagę na rynku i z tego powodu jest popularnym celem hakerów zamierzających
+uruchamiać na urządzeniach nieświadomych użytkowników złośliwe oprogramowanie.
+
+W tworzeniu Androida ma swój udział wiele grup.
+Jest to firma Google odpowiadająca za szkielet systemu operacyjnego i zarządzaniem marką Android, producenci układów
+scalonych, producenci sprzętu oraz operatorzy sieci komórkowych.
+Złożoność tego ekosystemu utrudnia zapewnienie bezpieczeństwa, ponieważ różne grupy mają różne cele które bywają dla
+siebie konkurencyjne.
+
+Efektem takiej złożoności jest jedna z najważniejszych komplikacji Androida, czyli problemy z aktualizacją.
+Przykładowo rządzenia typu Nexus mogą otrzymać łatę dotyczącą pewnego problemu w systemie niemal natychmiast, gdy Google
+naprawi ten problem.
+Niestety urządzeń z oprogramowaniem modyfikowanym przez producenta to nie dotyczy.
+Taka sytuacja wymaga od producenta nowej kompilacji oprogramowania z uwzględnieniem łaty od Google.
+Podobnie jest w przypadku oprogramowania zmodyfikowanego przez operatora sieci komórkowej.
+Przez taką komplikację użytkownik otrzymuje aktualizację systemu operacyjnego dużo później.
+Ponadto w systemi Android praktycznie nie istnieją \textit{backporty}, czyli poprawki aktualnej wersji oprogramowania
+nanoszone na starszą wersję systemu.
+
+Jeszcze jednym problemem związanym z bezpieczeństwem systemu Android jest upublicznianie informacji na temat wykrytych
+podatności.
+W ekosystemie Androida niestety niezwykle rzadko producenci publicznie ujawniają takie informacje.
+
+Dlatego obraliśmy sobie za cel zbadanie bezpieczeństwa tego najpopularniejszego mobilnego systemu operacyjnego.
+Pod uwagę wzięliśmy wersje od 4.0 (ICS) do najnowszej dostępnej. W tej pracy zmierzymy się z próbą wykazania różnych
+podatności systemu.

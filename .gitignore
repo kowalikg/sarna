@@ -8,3 +8,14 @@
 /build
 /captures
 .externalNativeBuild
+
+# LaTex doc
+*.pdf
+!agh.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.synctex.gz
+*.fdb_latexmk
+*.fls
