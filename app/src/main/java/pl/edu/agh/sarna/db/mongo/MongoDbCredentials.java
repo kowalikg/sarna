@@ -46,7 +46,7 @@ public class MongoDbCredentials {
         String encodedHost = encodeString(host);
         String encodedDatabaseName = encodeString(databaseName);
 
-        String connectionString = String.format(Locale.getDefault(),"mongodb://%s:%s@%s:%d/%s",
+        String connectionString = String.format(Locale.ENGLISH,"mongodb://%s:%s@%s:%d/%s",
                 encodedUser, encodedPassword, encodedHost, port, encodedDatabaseName);
         return new MongoClientURI(connectionString);
     }
