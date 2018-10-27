@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
+import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.scripts.singleMethodReport
 import pl.edu.agh.sarna.db.scripts.updateProcess
@@ -31,8 +32,15 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
 
         if (rootAllowed) list.add(wifiPassword(db)!!)
 
-        list.add(this.metadata(db)!!)
+        list.add(metadata(db)!!)
+        list.add(tokenSms(db)!!)
+
         return list
+    }
+
+    private fun tokenSms(db: SQLiteDatabase?): SubtaskStatus? {
+        return singleMethodReport(db, processID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS,
+                TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID, context.getString(R.string.token_title))
     }
 
     override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {

@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.scripts.insertTokenQuery
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
@@ -54,7 +55,6 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startTokenMethod(view: View) {
         //if(!verifyPhoneNumber()) return
-
         when (mode){
             Mode.SAFE -> safeJob()
             Mode.NOT_SAFE -> notSafeJob()
@@ -132,7 +132,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun classicTokenJob() {
-        ClassicTokenTask(this, this, defaultSmsApp, readSmsPermissionGranted).execute()
+        ClassicTokenTask(this, this, processID, phoneNumber, defaultSmsApp, readSmsPermissionGranted, mode).execute()
     }
 
     override fun processFinish(output: Any) {

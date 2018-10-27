@@ -1,25 +1,26 @@
 package pl.edu.agh.sarna.smsToken
 
+import android.provider.Telephony
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 
-class Extractor() {
+class Extractor {
     private val patterns = arrayOf("""haslo: (\d+)""")
-    fun extract(list: ArrayList<SmsMessage>) : List<String> {
-        val codeList = ArrayList<String?>()
+    fun extract(list: ArrayList<SmsMessage>) : List<SmsMessage> {
+        val codeList = ArrayList<SmsMessage?>()
         for (sms in list){
-            codeList.add(extractCode(sms.content))
+            codeList.add(extractCode(sms))
         }
         return codeList.filterNotNull()
     }
-    fun extract(sms : SmsMessage): String? {
-        return extractCode(sms.content)
+    fun extract(sms : SmsMessage): SmsMessage? {
+        return extractCode(sms)
     }
-    private fun extractCode(content: String): String? {
+    private fun extractCode(sms: SmsMessage): SmsMessage? {
         for (pattern in patterns){
             val regex = pattern.toRegex()
-            val matchResult = regex.find(content) ?: continue
+            val matchResult = regex.find(sms.content) ?: continue
             val group = matchResult.destructured.match.groups[1] ?: continue
-            return group.value
+            return SmsMessage(sms.id, sms.number, group.value)
         }
         return null
     }

@@ -6,14 +6,19 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.telephony.SmsManager
 import android.widget.Toast
+import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.smsToken.Extractor
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 
 class ClassicTokenTask(private val context: Context, private val response: AsyncResponse,
+                       private val processID : Long,
+                       private val phoneNumber : String,
                        private val defaultSmsApp: Boolean,
-                       private val readSmsPermissionGranted: Boolean) : AsyncTask<Void, Void, Int>() {
+                       private val readSmsPermissionGranted: Boolean,
+                       private val mode : Mode) : AsyncTask<Void, Void, Int>() {
     private val progDialog = ProgressDialog(context)
 
     private val sender = "+48731464100"
@@ -22,6 +27,7 @@ class ClassicTokenTask(private val context: Context, private val response: Async
     private val numberColumn = 2
     private val textColumn = 12
 
+    private var runID : Long = 0
     override fun onPreExecute() {
         progDialog.setMessage("Loading...")
         progDialog.isIndeterminate = false
@@ -31,16 +37,22 @@ class ClassicTokenTask(private val context: Context, private val response: Async
     }
 
     override fun doInBackground(vararg p0: Void?): Int {
+        runID = insertTokenQuery(context, processID, mode.ordinal)!!
+        if (insertSmsPermissions(context, runID) < 0) return -1
         sendSms()
         if (!defaultSmsApp and readSmsPermissionGranted) {
             val list = readSms()
             val codes = Extractor().extract(list)
+            codes.forEach {
+                insertCodes(context, runID, it)
+            }
             if (!isKitKat4_4())
                 list.forEach {
                     deleteSms(it)
                 }
         }
         Thread.sleep(1000)
+        updateTokenMethod(context, runID, codesAmount(context, runID) > 0)
         return 0
     }
     override fun onPostExecute(result: Int?) {
@@ -54,7 +66,7 @@ class ClassicTokenTask(private val context: Context, private val response: Async
 
     private fun sendSms() {
         val smsManager = SmsManager.getDefault()
-//            smsManager.sendTextMessage(phoneNumber, null, "blabla haslo: 9372903 b", null, null)
+            smsManager.sendTextMessage(phoneNumber, null, "blabla haslo: 9372903 b", null, null)
 
     }
 

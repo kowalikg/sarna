@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_report.*
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
+import pl.edu.agh.sarna.smsToken.task.TokenReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.wifiPasswords.MetadataReportTask
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordsReportTask
@@ -46,8 +47,13 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             when(view.tag) {
                 getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
                 getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
+                getString(R.string.token_title) -> generateExtendTokenReport(runID)
             }
         }
+    }
+
+    private fun generateExtendTokenReport(runID: Long) {
+        TokenReportTask(this, this, runID).execute()
     }
 
     private fun generateExtendMetadataReport(runID: Long) {
