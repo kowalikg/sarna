@@ -2,7 +2,6 @@ package pl.edu.agh.sarna.smsToken
 
 import android.Manifest
 import android.annotation.TargetApi
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -15,22 +14,26 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
+import pl.edu.agh.sarna.smsToken.task.ClassicTokenTask
+import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
 
 
-class TokenSms : AppCompatActivity() {
+class TokenSms : AppCompatActivity(), AsyncResponse {
     private var rootState: Boolean = false
     private var eduState: Boolean = false
     private var serverState: Boolean = false
     private var reportState: Boolean = false
     private var processID: Long = 0
 
-    private var mode: Mode = Mode.DUMMY
+    private var mode: Mode = Mode.NOT_SAFE
 
     private var permissionsGranted = false
     private var sendSmsPermissionGranted = false
@@ -46,11 +49,6 @@ class TokenSms : AppCompatActivity() {
         setContentView(R.layout.activity_token_sms)
         initialiseOptions()
         initialiseLayout()
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    fun isDefaultSmsApp(context: Context): Boolean {
-        return context.packageName == Telephony.Sms.getDefaultSmsPackage(context)
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -74,23 +72,6 @@ class TokenSms : AppCompatActivity() {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun dummyJob() {
-        if (isDefaultSmsApp(this)) {
-            classicTokenJob()
-        } else {
-            val packageName = this.packageName
-            val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-            startActivityForResult(intent, 0)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        defaultSmsApp = resultCode == -1
-        notSafeJob()
-    }
-
     private fun notSafeJob() {
         if (!checkPermissions())
             requestSelectedPermissions()
@@ -104,45 +85,27 @@ class TokenSms : AppCompatActivity() {
 
     }
 
-    private fun initialiseLayout() {
-        initialiseSafeRadio()
-        initialiseNotSafeRadio()
-        initialiseDummyRadio()
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun dummyJob() {
+        if (isDefaultSmsApp(this)) {
+            notSafeJob()
+        } else {
+            requestDefaultApp()
 
-    }
-
-    private fun initialiseDummyRadio() {
-        dummyRadio.isEnabled = isKitKat4_4()
-        dummyRadio.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
-                mode = Mode.DUMMY
-            }
         }
     }
 
-    private fun initialiseNotSafeRadio() {
-        notSafeRadio.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
-                mode = Mode.NOT_SAFE
-            }
-        }
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun requestDefaultApp() {
+        val packageName = this.packageName
+        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
+        startActivityForResult(intent, 0)
     }
 
-    private fun initialiseSafeRadio() {
-        safeRadio.isEnabled = isOreo8_0()
-        safeRadio.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
-                mode = Mode.SAFE
-            }
-        }
-    }
-
-    private fun initialiseOptions() {
-        rootState = intent.getBooleanExtra("root_state", false)
-        eduState = intent.getBooleanExtra("edu_state", false)
-        serverState = intent.getBooleanExtra("server_state", false)
-        reportState = intent.getBooleanExtra("report_state", false)
-        processID = intent.getLongExtra("process_id", 0)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        defaultSmsApp = resultCode == -1
+        notSafeJob()
     }
 
     private fun checkPermissions(): Boolean {
@@ -169,54 +132,53 @@ class TokenSms : AppCompatActivity() {
     }
 
     private fun classicTokenJob() {
-        sendSms()
-        if (!defaultSmsApp and readSmsPermissionGranted) {
-            val list = readSms()
-            val codes = Extractor(list).extract()
-            if (!isKitKat4_4())
-                list.forEach {
-                  deleteSms(it)
-                }
+        ClassicTokenTask(this, this, defaultSmsApp, readSmsPermissionGranted).execute()
+    }
+
+    override fun processFinish(output: Any) {
+        if (output == 0) startActivity(Intent(this, MetadataActivity::class.java).apply {
+            putExtra("root_state", rootState)
+            putExtra("edu_state", eduState)
+            putExtra("report_state", reportState)
+            putExtra("server_state", serverState)
+            putExtra("process_id", processID)
+        })
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
+    }
+    private fun initialiseLayout() {
+        initialiseSafeRadio()
+        initialiseNotSafeRadio()
+        initialiseDummyRadio()
+
+    }
+
+    private fun initialiseDummyRadio() {
+        dummyRadio.isEnabled = isKitKat4_4()
+        dummyRadio.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) mode = Mode.DUMMY
         }
     }
 
-    private fun deleteSms(sms: SmsMessage) {
-        contentResolver.delete(Uri.parse("content://sms/" + sms.id), null, null);
-    }
-
-    private fun sendSms() {
-        try {
-            val smsManager = SmsManager.getDefault()
-//            smsManager.sendTextMessage(phoneNumber, null, "blabla haslo: 9372903 b", null, null)
-            Toast.makeText(applicationContext, "Message Sent",
-                    Toast.LENGTH_LONG).show()
-        } catch (ex: Exception) {
-            Toast.makeText(applicationContext, ex.message.toString(),
-                    Toast.LENGTH_LONG).show()
-            ex.printStackTrace()
+    private fun initialiseNotSafeRadio() {
+        notSafeRadio.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) mode = Mode.NOT_SAFE
         }
-
     }
 
-    private fun readSms() : ArrayList<SmsMessage> {
-        val list = ArrayList<SmsMessage>()
-        val cursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
-
-        if (cursor!!.moveToFirst()) { // must check the result to prevent exception
-            do {
-                var msgData = ""
-                val idColumn = 0
-                val numberColumn = 2
-                val textColumn = 12
-                if(cursor.getString(numberColumn) == "+48731464100"){
-                    list.add(SmsMessage(cursor.getInt(idColumn), cursor.getString(numberColumn), cursor.getString(textColumn)))
-                }
-                // umsse msgData
-            } while (cursor.moveToNext())
-        } else {
-            // empty box, no SMS
+    private fun initialiseSafeRadio() {
+        safeRadio.isEnabled = isOreo8_0()
+        safeRadio.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) mode = Mode.SAFE
         }
-        cursor.close()
-        return list
     }
+
+    private fun initialiseOptions() {
+        rootState = intent.getBooleanExtra("root_state", false)
+        eduState = intent.getBooleanExtra("edu_state", false)
+        serverState = intent.getBooleanExtra("server_state", false)
+        reportState = intent.getBooleanExtra("report_state", false)
+        processID = intent.getLongExtra("process_id", 0)
+    }
+
+
 }

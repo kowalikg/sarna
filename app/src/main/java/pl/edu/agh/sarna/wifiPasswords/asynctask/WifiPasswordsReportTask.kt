@@ -13,7 +13,7 @@ import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 
 class WifiPasswordsReportTask(val context: Context, val response: AsyncResponse, val runID: Long) : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>() {
-    private var progDailog = ProgressDialog(context)
+    private var progDialog = ProgressDialog(context)
     private val projection = arrayOf(
             WifiUtils.WifiUtilsEntry.COLUMN_NAME_STORAGE_PERMISSION_STATUS,
             WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS,
@@ -30,11 +30,11 @@ class WifiPasswordsReportTask(val context: Context, val response: AsyncResponse,
             WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD
     )
     override fun onPreExecute() {
-        progDailog.setMessage("Loading...")
-        progDailog.isIndeterminate = false
-        progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progDailog.setCancelable(true)
-        progDailog.show()
+        progDialog.setMessage("Loading...")
+        progDialog.isIndeterminate = false
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progDialog.setCancelable(true)
+        progDialog.show()
     }
 
     override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus>? {
@@ -43,7 +43,7 @@ class WifiPasswordsReportTask(val context: Context, val response: AsyncResponse,
     }
 
     override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
-        progDailog.dismiss();
+        progDialog.dismiss();
         response.processFinish(result!!)
 
     }

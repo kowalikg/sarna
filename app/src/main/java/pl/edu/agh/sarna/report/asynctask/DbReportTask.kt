@@ -15,13 +15,13 @@ import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import java.util.*
 
 class DbReportTask(val context: Context, val response: AsyncResponse, val processID: Long, val rootAllowed: Boolean)  : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>()  {
-    private var progDailog = ProgressDialog(context)
+    private var progDialog = ProgressDialog(context)
     override fun onPreExecute() {
-        progDailog.setMessage("Loading...")
-        progDailog.isIndeterminate = false
-        progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progDailog.setCancelable(true)
-        progDailog.show()
+        progDialog.setMessage("Loading...")
+        progDialog.isIndeterminate = false
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progDialog.setCancelable(true)
+        progDialog.show()
     }
     override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus> {
         updateProcess(context, processID);
@@ -36,7 +36,7 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
     }
 
     override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
-        progDailog.dismiss();
+        progDialog.dismiss();
         response.load(result!!)
     }
 

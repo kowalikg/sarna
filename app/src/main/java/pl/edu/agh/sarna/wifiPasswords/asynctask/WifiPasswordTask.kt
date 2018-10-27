@@ -22,7 +22,7 @@ import java.util.concurrent.locks.ReentrantLock
 
 
 class WifiPasswordTask(val context: Activity, private val response: AsyncResponse, val processID: Long, val rootState: Boolean, private var permissionsGranted: Boolean = false, private var locationPermissionGranted: Boolean = false, private var storagePermissionGranted: Boolean = false) : AsyncTask<Void, Void, Int>() {
-    private val progDailog = ProgressDialog(context)
+    private val progDialog = ProgressDialog(context)
     private var runID: Long = 0
 
     private var connected = false
@@ -37,11 +37,11 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
 
 
     override fun onPreExecute() {
-        progDailog.setMessage("Loading...")
-        progDailog.isIndeterminate = false
-        progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progDailog.setCancelable(true)
-        progDailog.show()
+        progDialog.setMessage("Loading...")
+        progDialog.isIndeterminate = false
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progDialog.setCancelable(true)
+        progDialog.show()
     }
 
     override fun doInBackground(vararg params: Void?): Int? {
@@ -60,7 +60,7 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     override fun onPostExecute(result: Int?) {
-        progDailog.dismiss();
+        progDialog.dismiss()
         response.processFinish(result!!)
 
     }
