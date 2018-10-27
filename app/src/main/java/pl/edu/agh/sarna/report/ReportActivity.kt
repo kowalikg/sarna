@@ -16,8 +16,8 @@ import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
-import pl.edu.agh.sarna.wifi_passwords.MetadataReportTask
-import pl.edu.agh.sarna.wifi_passwords.asynctask.WifiPasswordsReportTask
+import pl.edu.agh.sarna.wifiPasswords.MetadataReportTask
+import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordsReportTask
 
 
 class ReportActivity : AppCompatActivity(), AsyncResponse {

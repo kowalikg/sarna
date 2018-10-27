@@ -21,6 +21,12 @@ fun checkCallLogsPermission(context: Context) : Boolean {
 fun checkContactsPermission(context: Context) : Boolean {
     return context.checkCallingOrSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
 }
+fun checkReadSmsPermission(context: Context) : Boolean {
+    return context.checkCallingOrSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED
+}
+fun checkSendSmsPermission(context: Context) : Boolean {
+    return context.checkCallingOrSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED
+}
 fun hasAllPermissionsGranted(@NonNull grantResults: IntArray) : Boolean {
     for (grantResult in grantResults) {
         if (grantResult == PackageManager.PERMISSION_DENIED) {

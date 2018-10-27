@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.wifi_passwords
+package pl.edu.agh.sarna.wifiPasswords
 
 import android.app.ProgressDialog
 import android.content.Context

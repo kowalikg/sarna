@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.wifi_passwords.asynctask
+package pl.edu.agh.sarna.wifiPasswords.asynctask
 
 import android.app.ProgressDialog
 import android.content.Context

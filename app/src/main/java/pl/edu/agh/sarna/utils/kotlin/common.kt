@@ -10,3 +10,6 @@ fun isOreo8_1(): Boolean {
 fun isOreo8_0(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 }
+fun isKitKat4_4(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+}

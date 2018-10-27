@@ -24,5 +24,12 @@
     <string name="most_frequent_contact">Most frequent contact</string>
     <string name="not_in_contacts">not saved in contacts</string>
     <string name="not_found">"not found"</string>
+    <string name="token_title">SMS token</string>
+    <string name="token_description">Grant permission to let app authenticate your phone</string>
+    <string name="token_button">Launch</string>
+    <string name="token_mode_title">Mode</string>
+    <string name="token_mode_safe">Safe</string>
+    <string name="token_mode_not_safe">Not safe</string>
+    <string name="token_mode_for_dummies">For dummies</string>
 
 </resources>
