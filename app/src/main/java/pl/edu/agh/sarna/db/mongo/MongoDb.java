@@ -46,8 +46,4 @@ public class MongoDb {
         }
     }
 
-    public void closeConnection() {
-        client.close();
-    }
-
 }

@@ -53,7 +53,7 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         try {
             mongoDb.saveData(CallsDetailsEntry.TABLE_NAME, document)
         } catch (e: MongoDbException) {
-            Log.e("MongoDB", "Could not connect")
+            Log.e("MongoDB", e.message)
         }
     }
 
