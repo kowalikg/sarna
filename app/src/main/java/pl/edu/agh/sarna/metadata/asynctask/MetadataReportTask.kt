@@ -13,29 +13,26 @@ import pl.edu.agh.sarna.db.scripts.callLogsAmount
 import pl.edu.agh.sarna.db.scripts.contactsAmount
 import pl.edu.agh.sarna.db.scripts.mostFrequentContact
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.report.ReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 
-class MetadataReportTask(val context: Context, val response: AsyncResponse, val runID: Long) : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>() {
-    private var progDialog = ProgressDialog(context)
-
-    override fun onPreExecute() {
-        progDialog.setMessage("Loading...")
-        progDialog.isIndeterminate = false
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progDialog.setCancelable(true)
-        progDialog.show()
-    }
-
+class MetadataReportTask(context: Context, response: AsyncResponse, val runID: Long) : ReportTask(context, response) {
+    private val projectionCalls = arrayOf(
+            CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_LOG_PERMISSION,
+            CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_FOUND
+    )
+    private val projectionContacts = arrayOf(
+            ContactsInfo.ContactsInfoEntry.COLUMN_NAME_CONTACTS_PERMISSION,
+            ContactsInfo.ContactsInfoEntry.COLUMN_NAME_FOUND
+    )
     override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus>? {
         val list = ArrayList<SubtaskStatus>()
 
-        list.addAll(generateCallsInfoReport(CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID,
-                CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_LOG_PERMISSION, CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_FOUND)!!)
+        list.addAll(generateTableReport(runID, CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, projectionCalls, CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID)!!)
         list.addAll(generateCallLogsReport()!!)
 
-        list.addAll(generateCallsInfoReport(ContactsInfo.ContactsInfoEntry.TABLE_NAME, ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID,
-                ContactsInfo.ContactsInfoEntry.COLUMN_NAME_CONTACTS_PERMISSION, ContactsInfo.ContactsInfoEntry.COLUMN_NAME_FOUND)!!)
+        list.addAll(generateTableReport(runID, ContactsInfo.ContactsInfoEntry.TABLE_NAME, projectionContacts, ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID)!!)
         list.addAll(generateContactsReport()!!)
 
         return list
@@ -55,36 +52,9 @@ class MetadataReportTask(val context: Context, val response: AsyncResponse, val 
         return list
     }
 
-    private fun generateCallsInfoReport(tableName: String, runIdColumn : String, permissionColumn: String, foundColumn: String): ArrayList<SubtaskStatus>? {
-        val projection = arrayOf(
-                permissionColumn,
-                foundColumn
-        )
-        val db = DbHelper.getInstance(context)!!.readableDatabase
-        val cursor = db.query(
-                tableName,
-                projection,
-                "$runIdColumn=?",
-                arrayOf("$runID"),
-                null, null,
-                null
-        )
-        val list = ArrayList<SubtaskStatus>()
-        if (cursor.moveToFirst()) {
-            list.addAll(generateList(cursor, projection))
-        }
-        return list
-    }
-
-    override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
-        progDialog.dismiss();
-        response.processFinish(result!!)
-
-    }
-    private fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>{
+    override fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>{
         val list = ArrayList<SubtaskStatus>()
         for (task in projection){
-            Log.i("TASK", cursor!!.getColumnIndex(task).toString())
             list.add(SubtaskStatus(
                     task.replace("_", " "),
                     cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())

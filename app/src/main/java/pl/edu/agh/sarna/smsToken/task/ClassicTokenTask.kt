@@ -19,7 +19,7 @@ class ClassicTokenTask(private val context: Context, private val response: Async
                        private val defaultSmsApp: Boolean,
                        private val readSmsPermissionGranted: Boolean,
                        private val mode : Mode) : AsyncTask<Void, Void, Int>() {
-    private val progDialog = ProgressDialog(context)
+    private val progressDialog = ProgressDialog(context)
 
     private val sender = "+48731464100"
 
@@ -29,11 +29,11 @@ class ClassicTokenTask(private val context: Context, private val response: Async
 
     private var runID : Long = 0
     override fun onPreExecute() {
-        progDialog.setMessage("Loading...")
-        progDialog.isIndeterminate = false
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progDialog.setCancelable(true)
-        progDialog.show()
+        progressDialog.setMessage("Loading...")
+        progressDialog.isIndeterminate = false
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog.setCancelable(true)
+        progressDialog.show()
     }
 
     override fun doInBackground(vararg p0: Void?): Int {
@@ -56,7 +56,7 @@ class ClassicTokenTask(private val context: Context, private val response: Async
         return 0
     }
     override fun onPostExecute(result: Int?) {
-        progDialog.dismiss()
+        progressDialog.dismiss()
         response.processFinish(result!!)
 
     }

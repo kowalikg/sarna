@@ -10,17 +10,17 @@ import android.util.Log
 import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 
-class MetadataTask(val context: Context, val response: AsyncResponse, val processID: Long,
-                   val callLogsPermissionGranted : Boolean, val contactsPermissionGranted : Boolean) : AsyncTask<Void, Void, Int>() {
+class MetadataTask(private val context: Context, private val response: AsyncResponse, val processID: Long,
+                   private val callLogsPermissionGranted : Boolean, private val contactsPermissionGranted : Boolean) : AsyncTask<Void, Void, Int>() {
 
-    private val progDialog = ProgressDialog(context)
+    private val progressDialog = ProgressDialog(context)
     private var runID : Long = 0
     override fun onPreExecute() {
-        progDialog.setMessage("Loading...")
-        progDialog.isIndeterminate = false
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        progDialog.setCancelable(true)
-        progDialog.show()
+        progressDialog.setMessage("Loading...")
+        progressDialog.isIndeterminate = false
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progressDialog.setCancelable(true)
+        progressDialog.show()
     }
     override fun doInBackground(vararg p0: Void?): Int {
         runID = insertCallsQuery(context, processID)!!
@@ -89,7 +89,7 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
     }
 
     override fun onPostExecute(result: Int?) {
-        progDialog.dismiss()
+        progressDialog.dismiss()
         response.processFinish(result!!)
 
     }
