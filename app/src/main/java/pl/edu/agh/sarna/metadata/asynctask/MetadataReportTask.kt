@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.wifiPasswords
+package pl.edu.agh.sarna.metadata.asynctask
 
 import android.content.Context
 import android.database.Cursor
@@ -12,8 +12,9 @@ import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.ReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
+import java.lang.ref.WeakReference
 
-class MetadataReportTask(context: Context, response: AsyncResponse, val runID: Long) : ReportTask(context, response) {
+class MetadataReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long) : ReportTask(contextReference, response) {
     private val projectionCalls = arrayOf(
             CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_LOG_PERMISSION,
             CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_FOUND
@@ -37,14 +38,14 @@ class MetadataReportTask(context: Context, response: AsyncResponse, val runID: L
     private fun generateContactsReport(): ArrayList<SubtaskStatus>? {
         val list = ArrayList<SubtaskStatus>()
 
-        list.add(SubtaskStatus(context.getString(R.string.contacts_amount), contactsAmount(context, runID)))
-        list.add(SubtaskStatus(context.getString(R.string.most_frequent_contact), mostFrequentContact(context, runID)))
+        list.add(SubtaskStatus(contextReference.get()!!.getString(R.string.contacts_amount), contactsAmount(contextReference.get(), runID)))
+        list.add(SubtaskStatus(contextReference.get()!!.getString(R.string.most_frequent_contact), mostFrequentContact(contextReference.get()!!, runID)))
 
         return list
     }
     private fun generateCallLogsReport(): ArrayList<SubtaskStatus>? {
         val list = ArrayList<SubtaskStatus>()
-        list.add(SubtaskStatus(context.getString(R.string.call_logs_amount), callLogsAmount(context, runID)))
+        list.add(SubtaskStatus(contextReference.get()!!.getString(R.string.call_logs_amount), callLogsAmount(contextReference.get(), runID)))
         return list
     }
 

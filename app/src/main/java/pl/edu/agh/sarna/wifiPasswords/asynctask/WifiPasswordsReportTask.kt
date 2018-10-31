@@ -9,8 +9,9 @@ import pl.edu.agh.sarna.report.ReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
+import java.lang.ref.WeakReference
 
-class WifiPasswordsReportTask(context: Context, response: AsyncResponse, val runID: Long) : ReportTask(context, response) {
+class WifiPasswordsReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long) : ReportTask(contextReference, response) {
     private val projection = arrayOf(
             WifiUtils.WifiUtilsEntry.COLUMN_NAME_STORAGE_PERMISSION_STATUS,
             WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS,

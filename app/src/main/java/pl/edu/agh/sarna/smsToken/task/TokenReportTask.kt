@@ -9,14 +9,15 @@ import pl.edu.agh.sarna.report.ReportTask
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
+import java.lang.ref.WeakReference
 
 
-class TokenReportTask(context: Context, response: AsyncResponse, val runID: Long) : ReportTask(context, response) {
-    val projectionGeneral = arrayOf(
+class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long) : ReportTask(contextReference, response) {
+    private val projectionGeneral = arrayOf(
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE,
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS
     )
-    val projectionPermission = arrayOf(
+    private val projectionPermission = arrayOf(
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_SEND

@@ -17,8 +17,9 @@ import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
 import pl.edu.agh.sarna.smsToken.task.TokenReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
-import pl.edu.agh.sarna.wifiPasswords.MetadataReportTask
+import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordsReportTask
+import java.lang.ref.WeakReference
 
 
 class ReportActivity : AppCompatActivity(), AsyncResponse {
@@ -53,16 +54,16 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun generateExtendTokenReport(runID: Long) {
-        TokenReportTask(this, this, runID).execute()
+        TokenReportTask(WeakReference(this), this, runID).execute()
     }
 
     private fun generateExtendMetadataReport(runID: Long) {
-        MetadataReportTask(this, this, runID).execute()
+        MetadataReportTask(WeakReference(this), this, runID).execute()
 
     }
 
     private fun generateExtendedWifiReport(runID: Long) {
-        WifiPasswordsReportTask(this, this, runID).execute()
+        WifiPasswordsReportTask(WeakReference(this), this, runID).execute()
     }
 
     private fun initialiseLayout() {

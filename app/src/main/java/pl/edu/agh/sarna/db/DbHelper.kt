@@ -35,9 +35,9 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private var instance : DbHelper? = null
 
         @Synchronized
-        fun getInstance(context: Context) : DbHelper? {
+        fun getInstance(context: Context?) : DbHelper? {
             if (instance == null){
-                instance = DbHelper(context)
+                instance = DbHelper(context!!)
             }
             return instance
         }
