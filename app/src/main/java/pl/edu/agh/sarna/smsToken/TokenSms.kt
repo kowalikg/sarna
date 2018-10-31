@@ -15,11 +15,11 @@ import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.smsToken.model.Mode
-import pl.edu.agh.sarna.smsToken.task.ClassicTokenTaskMethod
+import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
+import pl.edu.agh.sarna.smsToken.task.method.SafeTokenTask
+import pl.edu.agh.sarna.smsToken.task.method.DummyTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
-import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
-import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
 import java.lang.ref.WeakReference
 
 
@@ -45,18 +45,23 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
         setContentView(R.layout.activity_token_sms)
         initialiseOptions()
-        initialiseLayout()
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startTokenMethod(view: View) {
         //if(!verifyPhoneNumber()) return
-        when (mode){
-            Mode.SAFE -> safeJob()
-            Mode.NOT_SAFE -> notSafeJob()
-            Mode.DUMMY -> dummyJob()
-        }
+        safeJob()
+    }
 
+    override fun onFirstFinished(output: Any) {
+        if(output as Int == 0){
+            notSafeJob()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    override fun onSecondFinished(output: Any) {
+        dummyJob()
     }
 
     private fun verifyPhoneNumber(): Boolean {
@@ -78,19 +83,22 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun safeJob() {
-
+        SafeTokenTask(WeakReference(this), this, processID).execute()
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun dummyJob() {
         if (isDefaultSmsApp(this)) {
-            notSafeJob()
+            defaultSmsApp = true
+            dummyTask()
         } else {
             requestDefaultApp()
 
         }
     }
-
+    private fun dummyTask(){
+        DummyTask(WeakReference(this), this, processID, phoneNumber, defaultSmsApp).execute()
+    }
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun requestDefaultApp() {
         val packageName = this.packageName
@@ -101,7 +109,18 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         defaultSmsApp = resultCode == -1
-        notSafeJob()
+        dummyTask()
+    }
+
+    private fun nextActivity() {
+        startActivity(Intent(this, MetadataActivity::class.java).apply {
+            putExtra("root_state", rootState)
+            putExtra("edu_state", eduState)
+            putExtra("report_state", reportState)
+            putExtra("server_state", serverState)
+            putExtra("process_id", processID)
+        })
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
 
     private fun checkPermissions(): Boolean {
@@ -128,44 +147,11 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun classicTokenJob() {
-        ClassicTokenTaskMethod(WeakReference(this), this, processID, phoneNumber, defaultSmsApp, readSmsPermissionGranted, mode).execute()
+        NotSafeTask(WeakReference(this), this, processID, phoneNumber, readSmsPermissionGranted).execute()
     }
 
     override fun processFinish(output: Any) {
-        if (output == 0) startActivity(Intent(this, MetadataActivity::class.java).apply {
-            putExtra("root_state", rootState)
-            putExtra("edu_state", eduState)
-            putExtra("report_state", reportState)
-            putExtra("server_state", serverState)
-            putExtra("process_id", processID)
-        })
-        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
-    }
-    private fun initialiseLayout() {
-        initialiseSafeRadio()
-        initialiseNotSafeRadio()
-        initialiseDummyRadio()
-
-    }
-
-    private fun initialiseDummyRadio() {
-        dummyRadio.isEnabled = isKitKat4_4()
-        dummyRadio.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) mode = Mode.DUMMY
-        }
-    }
-
-    private fun initialiseNotSafeRadio() {
-        notSafeRadio.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) mode = Mode.NOT_SAFE
-        }
-    }
-
-    private fun initialiseSafeRadio() {
-        safeRadio.isEnabled = isOreo8_0()
-        safeRadio.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) mode = Mode.SAFE
-        }
+        if(output == 0) nextActivity()
     }
 
     private fun initialiseOptions() {
@@ -174,6 +160,10 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         serverState = intent.getBooleanExtra("server_state", false)
         reportState = intent.getBooleanExtra("report_state", false)
         processID = intent.getLongExtra("process_id", 0)
+    }
+
+    override fun onBackPressed() {
+
     }
 
 

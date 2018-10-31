@@ -8,7 +8,8 @@ import java.lang.ref.WeakReference
 abstract class MethodAsyncTask(
         protected val contextReference: WeakReference<Context>,
         protected val response: AsyncResponse,
-        protected val processID: Long) : AsyncTask<Void, Void, Int>() {
+        protected val processID: Long,
+        private val order : Int = 0) : AsyncTask<Void, Void, Int>() {
 
     private val progressDialog = ProgressDialog(contextReference.get())
     override fun onPreExecute() {
@@ -21,6 +22,11 @@ abstract class MethodAsyncTask(
     abstract override fun doInBackground(vararg p0: Void?): Int
     override fun onPostExecute(result: Int?) {
         progressDialog.dismiss()
-        response.processFinish(result!!)
+        when(order){
+            1 -> response.onFirstFinished(result!!)
+            2 -> response.onSecondFinished(result!!)
+            else ->
+                response.processFinish(result!!)
+        }
     }
 }

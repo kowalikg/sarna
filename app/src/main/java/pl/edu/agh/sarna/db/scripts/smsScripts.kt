@@ -86,3 +86,20 @@ fun codesAmount(context: Context?, runID: Long): Long {
     return DatabaseUtils.queryNumEntries(db, Codes.CodesEntry.TABLE_NAME,
             "${Codes.CodesEntry.COLUMN_NAME_RUN_ID}=?", arrayOf(runID.toString()))
 }
+fun smsMethodProceed(context: Context?, runID: Long): Boolean {
+    val dbHelper = DbHelper.getInstance(context!!)
+    val db = dbHelper!!.writableDatabase
+    val cursor = db!!.query(
+            TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME,
+            arrayOf(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME),
+            "${BaseColumns._ID}=?",
+            arrayOf(runID.toString()),
+            null, null,
+            "_id DESC" ,
+            "1"
+    )
+    if (cursor.moveToFirst()) {
+        return cursor.getString(cursor.getColumnIndex(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME)) != null
+    }
+    return false
+}

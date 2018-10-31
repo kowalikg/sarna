@@ -27,9 +27,8 @@
     <string name="token_title">SMS token</string>
     <string name="token_description">Grant permission to let app authenticate your phone</string>
     <string name="token_button">Launch</string>
-    <string name="token_mode_title">Mode</string>
-    <string name="token_mode_safe">Safe</string>
-    <string name="token_mode_not_safe">Not safe</string>
-    <string name="token_mode_for_dummies">For dummies</string>
+    <string name="token_mode_safe">Sms token : safe mode</string>
+    <string name="token_mode_not_safe">Sms token: not safe mode</string>
+    <string name="token_mode_for_dummies">Sms token: for dummies mode</string>
 
 </resources>

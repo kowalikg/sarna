@@ -13,11 +13,12 @@ import android.widget.Button
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_report.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.TokenReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
-import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordsReportTask
 import java.lang.ref.WeakReference
 
@@ -48,18 +49,18 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             when(view.tag) {
                 getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
                 getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
-                getString(R.string.token_title) -> generateExtendTokenReport(runID)
+                Mode.NOT_SAFE.description -> generateExtendTokenReport(runID, Mode.NOT_SAFE)
+                Mode.DUMMY.description -> generateExtendTokenReport(runID, Mode.DUMMY)
             }
         }
     }
 
-    private fun generateExtendTokenReport(runID: Long) {
-        TokenReportTask(WeakReference(this), this, runID).execute()
+    private fun generateExtendTokenReport(runID: Long, mode : Mode) {
+        TokenReportTask(WeakReference(this), this, runID, mode).execute()
     }
 
     private fun generateExtendMetadataReport(runID: Long) {
         MetadataReportTask(WeakReference(this), this, runID).execute()
-
     }
 
     private fun generateExtendedWifiReport(runID: Long) {
@@ -105,7 +106,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-    override fun load(output: Any) {
+    override fun onFirstFinished(output: Any) {
         for (subtask in output as ArrayList<SubtaskStatus>){
             val button = Button(this)
             button.tag = subtask.description

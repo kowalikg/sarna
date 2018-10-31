@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.smsToken.dummy
+package pl.edu.agh.sarna.smsToken.dummyHandlers
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,8 +6,10 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Telephony
 import android.support.annotation.RequiresApi
+import pl.edu.agh.sarna.db.scripts.codesAmount
 import pl.edu.agh.sarna.db.scripts.getLastRunID
 import pl.edu.agh.sarna.db.scripts.insertCodes
+import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.smsToken.Extractor
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 
@@ -21,6 +23,7 @@ class IncomingSms : BroadcastReceiver() {
                             0, smsMessage.displayOriginatingAddress, smsMessage.messageBody))!!)
         }
         codes.forEach {  insertCodes(p0!!, runID, it)}
+        updateTokenMethod(p0, runID, codesAmount(p0, runID) > 0)
 
     }
 }

@@ -10,8 +10,10 @@ import pl.edu.agh.sarna.db.model.calls.CallsDetails
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.scripts.singleMethodReport
+import pl.edu.agh.sarna.db.scripts.smsMethodReport
 import pl.edu.agh.sarna.db.scripts.updateProcess
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import java.util.*
 
@@ -33,19 +35,19 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
         if (rootAllowed) list.add(wifiPassword(db)!!)
 
         list.add(metadata(db)!!)
-        list.add(tokenSms(db)!!)
+        list.add(tokenSms(db, Mode.NOT_SAFE)!!)
+        list.add(tokenSms(db, Mode.DUMMY)!!)
 
         return list
     }
 
-    private fun tokenSms(db: SQLiteDatabase?): SubtaskStatus? {
-        return singleMethodReport(db, processID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS,
-                TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID, context.getString(R.string.token_title))
+    private fun tokenSms(db: SQLiteDatabase?, mode: Mode): SubtaskStatus? {
+        return smsMethodReport(db, processID, mode)
     }
 
     override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
         progressDialog.dismiss();
-        response.load(result!!)
+        response.onFirstFinished(result!!)
     }
 
     private fun metadata(db: SQLiteDatabase?): SubtaskStatus? {

@@ -2,6 +2,8 @@ package pl.edu.agh.sarna.smsToken.task
 
 import android.content.Context
 import android.database.Cursor
+import android.provider.BaseColumns
+import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.model.SubtaskStatus
@@ -12,7 +14,7 @@ import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.lang.ref.WeakReference
 
 
-class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long) : ReportTask(contextReference, response) {
+class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long, val mode: Mode) : ReportTask(contextReference, response) {
     private val projectionGeneral = arrayOf(
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE,
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS
@@ -26,7 +28,24 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
     override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus> {
         val list = ArrayList<SubtaskStatus>()
         list.addAll(generateTableReport(runID, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission)!!)
-        list.addAll(generateTableReport(runID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
+        list.addAll(generateTableModeReport(runID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
+        return list
+    }
+
+    private fun generateTableModeReport(runID: Long, tableName: String, projection: Array<String>): ArrayList<SubtaskStatus>? {
+        val db = DbHelper.getInstance(contextReference.get())!!.readableDatabase
+        val cursor = db.query(
+                tableName,
+                projection,
+                "${BaseColumns._ID}=? and ${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE}=?",
+                arrayOf("$runID", "${mode.ordinal}"),
+                null, null,
+                null
+        )
+        val list = ArrayList<SubtaskStatus>()
+        if (cursor.moveToFirst()) {
+            list.addAll(generateList(cursor, projection))
+        }
         return list
     }
 
@@ -43,7 +62,6 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
                         task.replace("_", " "),
                         cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
             }
-
         }
         return list
     }

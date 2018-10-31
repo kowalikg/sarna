@@ -27,7 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <receiver android:name=".smsToken.dummy.IncomingSms"
+        <receiver android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.IncomingSms"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
@@ -37,7 +37,7 @@
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
 
         <!-- BroadcastReceiver that listens for incoming MMS messages -->
-        <receiver android:name=".smsToken.dummy.MmsReceiver"
+        <receiver android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.MmsReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
@@ -46,7 +46,7 @@
         </receiver>
 
         <!-- Activity that allows the user to send new SMS/MMS messages -->
-        <activity android:name=".smsToken.dummy.ComposeSmsActivity" >
+        <activity android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.ComposeSmsActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
@@ -60,7 +60,7 @@
         </activity>
 
         <!-- Service that delivers messages from the phone "quick response" -->
-        <service android:name=".smsToken.dummy.HeadlessSmsSendService"
+        <service android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.HeadlessSmsSendService"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
             android:exported="true" >
             <intent-filter>

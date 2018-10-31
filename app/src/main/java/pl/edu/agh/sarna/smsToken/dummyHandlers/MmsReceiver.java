@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.smsToken.dummy;
+package pl.edu.agh.sarna.smsToken.dummyHandlers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
