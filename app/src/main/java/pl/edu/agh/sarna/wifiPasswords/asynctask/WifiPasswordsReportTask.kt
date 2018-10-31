@@ -1,11 +1,8 @@
 package pl.edu.agh.sarna.wifiPasswords.asynctask
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.database.Cursor
-import android.os.AsyncTask
 import android.util.Log
-import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.ReportTask

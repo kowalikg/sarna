@@ -3,28 +3,24 @@ package pl.edu.agh.sarna.smsToken
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Telephony
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
-import android.telephony.SmsManager
 import android.view.View
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.db.scripts.insertTokenQuery
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.smsToken.model.Mode
-import pl.edu.agh.sarna.smsToken.model.SmsMessage
-import pl.edu.agh.sarna.smsToken.task.ClassicTokenTask
+import pl.edu.agh.sarna.smsToken.task.ClassicTokenTaskMethod
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
+import java.lang.ref.WeakReference
 
 
 class TokenSms : AppCompatActivity(), AsyncResponse {
@@ -132,7 +128,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun classicTokenJob() {
-        ClassicTokenTask(this, this, processID, phoneNumber, defaultSmsApp, readSmsPermissionGranted, mode).execute()
+        ClassicTokenTaskMethod(WeakReference(this), this, processID, phoneNumber, defaultSmsApp, readSmsPermissionGranted, mode).execute()
     }
 
     override fun processFinish(output: Any) {

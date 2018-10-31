@@ -16,8 +16,8 @@ import pl.edu.agh.sarna.smsToken.model.SmsMessage
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
-fun insertTokenQuery(context: Context, processID: Long, mode : Int) : Long? {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertTokenQuery(context: Context?, processID: Long, mode: Int) : Long? {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -31,16 +31,16 @@ fun insertTokenQuery(context: Context, processID: Long, mode : Int) : Long? {
 
     return runID
 }
-fun updateTokenMethod(context: Context, runID: Long, status: Boolean) {
-    val db = DbHelper.getInstance(context)!!.writableDatabase
+fun updateTokenMethod(context: Context?, runID: Long, status: Boolean) {
+    val db = DbHelper.getInstance(context!!)!!.writableDatabase
     val cv = ContentValues()
     cv.put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
     cv.put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS, status.toInt())
 
     db.update(TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
-fun insertSmsPermissions(context: Context, runID: Long) : Long {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertSmsPermissions(context: Context?, runID: Long) : Long {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -69,8 +69,8 @@ fun getLastRunID(context: Context?) : Long {
     }
     return -1
 }
-fun insertCodes(context: Context, runID: Long, sms : SmsMessage) : Long {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertCodes(context: Context?, runID: Long, sms: SmsMessage) : Long {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -81,8 +81,8 @@ fun insertCodes(context: Context, runID: Long, sms : SmsMessage) : Long {
 
     return db?.insert(Codes.CodesEntry.TABLE_NAME, null, values)!!
 }
-fun codesAmount(context: Context, runID: Long): Long {
-    val db = DbHelper.getInstance(context)!!.readableDatabase
+fun codesAmount(context: Context?, runID: Long): Long {
+    val db = DbHelper.getInstance(context!!)!!.readableDatabase
     return DatabaseUtils.queryNumEntries(db, Codes.CodesEntry.TABLE_NAME,
             "${Codes.CodesEntry.COLUMN_NAME_RUN_ID}=?", arrayOf(runID.toString()))
 }

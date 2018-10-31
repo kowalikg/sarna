@@ -8,7 +8,6 @@ import android.provider.Telephony
 import android.support.annotation.RequiresApi
 import pl.edu.agh.sarna.db.scripts.getLastRunID
 import pl.edu.agh.sarna.db.scripts.insertCodes
-import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.smsToken.Extractor
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 

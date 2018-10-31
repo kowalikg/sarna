@@ -1,6 +1,5 @@
 package pl.edu.agh.sarna.smsToken
 
-import android.provider.Telephony
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 
 class Extractor {

@@ -1,6 +1,7 @@
 package pl.edu.agh.sarna.wifiPasswords
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Intent
 import android.os.Build
@@ -15,6 +16,7 @@ import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordTask
+import java.lang.ref.WeakReference
 
 
 class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
@@ -92,8 +94,9 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        WifiPasswordTask(this, this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
+        WifiPasswordTask(WeakReference(this), this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
     }
+    @SuppressLint("PrivateResource")
     override fun processFinish(output: Any) {
         if (output == 0) startActivity(Intent(this, TokenSms::class.java).apply {
             putExtra("root_state", rootState)

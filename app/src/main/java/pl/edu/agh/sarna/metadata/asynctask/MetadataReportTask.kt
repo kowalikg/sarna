@@ -1,12 +1,8 @@
 package pl.edu.agh.sarna.wifiPasswords
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.database.Cursor
-import android.os.AsyncTask
-import android.util.Log
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 import pl.edu.agh.sarna.db.scripts.callLogsAmount
