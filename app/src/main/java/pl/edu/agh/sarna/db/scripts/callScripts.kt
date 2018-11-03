@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.DatabaseUtils
 import android.provider.BaseColumns
 import android.util.Log
+import org.bson.Document
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.DbQueries
@@ -13,6 +14,8 @@ import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
+import pl.edu.agh.sarna.db.mongo.MongoDb
+import pl.edu.agh.sarna.db.mongo.MongoDbException
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
@@ -52,6 +55,20 @@ fun updateCallsMethod(context: Context, runID: Long, status: Boolean, endTime: L
     cv.put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS, status.toInt())
 
     db.update(CallsDetails.CallsDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
+}
+
+fun saveToMongo(processID: Long, startTime: Long, endTime: Long, status: Boolean) {
+    val mongoDb = MongoDb()
+    val document = Document()
+            .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_PROCESS_ID, processID)
+            .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_START_TIME, startTime)
+            .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_END_TIME, endTime)
+            .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS, status)
+    try {
+        mongoDb.saveData(CallsDetails.CallsDetailsEntry.TABLE_NAME, document)
+    } catch (e: MongoDbException) {
+        Log.e("MongoDB", e.message)
+    }
 }
 
 fun insertCallsLogsInfoQuery(context: Context, runID: Long, callLogsPermissionGranted: Boolean){

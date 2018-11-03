@@ -1,17 +1,12 @@
 package pl.edu.agh.sarna.metadata.asynctask
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.provider.CallLog
 import android.provider.ContactsContract
 import android.util.Log
-import org.bson.Document
-import pl.edu.agh.sarna.db.model.calls.CallsDetails.CallsDetailsEntry
-import pl.edu.agh.sarna.db.mongo.MongoDb
-import pl.edu.agh.sarna.db.mongo.MongoDbException
 import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import java.util.*
@@ -38,23 +33,8 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         val status = callsStatus and contactsStatus
         val endTime = Calendar.getInstance().timeInMillis
         updateCallsMethod(context, runID, status, endTime)
-        saveToMongo(runID, processID, startTime, endTime, status)
+        saveToMongo(processID, startTime, endTime, status)
         return 0
-    }
-
-    private fun saveToMongo(runID: Long, processID: Long, startTime: Long, endTime: Long, status: Boolean) {
-        val mongoDb = MongoDb()
-        val document = Document()
-                .append(CallsDetailsEntry.TABLE_KEY, runID)
-                .append(CallsDetailsEntry.COLUMN_NAME_PROCESS_ID, processID)
-                .append(CallsDetailsEntry.COLUMN_NAME_START_TIME, startTime)
-                .append(CallsDetailsEntry.COLUMN_NAME_END_TIME, endTime)
-                .append(CallsDetailsEntry.COLUMN_NAME_STATUS, status)
-        try {
-            mongoDb.saveData(CallsDetailsEntry.TABLE_NAME, document)
-        } catch (e: MongoDbException) {
-            Log.e("MongoDB", e.message)
-        }
     }
 
     private fun doContactsJob() : TaskStatus {
