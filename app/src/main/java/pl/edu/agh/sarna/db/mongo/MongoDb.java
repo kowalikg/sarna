@@ -10,16 +10,15 @@ import org.bson.Document;
 
 public class MongoDb {
 
-    private MongoDbCredentials credentials;
-
-    private MongoClient client;
+    private MongoDbConnection connection;
 
     private MongoDatabase database;
 
     public MongoDb() {
-        credentials = MongoDbCredentials.getDefaultCredentials();
-        client = credentials.getClient();
-        database = client.getDatabase(credentials.getDatabaseName());
+        connection = MongoDbConnection.getDefaultConnection();
+        MongoClient client = new MongoClient(connection.getServerAddress(),
+                connection.getCredentialList(), connection.getOptions());
+        database = client.getDatabase(connection.getDatabaseName());
     }
 
     public void saveData(String collectionName, Document document) throws MongoDbException {
