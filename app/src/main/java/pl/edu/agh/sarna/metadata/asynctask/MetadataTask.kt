@@ -12,7 +12,7 @@ import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import java.util.*
 
 class MetadataTask(val context: Context, val response: AsyncResponse, val processID: Long,
-                   val callLogsPermissionGranted : Boolean, val contactsPermissionGranted : Boolean) : AsyncTask<Void, Void, Int>() {
+                   val callLogsPermissionGranted : Boolean, val contactsPermissionGranted : Boolean, val sendingDataToServerAllowed: Boolean) : AsyncTask<Void, Void, Int>() {
 
     private val progDailog = ProgressDialog(context)
     private var runID : Long = 0
@@ -33,7 +33,9 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         val status = callsStatus and contactsStatus
         val endTime = Calendar.getInstance().timeInMillis
         updateCallsMethod(context, runID, status, endTime)
-        saveToMongo(processID, startTime, endTime, status)
+        if (sendingDataToServerAllowed) {
+            saveToMongo(processID, startTime, endTime, status)
+        }
         return 0
     }
 

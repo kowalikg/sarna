@@ -82,7 +82,7 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        MetadataTask(this, this, processID, callLogPermissionGranted, contactPermissionGranted).execute()
+        MetadataTask(this, this, processID, callLogPermissionGranted, contactPermissionGranted, serverState).execute()
     }
 
     private fun runReport() {
