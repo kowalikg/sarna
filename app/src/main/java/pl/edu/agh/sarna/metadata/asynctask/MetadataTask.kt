@@ -34,7 +34,7 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         val endTime = Calendar.getInstance().timeInMillis
         updateCallsMethod(context, runID, status, endTime)
         if (sendingDataToServerAllowed) {
-            saveToMongo(processID, startTime, endTime, status)
+            saveCallsDetailsToMongo(processID, startTime, endTime, status)
         }
         return 0
     }

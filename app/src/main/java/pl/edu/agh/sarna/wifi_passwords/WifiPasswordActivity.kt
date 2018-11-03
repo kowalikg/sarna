@@ -92,7 +92,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        WifiPasswordTask(this, this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
+        WifiPasswordTask(this, this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted, serverState).execute()
     }
     override fun processFinish(output: Any) {
         if (output == 0) startActivity(Intent(this, MetadataActivity::class.java).apply {

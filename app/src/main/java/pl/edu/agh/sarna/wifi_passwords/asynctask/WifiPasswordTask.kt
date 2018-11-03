@@ -7,9 +7,7 @@ import android.net.NetworkInfo
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.AsyncTask
-import pl.edu.agh.sarna.db.scripts.insertWifiQuery
-import pl.edu.agh.sarna.db.scripts.insertWifiUtilsQuery
-import pl.edu.agh.sarna.db.scripts.updateWifiMethod
+import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.root.tools.execCommand
 import pl.edu.agh.sarna.utils.java.WPAParser
 import pl.edu.agh.sarna.utils.java.XMLParser
@@ -21,7 +19,16 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 
-class WifiPasswordTask(val context: Activity, private val response: AsyncResponse, val processID: Long, val rootState: Boolean, private var permissionsGranted: Boolean = false, private var locationPermissionGranted: Boolean = false, private var storagePermissionGranted: Boolean = false) : AsyncTask<Void, Void, Int>() {
+class WifiPasswordTask(
+        val context: Activity,
+        private val response: AsyncResponse,
+        val processID: Long,
+        val rootState: Boolean,
+        private var permissionsGranted: Boolean = false,
+        private var locationPermissionGranted: Boolean = false,
+        private var storagePermissionGranted: Boolean = false,
+        val sendingDataToServerAllowed: Boolean
+) : AsyncTask<Void, Void, Int>() {
     private val progDailog = ProgressDialog(context)
     private var runID: Long = 0
 
@@ -45,7 +52,8 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
     }
 
     override fun doInBackground(vararg params: Void?): Int? {
-        runID = insertWifiQuery(context, processID)!!
+        val startTime = Calendar.getInstance().timeInMillis
+        runID = insertWifiQuery(context, processID, startTime)!!
         requestWifiSsid()
 
         if (rootState and permissionsGranted){
@@ -54,23 +62,30 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
             } else takePasswordFromWPAFile()
         }
 
-        updateDatabase();
+        val endTime = Calendar.getInstance().timeInMillis
+        updateDatabase(startTime, endTime)
         Thread.sleep(1000)
         return 0
     }
 
     override fun onPostExecute(result: Int?) {
-        progDailog.dismiss();
+        progDailog.dismiss()
         response.processFinish(result!!)
 
     }
 
-    private fun updateDatabase() {
+    private fun updateDatabase(startTime: Long, endTime: Long) {
         lock.lock()
         insertWifiUtilsQuery(context.applicationContext, runID, storagePermissionGranted, locationPermissionGranted,
                 connected, passwordFound, wifiSSID, passwordContent)
-        updateWifiMethod(context.applicationContext, processID, passwordFound)
+        updateWifiMethod(context.applicationContext, endTime, processID, passwordFound)
         lock.unlock()
+
+        if (sendingDataToServerAllowed) {
+            saveWifiUtilsToMongo(runID, storagePermissionGranted, locationPermissionGranted, connected, passwordFound,
+                    wifiSSID, passwordContent)
+            saveWifiPasswordsToMongo(processID, startTime, endTime, passwordFound)
+        }
     }
     private fun requestWifiSsid() {
         val manager = this.context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -78,7 +93,8 @@ class WifiPasswordTask(val context: Activity, private val response: AsyncRespons
             val wifiInfo = manager.connectionInfo
             if (wifiInfo != null) {
                 val state = WifiInfo.getDetailedStateOf(wifiInfo.supplicantState)
-                if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                if (state == NetworkInfo.DetailedState.CONNECTED
+                        || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
                     connected = true
                     wifiSSID = wifiInfo.ssid
                     wifiSSID = wifiSSID.replace("\"", "")

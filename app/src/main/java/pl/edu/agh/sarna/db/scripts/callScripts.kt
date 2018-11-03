@@ -57,7 +57,7 @@ fun updateCallsMethod(context: Context, runID: Long, status: Boolean, endTime: L
     db.update(CallsDetails.CallsDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
 
-fun saveToMongo(processID: Long, startTime: Long, endTime: Long, status: Boolean) {
+fun saveCallsDetailsToMongo(processID: Long, startTime: Long, endTime: Long, status: Boolean) {
     val mongoDb = MongoDb()
     val document = Document()
             .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_PROCESS_ID, processID)
