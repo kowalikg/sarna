@@ -9,6 +9,7 @@ abstract class MethodAsyncTask(
         protected val contextReference: WeakReference<Context>,
         protected val response: AsyncResponse,
         protected val processID: Long,
+        protected val serverState: Boolean,
         private val order : Int = 0) : AsyncTask<Void, Void, Int>() {
 
     private val progressDialog = ProgressDialog(contextReference.get())

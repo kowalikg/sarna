@@ -13,8 +13,9 @@ import java.lang.ref.WeakReference
 class MetadataTaskMethod(contextReference: WeakReference<Context>,
                          response: AsyncResponse,
                          processID: Long,
+                         serverState: Boolean,
                          private val callLogsPermissionGranted : Boolean,
-                         private val contactsPermissionGranted : Boolean) : MethodAsyncTask(contextReference, response, processID) {
+                         private val contactsPermissionGranted : Boolean) : MethodAsyncTask(contextReference, response, processID, serverState) {
     private var runID : Long = 0
 
     override fun doInBackground(vararg p0: Void?): Int {

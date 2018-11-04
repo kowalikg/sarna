@@ -16,7 +16,6 @@ import java.lang.ref.WeakReference
 
 class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long, val mode: Mode) : ReportTask(contextReference, response) {
     private val projectionGeneral = arrayOf(
-            TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE,
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS
     )
     private val projectionPermission = arrayOf(

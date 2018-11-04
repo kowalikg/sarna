@@ -84,7 +84,7 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        MetadataTaskMethod(WeakReference(this), this, processID, callLogPermissionGranted, contactPermissionGranted).execute()
+        MetadataTaskMethod(WeakReference(this), this, processID, serverState, callLogPermissionGranted, contactPermissionGranted).execute()
     }
 
     @SuppressLint("PrivateResource")

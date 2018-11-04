@@ -23,11 +23,12 @@ import java.util.concurrent.locks.ReentrantLock
 
 
 class WifiPasswordTask(contextReference: WeakReference<Context>, response: AsyncResponse, processID: Long,
+                       serverState: Boolean,
                        private val rootState: Boolean,
                        private var permissionsGranted: Boolean = false,
                        private var locationPermissionGranted: Boolean = false,
                        private var storagePermissionGranted: Boolean = false)
-    : MethodAsyncTask(contextReference, response, processID) {
+    : MethodAsyncTask(contextReference, response, processID, serverState) {
     private var runID: Long = 0
 
     private var connected = false

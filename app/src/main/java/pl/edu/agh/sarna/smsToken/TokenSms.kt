@@ -20,6 +20,7 @@ import pl.edu.agh.sarna.smsToken.task.method.SafeTokenTask
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
+import pl.edu.agh.sarna.utils.kotlin.isNetworkAvailable
 import java.lang.ref.WeakReference
 
 
@@ -30,13 +31,8 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private var reportState: Boolean = false
     private var processID: Long = 0
 
-    private var mode: Mode = Mode.NOT_SAFE
-
-    private var permissionsGranted = false
     private var sendSmsPermissionGranted = false
     private var readSmsPermissionGranted = false
-
-    private var defaultSmsApp = false
 
     private var phoneNumber : String = "+48731464100"
 
@@ -77,7 +73,6 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         if (!checkPermissions())
             requestSelectedPermissions()
         else {
-            permissionsGranted = true
             classicTokenJob()
         }
     }
@@ -89,7 +84,6 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun dummyJob() {
         if (isDefaultSmsApp(this)) {
-            defaultSmsApp = true
             dummyTask()
         } else {
             requestDefaultApp()
@@ -97,7 +91,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         }
     }
     private fun dummyTask(){
-        DummyTask(WeakReference(this), this, processID, phoneNumber, defaultSmsApp).execute()
+        DummyTask(WeakReference(this), this, processID, serverState, phoneNumber).execute()
     }
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun requestDefaultApp() {
@@ -108,7 +102,6 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        defaultSmsApp = resultCode == -1
         dummyTask()
     }
 
@@ -131,23 +124,20 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun requestSelectedPermissions() {
-        if (!readSmsPermissionGranted and !sendSmsPermissionGranted)
+        if (!serverState and !isNetworkAvailable(this) and !readSmsPermissionGranted and !sendSmsPermissionGranted)
             requestPermissions(arrayOf(Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS), 10)
+        else if(!serverState and !isNetworkAvailable(this) and !sendSmsPermissionGranted)
+            requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 20)
         else if(!readSmsPermissionGranted)
-            requestPermissions(arrayOf(Manifest.permission.READ_SMS), 20)
-        else if(!sendSmsPermissionGranted)
-            requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 30)
+            requestPermissions(arrayOf(Manifest.permission.READ_SMS), 30)
 
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        readSmsPermissionGranted = checkReadSmsPermission(this)
-        sendSmsPermissionGranted = checkSendSmsPermission(this)
-        permissionsGranted = readSmsPermissionGranted and sendSmsPermissionGranted
         classicTokenJob()
     }
 
     private fun classicTokenJob() {
-        NotSafeTask(WeakReference(this), this, processID, phoneNumber, readSmsPermissionGranted).execute()
+        NotSafeTask(WeakReference(this), this, processID, serverState, phoneNumber).execute()
     }
 
     override fun processFinish(output: Any) {

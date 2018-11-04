@@ -94,7 +94,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        WifiPasswordTask(WeakReference(this), this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
+        WifiPasswordTask(WeakReference(this), this, processID, serverState, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
     }
     @SuppressLint("PrivateResource")
     override fun processFinish(output: Any) {

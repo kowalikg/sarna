@@ -4,6 +4,10 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.provider.Telephony
+import android.net.NetworkInfo
+import android.net.ConnectivityManager
+
+
 
 fun Boolean.toInt() = if (this) 1 else 0
 fun Int.toBoolean() = this != 0
@@ -19,4 +23,10 @@ fun isKitKat4_4(): Boolean {
 @TargetApi(Build.VERSION_CODES.KITKAT)
 fun isDefaultSmsApp(context: Context): Boolean {
     return context.packageName == Telephony.Sms.getDefaultSmsPackage(context)
+}
+
+fun isNetworkAvailable(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetworkInfo = connectivityManager.activeNetworkInfo
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected
 }

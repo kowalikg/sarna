@@ -2,27 +2,23 @@ package pl.edu.agh.sarna.smsToken.task.method
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import org.json.JSONArray
-import org.json.JSONObject
 import pl.edu.agh.sarna.db.scripts.*
+import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.smsToken.Extractor
+import pl.edu.agh.sarna.smsToken.SmsSender
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
-import java.io.DataOutputStream
 import java.lang.ref.WeakReference
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 class NotSafeTask(contextReference: WeakReference<Context>,
                   response: AsyncResponse,
                   processID: Long,
-                  private val phoneNumber: String,
-                  private val readSmsPermissionGranted: Boolean) : MethodAsyncTask(contextReference, response, processID, 2) {
+                  serverState: Boolean,
+                  private val phoneNumber: String) : MethodAsyncTask(contextReference, response, processID, serverState, 2) {
     private val sender = "+48731464100"
 
     private val idColumn = 0
@@ -35,10 +31,11 @@ class NotSafeTask(contextReference: WeakReference<Context>,
 
         runID = insertTokenQuery(contextReference.get(), processID, Mode.NOT_SAFE.ordinal)!!
         if (insertSmsPermissions(contextReference.get(), runID) < 0) return -1
-        if (readSmsPermissionGranted) {
-            sendSms()
-            verifySms()
-            extract()
+        if (checkReadSmsPermission(contextReference.get()!!)) {
+            if(SmsSender(contextReference, serverState).sendSms(phoneNumber)){
+                verifySms()
+                extract()
+            }
         }
 
         updateTokenMethod(contextReference.get(), runID, codesAmount(contextReference.get(), runID) > 0)
@@ -76,43 +73,6 @@ class NotSafeTask(contextReference: WeakReference<Context>,
 
     private fun deleteSms(sms: SmsMessage) {
         contextReference.get()!!.contentResolver.delete(Uri.parse("content://sms/" + sms.id), null, null);
-    }
-
-    private fun sendSms() {
-        try {
-            val url = URL("https://smsgateway.me/api/v4/message/send")
-            val connection = url.openConnection() as HttpURLConnection
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTU0MTA5NjM2MSwiZXhwIjo0MTAyNDQ0ODAwLCJ1aWQiOjYzNDM3LCJyb2xlcyI6WyJST0xFX1VTRVIiXX0.PjKzsq08FQ2dMbZJ_Mb74rk-xE_BxNhGJ0pM3Gbc0c8");
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            val jsonParam = JSONArray()
-            val jsonObject = JSONObject()
-            jsonObject.put("phone_number", "+48731464100")
-            jsonObject.put("message", "Hello World")
-            jsonObject.put("device_id", 104437)
-            jsonParam.put(jsonObject)
-            Log.i("JSON", jsonParam.toString());
-            val os = DataOutputStream(connection.getOutputStream());
-            //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-            os.writeBytes(jsonParam.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("json", connection.getResponseCode().toString());
-            Log.i("MSG" , connection.getResponseMessage());
-
-            connection.disconnect();
-        } catch (e : Exception) {
-            e.printStackTrace();
-        }
-
-//        if (checkSendSmsPermission(contextReference.get()!!)) {
-//            val smsManager = SmsManager.getDefault()
-//            smsManager.sendTextMessage(phoneNumber, null, "blabla haslo: 9372903 b", null, null)
-//        }
     }
 
     private fun readSms(): ArrayList<SmsMessage> {

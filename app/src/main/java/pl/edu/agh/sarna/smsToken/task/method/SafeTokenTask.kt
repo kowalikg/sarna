@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference
 
 class SafeTokenTask(contextReference: WeakReference<Context>,
                     response: AsyncResponse,
-                    processID: Long) : MethodAsyncTask(contextReference, response, processID, 1) {
+                    processID: Long) : MethodAsyncTask(contextReference, response, processID,false, 1) {
     override fun doInBackground(vararg p0: Void?): Int {
         return 0
     }
