@@ -55,7 +55,6 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
             permissionsGranted = true
             doJob()
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)

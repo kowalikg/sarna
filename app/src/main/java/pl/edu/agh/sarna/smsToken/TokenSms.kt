@@ -14,10 +14,8 @@ import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
-import pl.edu.agh.sarna.smsToken.model.Mode
-import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
-import pl.edu.agh.sarna.smsToken.task.method.SafeTokenTask
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
+import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.isNetworkAvailable
@@ -34,7 +32,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private var sendSmsPermissionGranted = false
     private var readSmsPermissionGranted = false
 
-    private var phoneNumber : String = "+48731464100"
+    private var phoneNumber : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +44,21 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startTokenMethod(view: View) {
         //if(!verifyPhoneNumber()) return
-        safeJob()
-    }
-
-    override fun onFirstFinished(output: Any) {
-        if(output as Int == 0){
-            notSafeJob()
-        }
+        phoneNumber = "+48731464100"
+        notSafeJob()
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
-    override fun onSecondFinished(output: Any) {
-        dummyJob()
+    override fun onFirstFinished(output: Any) {
+        if(output as Int == 0){
+            dummyJob()
+        }
     }
 
     private fun verifyPhoneNumber(): Boolean {
         phoneNumber = tokenEditText.text.toString()
         if (phoneNumber.isEmpty()) {
-            tokenEditText.error = "Please input phone number!"
+            tokenEditText.error = getString(R.string.number_error)
             return false
         }
         return true
@@ -75,10 +70,6 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         else {
             classicTokenJob()
         }
-    }
-
-    private fun safeJob() {
-        SafeTokenTask(WeakReference(this), this, processID).execute()
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)

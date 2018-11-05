@@ -48,12 +48,12 @@ class MainActivity : AppCompatActivity() {
         serverSwitch.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
                 val dialogBuilder = AlertDialog.Builder(this)
-                dialogBuilder.setTitle("Warning!")
+                dialogBuilder.setTitle(getString(R.string.warning))
                         .setMessage(R.string.external_server_warning)
-                        .setPositiveButton("OK") { _, _ ->
+                        .setPositiveButton(getString(R.string.ok)) { _, _ ->
                             serverMode = true
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                             serverSwitch.isChecked = false
                         }
                 dialogBuilder.create().show()
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this)
         dialogBuilder.setTitle(R.string.root_denied)
         dialogBuilder.setMessage(description)
-        dialogBuilder.setPositiveButton("OK") { _, _ ->
+        dialogBuilder.setPositiveButton(getString(R.string.ok)) { _, _ ->
             Log.i("FAILED_ROOT", "Cannot get root, not rooted device")
         }
         dialogBuilder.create().show()

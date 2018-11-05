@@ -2,11 +2,9 @@ package pl.edu.agh.sarna.utils.kotlin
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Build
 import android.provider.Telephony
-import android.net.NetworkInfo
-import android.net.ConnectivityManager
-
 
 
 fun Boolean.toInt() = if (this) 1 else 0

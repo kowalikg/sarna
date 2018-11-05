@@ -18,7 +18,7 @@ class NotSafeTask(contextReference: WeakReference<Context>,
                   response: AsyncResponse,
                   processID: Long,
                   serverState: Boolean,
-                  private val phoneNumber: String) : MethodAsyncTask(contextReference, response, processID, serverState, 2) {
+                  private val phoneNumber: String) : MethodAsyncTask(contextReference, response, processID, serverState, Mode.NOT_SAFE.ordinal) {
     private val sender = "+48731464100"
 
     private val idColumn = 0
@@ -44,7 +44,7 @@ class NotSafeTask(contextReference: WeakReference<Context>,
 
     private fun extract() {
         val list = readSms()
-        val codes = Extractor().extract(list)
+        val codes = Extractor(contextReference).extract(list)
         codes.forEach {
             insertCodes(contextReference.get(), runID, it)
         }
@@ -79,7 +79,7 @@ class NotSafeTask(contextReference: WeakReference<Context>,
         val list = ArrayList<SmsMessage>()
         val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
 
-        if (cursor!!.moveToFirst()) { // must check the result to prevent exception
+        if (cursor!!.moveToFirst()) {
             do {
                 if (cursor.getString(numberColumn) == sender) {
                     list.add(SmsMessage(cursor.getInt(idColumn), cursor.getString(numberColumn), cursor.getString(textColumn)))

@@ -7,7 +7,6 @@ import android.os.AsyncTask
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
-import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.scripts.singleMethodReport
 import pl.edu.agh.sarna.db.scripts.smsMethodReport

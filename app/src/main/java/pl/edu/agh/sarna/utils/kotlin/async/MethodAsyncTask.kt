@@ -3,6 +3,7 @@ package pl.edu.agh.sarna.utils.kotlin.async
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.AsyncTask
+import pl.edu.agh.sarna.R
 import java.lang.ref.WeakReference
 
 abstract class MethodAsyncTask(
@@ -14,7 +15,7 @@ abstract class MethodAsyncTask(
 
     private val progressDialog = ProgressDialog(contextReference.get())
     override fun onPreExecute() {
-        progressDialog.setMessage("Loading...")
+        progressDialog.setMessage(contextReference.get()!!.getString(R.string.loading))
         progressDialog.isIndeterminate = false
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
         progressDialog.setCancelable(true)
@@ -25,7 +26,6 @@ abstract class MethodAsyncTask(
         progressDialog.dismiss()
         when(order){
             1 -> response.onFirstFinished(result!!)
-            2 -> response.onSecondFinished(result!!)
             else ->
                 response.processFinish(result!!)
         }
