@@ -16,8 +16,8 @@ import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
-fun insertCallsQuery(context: Context, processID: Long) : Long? {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertCallsQuery(context: Context?, processID: Long) : Long? {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -30,8 +30,8 @@ fun insertCallsQuery(context: Context, processID: Long) : Long? {
 
     return runID
 }
-fun insertContactsInfoQuery(context: Context, runID: Long, contactsPermissionGranted: Boolean) : Long? {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertContactsInfoQuery(context: Context?, runID: Long, contactsPermissionGranted: Boolean) : Long? {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -45,8 +45,8 @@ fun insertContactsInfoQuery(context: Context, runID: Long, contactsPermissionGra
     return tryID
 }
 
-fun updateCallsMethod(context: Context, runID: Long, status: Boolean) {
-    val db = DbHelper.getInstance(context)!!.writableDatabase
+fun updateCallsMethod(context: Context?, runID: Long, status: Boolean) {
+    val db = DbHelper.getInstance(context!!)!!.writableDatabase
     val cv = ContentValues()
     cv.put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
     cv.put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS, status.toInt())
@@ -54,8 +54,8 @@ fun updateCallsMethod(context: Context, runID: Long, status: Boolean) {
     db.update(CallsDetails.CallsDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
 
-fun insertCallsLogsInfoQuery(context: Context, runID: Long, callLogsPermissionGranted: Boolean){
-    val dbHelper = DbHelper.getInstance(context)
+fun insertCallsLogsInfoQuery(context: Context?, runID: Long, callLogsPermissionGranted: Boolean){
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -68,8 +68,8 @@ fun insertCallsLogsInfoQuery(context: Context, runID: Long, callLogsPermissionGr
 
 }
 
-fun insertCallsLogs(context: Context, runID: Long, name: String?, number: String?, type: String?, time: String?) : Long {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertCallsLogs(context: Context?, runID: Long, name: String?, number: String?, type: String?, time: String?) : Long {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
@@ -83,35 +83,35 @@ fun insertCallsLogs(context: Context, runID: Long, name: String?, number: String
     return db?.insert(CallsLogs.CallsLogsEntry.TABLE_NAME, null, values)!!
 }
 
-fun updateCallsLogsInfoQuery(context: Context, runID: Long, status: Boolean) {
-    val db = DbHelper.getInstance(context)!!.writableDatabase
+fun updateCallsLogsInfoQuery(context: Context?, runID: Long, status: Boolean) {
+    val db = DbHelper.getInstance(context!!)!!.writableDatabase
     val cv = ContentValues()
     cv.put(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_FOUND, status.toInt())
     db.update(CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
 
-fun updateContactsInfoQuery(context: Context, runID: Long, status: Boolean) {
-    val db = DbHelper.getInstance(context)!!.writableDatabase
+fun updateContactsInfoQuery(context: Context?, runID: Long, status: Boolean) {
+    val db = DbHelper.getInstance(context!!)!!.writableDatabase
     val cv = ContentValues()
     cv.put(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_FOUND, status.toInt())
     db.update(ContactsInfo.ContactsInfoEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
 
 
-fun callLogsAmount(context: Context, runID: Long): Long {
-    val db = DbHelper.getInstance(context)!!.readableDatabase
+fun callLogsAmount(context: Context?, runID: Long): Long {
+    val db = DbHelper.getInstance(context!!)!!.readableDatabase
     return DatabaseUtils.queryNumEntries(db, CallsLogs.CallsLogsEntry.TABLE_NAME,
             "${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID}=?", arrayOf(runID.toString()))
 }
 
-fun contactsAmount(context: Context, runID: Long): Long {
-    val db = DbHelper.getInstance(context)!!.readableDatabase
+fun contactsAmount(context: Context?, runID: Long): Long {
+    val db = DbHelper.getInstance(context!!)!!.readableDatabase
     return DatabaseUtils.queryNumEntries(db, Contacts.ContactsEntry.TABLE_NAME,
             "${Contacts.ContactsEntry.COLUMN_NAME_RUN_ID}=?", arrayOf(runID.toString()))
 }
 
-fun insertContacts(context: Context, runID: Long, name: String?, number: String?) : Long {
-    val dbHelper = DbHelper.getInstance(context)
+fun insertContacts(context: Context?, runID: Long, name: String?, number: String?) : Long {
+    val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {

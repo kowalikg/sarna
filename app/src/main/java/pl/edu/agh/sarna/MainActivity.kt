@@ -8,8 +8,8 @@ import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
-import pl.edu.agh.sarna.metadata.MetadataActivity
-import pl.edu.agh.sarna.wifi_passwords.WifiPasswordActivity
+import pl.edu.agh.sarna.smsToken.TokenSms
+import pl.edu.agh.sarna.wifiPasswords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
 
@@ -48,12 +48,12 @@ class MainActivity : AppCompatActivity() {
         serverSwitch.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
                 val dialogBuilder = AlertDialog.Builder(this)
-                dialogBuilder.setTitle("Warning!")
+                dialogBuilder.setTitle(getString(R.string.warning))
                         .setMessage(R.string.external_server_warning)
-                        .setPositiveButton("OK") { _, _ ->
+                        .setPositiveButton(getString(R.string.ok)) { _, _ ->
                             serverMode = true
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                             serverSwitch.isChecked = false
                         }
                 dialogBuilder.create().show()
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             putExtra("process_id", processID)
         })
         else {
-            startActivity(Intent(this, MetadataActivity::class.java).apply {
+            startActivity(Intent(this, TokenSms::class.java).apply {
                 putExtra("root_state", rootAllowed)
                 putExtra("edu_state", educationalMode)
                 putExtra("report_state", reportMode)
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this)
         dialogBuilder.setTitle(R.string.root_denied)
         dialogBuilder.setMessage(description)
-        dialogBuilder.setPositiveButton("OK") { _, _ ->
+        dialogBuilder.setPositiveButton(getString(R.string.ok)) { _, _ ->
             Log.i("FAILED_ROOT", "Cannot get root, not rooted device")
         }
         dialogBuilder.create().show()

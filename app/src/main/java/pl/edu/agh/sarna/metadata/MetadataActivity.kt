@@ -1,6 +1,7 @@
 package pl.edu.agh.sarna.metadata
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -8,11 +9,12 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.metadata.asynctask.MetadataTask
+import pl.edu.agh.sarna.metadata.asynctask.MetadataTaskMethod
 import pl.edu.agh.sarna.permissions.checkCallLogsPermission
 import pl.edu.agh.sarna.permissions.checkContactsPermission
 import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import java.lang.ref.WeakReference
 
 
 class MetadataActivity : AppCompatActivity(), AsyncResponse {
@@ -82,9 +84,10 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        MetadataTask(this, this, processID, callLogPermissionGranted, contactPermissionGranted).execute()
+        MetadataTaskMethod(WeakReference(this), this, processID, serverState, callLogPermissionGranted, contactPermissionGranted).execute()
     }
 
+    @SuppressLint("PrivateResource")
     private fun runReport() {
         startActivity(Intent(this, ReportActivity::class.java).apply {
             putExtra("root_state", rootState)

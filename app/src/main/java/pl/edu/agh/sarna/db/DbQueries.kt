@@ -7,6 +7,9 @@ import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
+import pl.edu.agh.sarna.db.model.smsToken.Codes
+import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
+import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 
@@ -101,7 +104,33 @@ object DbQueries {
             "DROP TABLE IF EXISTS ${WifiUtils.WifiUtilsEntry.TABLE_NAME}" +
             "DROP TABLE IF EXISTS ${WifiPasswords.WifiPasswordsEntry.TABLE_NAME}"
 
+    const val CREATE_TOKEN_SMS_DETAILS =
+            "CREATE TABLE ${TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID} integer, " +
+                    "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_START_TIME} text, " +
+                    "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME} text, " +
+                    "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS} integer DEFAULT 0, " +
+                    "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE} integer DEFAULT 0, " +
+                    "FOREIGN KEY (${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID}) " +
+                    "REFERENCES ${Processes.ProcessEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
-    const val SQL_CREATE_ENTRIES = " $CREATE_PROCESS, $CREATE_WIFI_PASSWORDS, $CREATE_WIFI_UTILS, $CREATE_CALLS_DETAILS," +
-            "$CREATE_CALLS_LOG_INFO, $CREATE_CALLS_LOGS"
+    const val CREATE_SMS_PERMISSIONS =
+            "CREATE TABLE ${SmsPermissions.SmsPermissionsEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID} integer, " +
+                    "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_SEND} integer default 0, " +
+                    "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ} integer default 0, " +
+                    "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE} integer default 0, " +
+                    "FOREIGN KEY (${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val CREATE_CODES =
+            "CREATE TABLE ${Codes.CodesEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${Codes.CodesEntry.COLUMN_NAME_RUN_ID} integer, " +
+                    "${Codes.CodesEntry.COLUMN_NAME_CODE} text, " +
+                    "${Codes.CodesEntry.COLUMN_NAME_NUMBER} text, " +
+                    "FOREIGN KEY (${Codes.CodesEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 }

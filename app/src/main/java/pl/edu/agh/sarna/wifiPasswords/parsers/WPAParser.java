@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.utils.java;
+package pl.edu.agh.sarna.wifiPasswords.parsers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,15 +11,15 @@ import java.util.regex.Pattern;
 import pl.edu.agh.sarna.model.NetworkEntry;
 
 public class WPAParser {
-    String content = "";
+    private String content = "";
 
     private static String netEntryPattern = "network=\\{([^\\}]*\n)*\\}";
     private static String SSIDPattern = "ssid=\"[^\"]*\"";
     private static String passwdPattern = "psk=\"[^\"]*\"";
 
-    Pattern entryPattern = Pattern.compile(netEntryPattern);
-    Pattern ssidPattern = Pattern.compile(SSIDPattern);
-    Pattern passwordPattern = Pattern.compile(passwdPattern);
+    private Pattern entryPattern = Pattern.compile(netEntryPattern);
+    private Pattern ssidPattern = Pattern.compile(SSIDPattern);
+    private Pattern passwordPattern = Pattern.compile(passwdPattern);
 
     public WPAParser(String pathToFile) throws IOException {
 
