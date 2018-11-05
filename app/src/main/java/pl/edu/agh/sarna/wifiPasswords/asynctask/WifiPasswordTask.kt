@@ -13,7 +13,7 @@ import pl.edu.agh.sarna.root.tools.execCommand
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
-import pl.edu.agh.sarna.values.WifiLogsValues
+import pl.edu.agh.sarna.wifiPasswords.values.WifiLogsValues
 import pl.edu.agh.sarna.wifiPasswords.parsers.WPAParser
 import pl.edu.agh.sarna.wifiPasswords.parsers.XMLParser
 import java.io.FileInputStream

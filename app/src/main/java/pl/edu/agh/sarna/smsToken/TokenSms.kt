@@ -43,8 +43,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startTokenMethod(view: View) {
-        //if(!verifyPhoneNumber()) return
-        phoneNumber = "+48731464100"
+        if(!verifyPhoneNumber()) return
         notSafeJob()
     }
 
