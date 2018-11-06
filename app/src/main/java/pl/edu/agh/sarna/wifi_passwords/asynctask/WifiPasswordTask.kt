@@ -27,7 +27,7 @@ class WifiPasswordTask(
         private var permissionsGranted: Boolean = false,
         private var locationPermissionGranted: Boolean = false,
         private var storagePermissionGranted: Boolean = false,
-        val sendingDataToServerAllowed: Boolean
+        private val sendingDataToServerAllowed: Boolean
 ) : AsyncTask<Void, Void, Int>() {
     private val progDailog = ProgressDialog(context)
     private var runID: Long = 0

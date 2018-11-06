@@ -75,11 +75,13 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         if (callLogsPermissionGranted)
             if (getAccessToCalls(runID) == TaskStatus.CALL_ERROR){
                 updateCallsLogsInfoQuery(context, runID, false)
+                saveCallsLogsInfoToMongo(runID, callLogsPermissionGranted, false)
                 return TaskStatus.CALL_ERROR
             }
 
         val amount = callLogsAmount(context, runID)
         updateCallsLogsInfoQuery(context, runID, amount > 0)
+        saveCallsLogsInfoToMongo(runID, callLogsPermissionGranted, amount > 0)
 
         if (amount > 0) return TaskStatus.CALL_OK
         return TaskStatus.CALL_ERROR

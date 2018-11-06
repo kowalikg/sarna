@@ -107,6 +107,19 @@ fun updateCallsLogsInfoQuery(context: Context, runID: Long, status: Boolean) {
     db.update(CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
 
+fun saveCallsLogsInfoToMongo(runID: Long, callLogsPermissionGranted: Boolean, status: Boolean) {
+    val mongoDb = MongoDb()
+    val document = Document()
+            .append(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID, runID)
+            .append(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_LOG_PERMISSION, callLogsPermissionGranted)
+            .append(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_FOUND, status)
+    try {
+        mongoDb.saveData(CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, document)
+    } catch (e: MongoDbException) {
+        Log.e("MongoDB", e.message)
+    }
+}
+
 fun updateContactsInfoQuery(context: Context, runID: Long, status: Boolean) {
     val db = DbHelper.getInstance(context)!!.writableDatabase
     val cv = ContentValues()
