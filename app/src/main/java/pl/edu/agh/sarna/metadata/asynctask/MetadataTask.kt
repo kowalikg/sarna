@@ -63,6 +63,7 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
             val phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
             Log.i("CONTACTS", "$name $phoneNumber")
             val status = insertContacts(context, runID!!, name, phoneNumber)
+            saveContactsToMongo(runID, name, phoneNumber)
             if (status.toInt() == -1) return TaskStatus.CONTACTS_ERROR
 
         }

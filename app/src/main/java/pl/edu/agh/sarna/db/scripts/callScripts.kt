@@ -166,6 +166,19 @@ fun insertContacts(context: Context, runID: Long, name: String?, number: String?
     return db?.insert(Contacts.ContactsEntry.TABLE_NAME, null, values)!!
 }
 
+fun saveContactsToMongo(runID: Long, name: String?, number: String?) {
+    val mongoDb = MongoDb()
+    val document = Document()
+            .append(Contacts.ContactsEntry.COLUMN_NAME_RUN_ID, runID)
+            .append(Contacts.ContactsEntry.COLUMN_NAME_NAME, name)
+            .append(Contacts.ContactsEntry.COLUMN_NAME_NUMBER, number)
+    try {
+        mongoDb.saveData(Contacts.ContactsEntry.TABLE_NAME, document)
+    } catch (e: MongoDbException) {
+        Log.e("MongoDB", e.message)
+    }
+}
+
 fun mostFrequentContact(context: Context, runID: Long): String {
     val db = DbHelper.getInstance(context)!!.readableDatabase
 
