@@ -96,6 +96,7 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         val cursor = context.contentResolver.query(CallLog.Calls.CONTENT_URI, projection, null, null, null)
         while (cursor.moveToNext()) {
             val status = insertCallsLogs(context, runID, cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3))
+            saveCallsLogsToMongo(runID, cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3))
             if (status.toInt() == -1) return TaskStatus.CALL_ERROR
         }
         cursor.close()

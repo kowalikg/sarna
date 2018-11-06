@@ -100,6 +100,21 @@ fun insertCallsLogs(context: Context, runID: Long, name: String?, number: String
     return db?.insert(CallsLogs.CallsLogsEntry.TABLE_NAME, null, values)!!
 }
 
+fun saveCallsLogsToMongo(runID: Long, name: String?, number: String?, type: String?, time: String?) {
+    val mongoDb = MongoDb()
+    val document = Document()
+            .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID, runID)
+            .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME, name)
+            .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER, number)
+            .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE, type!!.toInt())
+            .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_TIME, time)
+    try {
+        mongoDb.saveData(CallsLogs.CallsLogsEntry.TABLE_NAME, document)
+    } catch (e: MongoDbException) {
+        Log.e("MongoDB", e.message)
+    }
+}
+
 fun updateCallsLogsInfoQuery(context: Context, runID: Long, status: Boolean) {
     val db = DbHelper.getInstance(context)!!.writableDatabase
     val cv = ContentValues()
