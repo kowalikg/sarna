@@ -127,6 +127,19 @@ fun updateContactsInfoQuery(context: Context, runID: Long, status: Boolean) {
     db.update(ContactsInfo.ContactsInfoEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
 }
 
+fun saveContactsInfoToMongo(runID: Long, contactsPermissionGranted: Boolean, status: Boolean) {
+    val mongoDb = MongoDb()
+    val document = Document()
+            .append(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID, runID)
+            .append(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_CONTACTS_PERMISSION, contactsPermissionGranted)
+            .append(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_FOUND, status)
+    try {
+        mongoDb.saveData(ContactsInfo.ContactsInfoEntry.TABLE_NAME, document)
+    } catch (e: MongoDbException) {
+        Log.e("MongoDB", e.message)
+    }
+}
+
 
 fun callLogsAmount(context: Context, runID: Long): Long {
     val db = DbHelper.getInstance(context)!!.readableDatabase

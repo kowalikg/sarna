@@ -44,11 +44,13 @@ class MetadataTask(val context: Context, val response: AsyncResponse, val proces
         if (contactsPermissionGranted)
             if (getAccessToContacts(runID) == TaskStatus.CONTACTS_ERROR) {
                 updateContactsInfoQuery(context, runID, false)
+                saveContactsInfoToMongo(runID, contactsPermissionGranted, false)
                 return TaskStatus.CONTACTS_ERROR
             }
 
         val amount = contactsAmount(context, runID)
         updateContactsInfoQuery(context, runID, amount > 0)
+        saveContactsInfoToMongo(runID, contactsPermissionGranted, amount > 0)
 
         if (amount > 0) return TaskStatus.CONTACTS_OK
         return TaskStatus.CONTACTS_ERROR
