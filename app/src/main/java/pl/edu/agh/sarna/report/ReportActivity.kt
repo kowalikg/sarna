@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_report.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.dirtycow.task.DirtyCowReportTask
 import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
@@ -47,12 +48,17 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
     private fun extendedReportOnClickListener(runID: Long): View.OnClickListener? {
         return View.OnClickListener {view ->
             when(view.tag) {
+                getString(R.string.dirtycow_title) -> generateExtendedDirtycowReport(runID)
                 getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
                 getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
                 Mode.NOT_SAFE.description -> generateExtendTokenReport(runID, Mode.NOT_SAFE)
                 Mode.DUMMY.description -> generateExtendTokenReport(runID, Mode.DUMMY)
             }
         }
+    }
+
+    private fun generateExtendedDirtycowReport(runID: Long) {
+        DirtyCowReportTask(WeakReference(this), this, runID).execute()
     }
 
     private fun generateExtendTokenReport(runID: Long, mode : Mode) {

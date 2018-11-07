@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.report
+package pl.edu.agh.sarna.report.asynctask
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -8,6 +8,7 @@ import android.provider.BaseColumns
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.lang.ref.WeakReference
 
 abstract class ReportTask(protected val contextReference: WeakReference<Context>, private val response : AsyncResponse) : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>() {
@@ -44,5 +45,13 @@ abstract class ReportTask(protected val contextReference: WeakReference<Context>
         return list
     }
 
-    abstract fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>
+    protected open fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus> {
+        val list = ArrayList<SubtaskStatus>()
+        for (task in projection){
+            list.add(SubtaskStatus(
+                    task.replace("_", " "),
+                    cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
+        }
+        return list
+    }
 }

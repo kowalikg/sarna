@@ -7,6 +7,8 @@ import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
+import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowDetails
+import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowInfo
 import pl.edu.agh.sarna.db.model.smsToken.Codes
 import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
@@ -133,4 +135,26 @@ object DbQueries {
                     "${Codes.CodesEntry.COLUMN_NAME_NUMBER} text, " +
                     "FOREIGN KEY (${Codes.CodesEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val CREATE_DIRTYCOW_DETAILS =
+            "CREATE TABLE ${DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_PROCESS_ID} integer, " +
+                    "${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_START_TIME} text, " +
+                    "${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_END_TIME} text, " +
+                    "${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_STATUS} integer DEFAULT 0, " +
+                    "FOREIGN KEY (${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_PROCESS_ID}) " +
+                    "REFERENCES ${DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val CREATE_DIRTYCOW_INFO =
+            "CREATE TABLE ${DirtyCowInfo.DirtyCowInfoEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_RUN_ID} integer, " +
+                    "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_ETA} integer, " +
+                    "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_SELINUX} integer, " +
+                    "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_KERNEL} text, " +
+                    "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_BUILD} text, " +
+                    "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_VENDOR} text, " +
+                    "FOREIGN KEY (${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 }

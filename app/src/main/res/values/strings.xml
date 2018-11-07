@@ -23,6 +23,9 @@
     <string name="call_logs_amount">Call logs amount</string>
     <string name="most_frequent_contact">Most frequent contact</string>
     <string name="not_in_contacts">not saved in contacts</string>
+    <string name="dirtycow_title">Dirty cow vulnerability</string>
+    <string name="dirtycow_description">Check whether your phone is vulnerable</string>
+    <string name="dirtycow_button">Launch</string>
     <string name="not_found">"not found"</string>
     <string name="token_title">SMS token</string>
     <string name="token_description">Grant permission to let app authenticate your phone</string>

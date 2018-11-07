@@ -1,7 +1,6 @@
 package pl.edu.agh.sarna.metadata.asynctask
 
 import android.content.Context
-import android.database.Cursor
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
@@ -9,9 +8,8 @@ import pl.edu.agh.sarna.db.scripts.callLogsAmount
 import pl.edu.agh.sarna.db.scripts.contactsAmount
 import pl.edu.agh.sarna.db.scripts.mostFrequentContact
 import pl.edu.agh.sarna.model.SubtaskStatus
-import pl.edu.agh.sarna.report.ReportTask
+import pl.edu.agh.sarna.report.asynctask.ReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
-import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.lang.ref.WeakReference
 
 class MetadataReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long) : ReportTask(contextReference, response) {
@@ -46,16 +44,6 @@ class MetadataReportTask(contextReference: WeakReference<Context>, response: Asy
     private fun generateCallLogsReport(): ArrayList<SubtaskStatus>? {
         val list = ArrayList<SubtaskStatus>()
         list.add(SubtaskStatus(contextReference.get()!!.getString(R.string.call_logs_amount), callLogsAmount(contextReference.get(), runID)))
-        return list
-    }
-
-    override fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>{
-        val list = ArrayList<SubtaskStatus>()
-        for (task in projection){
-            list.add(SubtaskStatus(
-                    task.replace("_", " "),
-                    cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
-        }
         return list
     }
 

@@ -17,6 +17,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(DbQueries.CREATE_TOKEN_SMS_DETAILS)
         db.execSQL(DbQueries.CREATE_SMS_PERMISSIONS)
         db.execSQL(DbQueries.CREATE_CODES)
+        db.execSQL(DbQueries.CREATE_DIRTYCOW_DETAILS)
+        db.execSQL(DbQueries.CREATE_DIRTYCOW_INFO)
 
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

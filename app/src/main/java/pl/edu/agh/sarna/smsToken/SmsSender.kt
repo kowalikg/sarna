@@ -2,6 +2,7 @@ package pl.edu.agh.sarna.smsToken
 
 import android.content.Context
 import android.telephony.SmsManager
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import pl.edu.agh.sarna.R
@@ -44,7 +45,7 @@ class SmsSender(val contextReference: WeakReference<Context>, private val server
 
             val os = DataOutputStream(connection.outputStream)
             os.writeBytes(jsonParam.toString())
-
+            Log.i("MSG" , connection.getResponseMessage());
             os.flush();
             os.close();
 

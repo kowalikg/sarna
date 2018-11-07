@@ -88,6 +88,7 @@
             android:name=".report.ReportActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".metadata.MetadataActivity" />
+        <activity android:name=".dirtycow.DirtyCowActivity" />
         <activity android:name=".smsToken.TokenSms" />
     </application>
 

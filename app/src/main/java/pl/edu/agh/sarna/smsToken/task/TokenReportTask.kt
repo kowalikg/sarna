@@ -7,7 +7,7 @@ import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.model.SubtaskStatus
-import pl.edu.agh.sarna.report.ReportTask
+import pl.edu.agh.sarna.report.asynctask.ReportTask
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.toBoolean

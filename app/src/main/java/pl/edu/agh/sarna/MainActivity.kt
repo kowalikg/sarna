@@ -2,14 +2,13 @@ package pl.edu.agh.sarna
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
-import pl.edu.agh.sarna.smsToken.TokenSms
+import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.wifiPasswords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
@@ -26,9 +25,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //Required to load native shared library
-        System.loadLibrary("native-lib");
 
         rootSwitch.setOnCheckedChangeListener { _, isChecked ->
 
@@ -66,19 +62,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        dcowSwitch.setOnCheckedChangeListener{_, isChecked ->
-            if (isChecked) {
-                var s = dcow();
-                if (s.equals("success")) {
-                    dcowTextView.setTextColor(Color.RED)
-                    dcowTextView.text = "DirtyCOW: vulnerable"
-                    dcowSwitch.visibility = View.INVISIBLE
-                }
-                else {
-                    dcowTextView.text = "DirtyCOW: NOT vulnerable"
-                }
-            }
-        };
     }
 
     fun onStartButtonClicked(view: View) {
@@ -96,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             putExtra("process_id", processID)
         })
         else {
-            startActivity(Intent(this, TokenSms::class.java).apply {
+            startActivity(Intent(this, DirtyCowActivity::class.java).apply {
                 putExtra("root_state", rootAllowed)
                 putExtra("edu_state", educationalMode)
                 putExtra("report_state", reportMode)
@@ -119,6 +102,5 @@ class MainActivity : AppCompatActivity() {
         dialogBuilder.create().show()
     }
 
-    private external fun dcow(): String
 
 }

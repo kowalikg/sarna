@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
+import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowDetails
 import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.scripts.singleMethodReport
 import pl.edu.agh.sarna.db.scripts.smsMethodReport
@@ -32,7 +33,7 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
         val db = DbHelper.getInstance(context)!!.readableDatabase
 
         if (rootAllowed) list.add(wifiPassword(db)!!)
-
+        list.add(dirtycow(db)!!)
         list.add(metadata(db)!!)
         list.add(tokenSms(db, Mode.NOT_SAFE)!!)
         list.add(tokenSms(db, Mode.DUMMY)!!)
@@ -42,6 +43,13 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
 
     private fun tokenSms(db: SQLiteDatabase?, mode: Mode): SubtaskStatus? {
         return smsMethodReport(db, processID, mode)
+    }
+    private fun dirtycow(db: SQLiteDatabase?): SubtaskStatus? {
+        return singleMethodReport(db, processID, DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME,
+                DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_STATUS,
+                DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_PROCESS_ID,
+                context.getString(R.string.dirtycow_title)
+                )
     }
 
     override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {

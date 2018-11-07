@@ -67,7 +67,7 @@ using namespace std;
  */
 
 
-extern "C" JNIEXPORT jstring JNICALL Java_pl_edu_agh_sarna_MainActivity_dcow(JNIEnv *env, jobject obj)
+extern "C" JNIEXPORT jstring JNICALL Java_pl_edu_agh_sarna_dirtycow_task_DirtyCowTask_dcow(JNIEnv *env, jobject obj)
 {
     // make file backup & mocking payload. for example payload can be shell script or SHARED LIBRARY
     system("cp /system/bin/tc /data/data/pl.edu.agh.sarna/tc_copy");

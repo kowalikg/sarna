@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.util.Log
 import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 import pl.edu.agh.sarna.model.SubtaskStatus
-import pl.edu.agh.sarna.report.ReportTask
+import pl.edu.agh.sarna.report.asynctask.ReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
@@ -42,7 +42,6 @@ class WifiPasswordsReportTask(contextReference: WeakReference<Context>, response
                 WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD,
                 WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID
                     ->
-
                     list.add(SubtaskStatus(
                         task.replace("_", " "),
                         cursor.getString(cursor.getColumnIndex(task))))

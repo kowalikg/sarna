@@ -33,8 +33,8 @@ class NotSafeTask(contextReference: WeakReference<Context>,
         if (insertSmsPermissions(contextReference.get(), runID) < 0) return -1
         if (checkReadSmsPermission(contextReference.get()!!)) {
             if(SmsSender(contextReference, serverState).sendSms(phoneNumber)){
-                verifySms()
-                extract()
+                if(verifySms())
+                    extract()
             }
         }
 
@@ -56,7 +56,9 @@ class NotSafeTask(contextReference: WeakReference<Context>,
         Thread.sleep(1000)
     }
 
-    private fun verifySms() {
+    private fun verifySms() : Boolean {
+        val maxIterations = 5
+        var iteration = 0
         var found = false
         do {
             val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
@@ -68,7 +70,9 @@ class NotSafeTask(contextReference: WeakReference<Context>,
                 } while (cursor.moveToNext())
             }
             Thread.sleep(200)
-        } while (!found)
+            iteration++
+        } while (!found and (iteration < maxIterations))
+        return found
     }
 
     private fun deleteSms(sms: SmsMessage) {

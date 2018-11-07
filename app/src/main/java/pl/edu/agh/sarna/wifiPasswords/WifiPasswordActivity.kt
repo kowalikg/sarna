@@ -10,9 +10,9 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.permissions.checkLocationPermission
 import pl.edu.agh.sarna.permissions.checkStoragePermission
-import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordTask
@@ -97,7 +97,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
     @SuppressLint("PrivateResource")
     override fun processFinish(output: Any) {
-        if (output == 0) startActivity(Intent(this, TokenSms::class.java).apply {
+        if (output == 0) startActivity(Intent(this, DirtyCowActivity::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)

@@ -108,6 +108,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     private fun checkPermissions(): Boolean {
         readSmsPermissionGranted = checkReadSmsPermission(this)
+        if(serverState and isNetworkAvailable(this)) return readSmsPermissionGranted
         sendSmsPermissionGranted = checkSendSmsPermission(this)
         return readSmsPermissionGranted and sendSmsPermissionGranted
     }
