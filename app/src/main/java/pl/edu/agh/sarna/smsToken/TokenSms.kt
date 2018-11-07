@@ -115,9 +115,10 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun requestSelectedPermissions() {
-        if (!serverState and !isNetworkAvailable(this) and !readSmsPermissionGranted and !sendSmsPermissionGranted)
+        val sendByNetwork = serverState and isNetworkAvailable(this)
+        if (!sendByNetwork and !readSmsPermissionGranted and !sendSmsPermissionGranted)
             requestPermissions(arrayOf(Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS), 10)
-        else if(!serverState and !isNetworkAvailable(this) and !sendSmsPermissionGranted)
+        else if(!sendByNetwork and !sendSmsPermissionGranted)
             requestPermissions(arrayOf(Manifest.permission.SEND_SMS), 20)
         else if(!readSmsPermissionGranted)
             requestPermissions(arrayOf(Manifest.permission.READ_SMS), 30)

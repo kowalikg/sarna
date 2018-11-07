@@ -30,7 +30,7 @@ class DummyTask(contextReference: WeakReference<Context>,
     }
 
     private fun waitForUpdate(runID: Long) {
-        val maxIterations = 5
+        val maxIterations = 30
         var iteration = 0
         while (!smsMethodProceed(contextReference.get(), runID) and (iteration < maxIterations)){
             Thread.sleep(200)

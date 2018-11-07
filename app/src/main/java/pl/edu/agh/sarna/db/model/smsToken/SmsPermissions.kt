@@ -9,5 +9,6 @@ object SmsPermissions {
         const val COLUMN_NAME_READ = "Read_permission"
         const val COLUMN_NAME_RECEIVE = "Receive_permission"
         const val COLUMN_NAME_SEND = "Send_permission"
+        const val COLUMN_NAME_DEFAULT_APP = "Default_app"
     }
 }

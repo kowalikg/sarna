@@ -20,7 +20,11 @@ fun isKitKat4_4(): Boolean {
 }
 @TargetApi(Build.VERSION_CODES.KITKAT)
 fun isDefaultSmsApp(context: Context): Boolean {
-    return context.packageName == Telephony.Sms.getDefaultSmsPackage(context)
+    return try {
+        context.packageName == Telephony.Sms.getDefaultSmsPackage(context)
+    } catch (e: NoSuchMethodError){
+        false
+    }
 }
 
 fun isNetworkAvailable(context: Context): Boolean {

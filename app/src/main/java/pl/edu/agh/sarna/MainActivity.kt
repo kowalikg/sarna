@@ -15,12 +15,10 @@ import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
-    var rootAllowed: Boolean = false
-    var educationalMode: Boolean = false
-    var reportMode: Boolean = false
-    var serverMode: Boolean = false
-
-
+    private var rootAllowed: Boolean = false
+    private var educationalMode: Boolean = false
+    private var reportMode: Boolean = false
+    private var serverMode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             }
         };
         serverSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
+            if (isChecked) {
                 val dialogBuilder = AlertDialog.Builder(this)
                 dialogBuilder.setTitle(getString(R.string.warning))
                         .setMessage(R.string.external_server_warning)
@@ -77,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             putExtra("report_state", reportMode)
             putExtra("server_state", serverMode)
             putExtra("process_id", processID)
+            overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         })
         else {
             startActivity(Intent(this, DirtyCowActivity::class.java).apply {
@@ -89,7 +88,6 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         }
     }
-
 
 
     private fun showDeclineAlert(description: Int) {

@@ -13,20 +13,8 @@ import java.lang.ref.WeakReference
 
 class DirtyCowActivity : AppCompatActivity(), AsyncResponse {
     override fun processFinish(output: Any) {
-        var text = ""
-        text = if (output as Int == 1){
-            "Yes"
-        }
-        else
-            "No"
-
-        val duration = Toast.LENGTH_SHORT
-
-        val toast = Toast.makeText(applicationContext, text, duration)
-        toast.show()
         nextActivity()
     }
-
     private var rootState: Boolean = false
     private var eduState: Boolean = false
     private var serverState: Boolean = false
@@ -35,11 +23,8 @@ class DirtyCowActivity : AppCompatActivity(), AsyncResponse {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        System.loadLibrary("native-lib")
         setContentView(R.layout.activity_dirty_cow)
         initialiseOptions()
-
     }
     fun startDirtyCow(view: View){
         DirtyCowTask(WeakReference(this), this, processID, serverState).execute()

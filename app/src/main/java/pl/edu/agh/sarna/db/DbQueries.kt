@@ -124,6 +124,7 @@ object DbQueries {
                     "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_SEND} integer default 0, " +
                     "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ} integer default 0, " +
                     "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE} integer default 0, " +
+                    "${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_DEFAULT_APP} integer default 0, " +
                     "FOREIGN KEY (${SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 

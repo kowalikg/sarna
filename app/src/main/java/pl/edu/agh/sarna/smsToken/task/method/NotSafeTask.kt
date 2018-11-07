@@ -57,7 +57,7 @@ class NotSafeTask(contextReference: WeakReference<Context>,
     }
 
     private fun verifySms() : Boolean {
-        val maxIterations = 5
+        val maxIterations = 30
         var iteration = 0
         var found = false
         do {

@@ -9,6 +9,7 @@ import pl.edu.agh.sarna.dirtycow.SystemInfo
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import java.lang.ref.WeakReference
+import java.util.*
 
 class DirtyCowTask(contextReference: WeakReference<Context>, response: AsyncResponse, processID: Long, serverState: Boolean)
     : MethodAsyncTask(contextReference, response, processID, serverState) {
@@ -23,11 +24,14 @@ class DirtyCowTask(contextReference: WeakReference<Context>, response: AsyncResp
         Log.i("DIRTYCOW", "Vendor ${systemInfo.vendor}")
 
         System.loadLibrary("native-lib")
+        val start = Date()
         val s = dcow()
+        val end = Date()
+        val eta = end.time - start.time
 
         insertDirtyCowInfo(contextReference.get(),
                 runID!!,
-                1000,
+                eta,
                 systemInfo.vendor,
                 systemInfo.buildDate,
                 systemInfo.isSELinuxInstalled,

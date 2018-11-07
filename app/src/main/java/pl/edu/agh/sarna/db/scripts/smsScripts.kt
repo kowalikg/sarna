@@ -13,6 +13,7 @@ import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkReceiveSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
+import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
@@ -48,6 +49,7 @@ fun insertSmsPermissions(context: Context?, runID: Long) : Long {
         put(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ, checkReadSmsPermission(context))
         put(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE, checkReceiveSmsPermission(context))
         put(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_SEND, checkSendSmsPermission(context))
+        put(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_DEFAULT_APP, isDefaultSmsApp(context))
     }
 
     return db?.insert(SmsPermissions.SmsPermissionsEntry.TABLE_NAME, null, values)!!

@@ -19,13 +19,11 @@ class IncomingSms : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
         val runID = getLastRunID(p0)
         val codes = ArrayList<SmsMessage>()
-
         for (smsMessage in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
              codes.add(Extractor(WeakReference(p0!!)).extract(SmsMessage(
                             0, smsMessage.displayOriginatingAddress, smsMessage.messageBody))!!)
         }
         codes.forEach {  insertCodes(p0!!, runID, it)}
-        updateTokenMethod(p0, runID, codesAmount(p0, runID) > 0)
-
+        updateTokenMethod(p0, runID, !codes.isEmpty())
     }
 }

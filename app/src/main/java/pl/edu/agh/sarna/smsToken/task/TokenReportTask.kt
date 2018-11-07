@@ -19,9 +19,11 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS
     )
     private val projectionPermission = arrayOf(
+            SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_DEFAULT_APP,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_SEND
+
     )
 
     override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus> {
