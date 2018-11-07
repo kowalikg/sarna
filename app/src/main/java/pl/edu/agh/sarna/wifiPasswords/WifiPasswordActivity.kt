@@ -1,6 +1,7 @@
-package pl.edu.agh.sarna.wifi_passwords
+package pl.edu.agh.sarna.wifiPasswords
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Intent
 import android.os.Build
@@ -9,12 +10,13 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkLocationPermission
 import pl.edu.agh.sarna.permissions.checkStoragePermission
+import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
-import pl.edu.agh.sarna.wifi_passwords.asynctask.WifiPasswordTask
+import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordTask
+import java.lang.ref.WeakReference
 
 
 class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
@@ -53,7 +55,6 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
             permissionsGranted = true
             doJob()
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -92,10 +93,11 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun doJob() {
-        WifiPasswordTask(this, this, processID, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
+        WifiPasswordTask(WeakReference(this), this, processID, serverState, rootState, permissionsGranted, locationPermissionGranted, storagePermissionGranted).execute()
     }
+    @SuppressLint("PrivateResource")
     override fun processFinish(output: Any) {
-        if (output == 0) startActivity(Intent(this, MetadataActivity::class.java).apply {
+        if (output == 0) startActivity(Intent(this, TokenSms::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)

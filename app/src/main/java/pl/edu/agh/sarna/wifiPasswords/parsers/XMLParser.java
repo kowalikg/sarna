@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.utils.java;
+package pl.edu.agh.sarna.wifiPasswords.parsers;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

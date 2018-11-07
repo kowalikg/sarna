@@ -8,7 +8,9 @@ import android.provider.BaseColumns
 import android.util.Log
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.Processes
+import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.util.*
 
@@ -58,5 +60,24 @@ fun singleMethodReport(db: SQLiteDatabase?, processID: Long, tableName : String,
                 cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)))
     }
     cursor.close()
-    return null
+    return SubtaskStatus(title, false)
+}
+fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode) : SubtaskStatus?{
+    val cursor = db!!.query(
+            TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME,
+            arrayOf(BaseColumns._ID, TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS),
+            "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID}=? and ${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE}=?",
+            arrayOf(processID.toString(), mode.ordinal.toString()),
+            null, null,
+            "_id DESC" ,
+            "1"
+    )
+    if (cursor.moveToFirst()) {
+        return SubtaskStatus(
+                mode.description,
+                cursor.getInt(cursor.getColumnIndex( TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS)).toBoolean(),
+                cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)))
+    }
+    cursor.close()
+    return SubtaskStatus(mode.description, false)
 }

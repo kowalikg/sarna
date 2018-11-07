@@ -1,4 +1,4 @@
-package pl.edu.agh.sarna.values
+package pl.edu.agh.sarna.wifiPasswords.values
 
 class WifiLogsValues {
   val wifiFileToNougat = "wpa_supplicant.conf"
