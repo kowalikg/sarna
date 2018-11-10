@@ -44,8 +44,8 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
             getString(R.string.dirtycow_title) -> generateExtendedDirtycowReport(runID)
             getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
             getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
-            Mode.NOT_SAFE.description -> generateExtendTokenReport(runID, Mode.NOT_SAFE)
-            Mode.DUMMY.description -> generateExtendTokenReport(runID, Mode.DUMMY)
+            getString(R.string.token_mode_not_safe) -> generateExtendTokenReport(runID, Mode.NOT_SAFE)
+            getString(R.string.token_mode_for_dummies) -> generateExtendTokenReport(runID, Mode.DUMMY)
         }
     }
 

@@ -35,4 +35,6 @@
     <string name="warning">Ostrzeżenie</string>
     <string name="number_error">Podaj numer telefonu</string>
     <string name="loading">Czekaj...</string>
+    <string name="token_mode_not_safe">Autoryzacja sms</string>
+    <string name="token_mode_for_dummies">Domyślna aplikacja sms</string>
 </resources>

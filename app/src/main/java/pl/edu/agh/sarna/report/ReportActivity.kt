@@ -42,7 +42,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
         setContentView(R.layout.activity_report)
         initialiseLayout()
         initialiseOptions()
-        DbReportTask(this, this, processID, rootState).execute()
+        DbReportTask(WeakReference(this), this, processID, rootState).execute()
 
     }
 

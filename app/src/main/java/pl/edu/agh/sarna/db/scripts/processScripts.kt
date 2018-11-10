@@ -62,7 +62,7 @@ fun singleMethodReport(db: SQLiteDatabase?, processID: Long, tableName : String,
     cursor.close()
     return SubtaskStatus(title, false)
 }
-fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode) : SubtaskStatus?{
+fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode, title: String) : SubtaskStatus?{
     val cursor = db!!.query(
             TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME,
             arrayOf(BaseColumns._ID, TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS),
@@ -74,7 +74,7 @@ fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode) : SubtaskS
     )
     if (cursor.moveToFirst()) {
         return SubtaskStatus(
-                mode.description,
+                title,
                 cursor.getInt(cursor.getColumnIndex( TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS)).toBoolean(),
                 cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)))
     }
