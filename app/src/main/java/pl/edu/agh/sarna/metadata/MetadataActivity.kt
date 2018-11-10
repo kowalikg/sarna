@@ -55,7 +55,7 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
         }
         else if (!checkCallLogsPermission(this)) {
             contactPermissionGranted = true
-            requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG), 2)
+            //requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG), 2)
         }
         else if (!checkContactsPermission(this)){
             callLogPermissionGranted = true

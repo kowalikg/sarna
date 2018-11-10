@@ -14,6 +14,7 @@ import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
+import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
 import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
@@ -32,7 +33,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private var sendSmsPermissionGranted = false
     private var readSmsPermissionGranted = false
 
-    private var phoneNumber : String = ""
+    private var phoneNumber : String = "+48731464100"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,14 +44,14 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun startTokenMethod(view: View) {
-        if(!verifyPhoneNumber()) return
+        //if(!verifyPhoneNumber()) return
         notSafeJob()
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onFirstFinished(output: Any) {
         if(output as Int == 0){
-            dummyJob()
+            nextActivity()
         }
     }
 
@@ -96,7 +97,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun nextActivity() {
-        startActivity(Intent(this, MetadataActivity::class.java).apply {
+        startActivity(Intent(this, ReportActivity::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)

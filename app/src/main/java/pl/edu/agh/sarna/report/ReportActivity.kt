@@ -121,7 +121,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             val runID = subtask._id
             if (reportState) button.setOnClickListener(extendedReportOnClickListener(runID))
 
-            button.background = if (subtask.value as Boolean) successDrawable else failDrawable
+            //button.background = if (subtask.value as Boolean) successDrawable else failDrawable
 
             reportLayout.addView(button, layoutParams)
         }

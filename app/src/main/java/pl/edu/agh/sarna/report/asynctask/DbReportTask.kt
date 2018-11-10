@@ -34,9 +34,9 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
 
         if (rootAllowed) list.add(wifiPassword(db)!!)
         list.add(dirtycow(db)!!)
-        list.add(metadata(db)!!)
+        //list.add(metadata(db)!!)
         list.add(tokenSms(db, Mode.NOT_SAFE)!!)
-        list.add(tokenSms(db, Mode.DUMMY)!!)
+        //list.add(tokenSms(db, Mode.DUMMY)!!)
 
         return list
     }

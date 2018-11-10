@@ -90,6 +90,11 @@
         <activity android:name=".metadata.MetadataActivity" />
         <activity android:name=".dirtycow.DirtyCowActivity" />
         <activity android:name=".smsToken.TokenSms" />
+        <service android:label="Test App" android:name=".smsToken.dummyHandlers.Service" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
