@@ -18,7 +18,7 @@ class DummyTask(contextReference: WeakReference<Context>,
                 processID: Long,
                 serverState: Boolean,
                 private val phoneNumber: String)
-    : MethodAsyncTask(contextReference, response, processID, serverState, Mode.DUMMY.ordinal) {
+    : MethodAsyncTask(contextReference, response, processID, serverState) {
     override fun doInBackground(vararg p0: Void?): Int {
         val runID = insertTokenQuery(contextReference.get(), processID, Mode.DUMMY.ordinal)!!
         if (insertSmsPermissions(contextReference.get(), runID) < 0) return -1

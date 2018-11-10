@@ -10,8 +10,7 @@ abstract class MethodAsyncTask(
         protected val contextReference: WeakReference<Context>,
         protected val response: AsyncResponse,
         protected val processID: Long,
-        protected val serverState: Boolean,
-        private val order : Int = 0) : AsyncTask<Void, Void, Int>() {
+        protected val serverState: Boolean) : AsyncTask<Void, Void, Int>() {
 
     private val progressDialog = ProgressDialog(contextReference.get())
     override fun onPreExecute() {
@@ -24,10 +23,7 @@ abstract class MethodAsyncTask(
     abstract override fun doInBackground(vararg p0: Void?): Int
     override fun onPostExecute(result: Int?) {
         progressDialog.dismiss()
-        when(order){
-            1 -> response.onFirstFinished(result!!)
-            else ->
-                response.processFinish(result!!)
-        }
+        response.processFinish(result!!)
+
     }
 }

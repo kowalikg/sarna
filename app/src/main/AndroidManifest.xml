@@ -28,31 +28,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <receiver android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.IncomingSms"
+        <receiver
+            android:name=".smsToken.dummyHandlers.IncomingSms"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
 
+
         <!-- BroadcastReceiver that listens for incoming MMS messages -->
-        <receiver android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.MmsReceiver"
+        <receiver
+            android:name=".smsToken.dummyHandlers.MmsReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
 
         <!-- Activity that allows the user to send new SMS/MMS messages -->
-        <activity android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.ComposeSmsActivity" >
+        <activity android:name=".smsToken.dummyHandlers.ComposeSmsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
@@ -61,23 +68,28 @@
         </activity>
 
         <!-- Service that delivers messages from the phone "quick response" -->
-        <service android:name="pl.edu.agh.sarna.smsToken.dummyHandlers.HeadlessSmsSendService"
-            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
-            android:exported="true" >
+        <service
+            android:name=".smsToken.dummyHandlers.HeadlessSmsSendService"
+            android:exported="true"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
                 <data android:scheme="mmsto" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -90,11 +102,8 @@
         <activity android:name=".metadata.MetadataActivity" />
         <activity android:name=".dirtycow.DirtyCowActivity" />
         <activity android:name=".smsToken.TokenSms" />
-        <service android:label="Test App" android:name=".smsToken.dummyHandlers.Service" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
+        <activity android:name=".report.ExtendedReportActivity" />
+        <activity android:name=".smsToken.DefaultSms"></activity>
     </application>
 
 </manifest>

@@ -48,13 +48,6 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         notSafeJob()
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    override fun onFirstFinished(output: Any) {
-        if(output as Int == 0){
-            nextActivity()
-        }
-    }
-
     private fun verifyPhoneNumber(): Boolean {
         phoneNumber = tokenEditText.text.toString()
         if (phoneNumber.isEmpty()) {
@@ -72,37 +65,14 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun dummyJob() {
-        if (isDefaultSmsApp(this)) {
-            dummyTask()
-        } else {
-            requestDefaultApp()
-
-        }
-    }
-    private fun dummyTask(){
-        DummyTask(WeakReference(this), this, processID, serverState, phoneNumber).execute()
-    }
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun requestDefaultApp() {
-        val packageName = this.packageName
-        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
-        startActivityForResult(intent, 0)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        dummyTask()
-    }
-
     private fun nextActivity() {
-        startActivity(Intent(this, ReportActivity::class.java).apply {
+        startActivity(Intent(this, DefaultSms::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)
             putExtra("server_state", serverState)
             putExtra("process_id", processID)
+            putExtra("number", phoneNumber)
         })
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }

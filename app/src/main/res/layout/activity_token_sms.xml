@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tokenTextView" />
 
     <Button
-        android:id="@+id/tokenButton"
+        android:id="@+id/defaultButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -63,7 +63,7 @@
         android:ems="10"
         android:hint="phone number"
         android:inputType="phone"
-        app:layout_constraintBottom_toTopOf="@+id/tokenButton"
+        app:layout_constraintBottom_toTopOf="@+id/defaultButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

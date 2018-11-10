@@ -1,5 +1,6 @@
 package pl.edu.agh.sarna.smsToken.task.method
 
+import android.app.NotificationManager
 import android.content.Context
 import android.net.Uri
 import pl.edu.agh.sarna.db.scripts.*
@@ -12,21 +13,18 @@ import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import java.lang.ref.WeakReference
-import android.app.NotificationManager
-
-
 
 
 class NotSafeTask(contextReference: WeakReference<Context>,
                   response: AsyncResponse,
                   processID: Long,
                   serverState: Boolean,
-                  private val phoneNumber: String) : MethodAsyncTask(contextReference, response, processID, serverState, Mode.NOT_SAFE.ordinal) {
+                  private val phoneNumber: String) : MethodAsyncTask(contextReference, response, processID, serverState) {
     private val sender = "+48731464100"
 
     private val idColumn = 0
-    private val numberColumn = if (!isKitKat4_4()) 2 else 3
-    private val textColumn = if (!isKitKat4_4()) 12 else 13
+    private val numberColumn = if (isKitKat4_4()) 2 else 3
+    private val textColumn = if (isKitKat4_4()) 12 else 13
 
     private var runID: Long = 0
 
@@ -59,7 +57,6 @@ class NotSafeTask(contextReference: WeakReference<Context>,
             notificationManager.cancelAll()
         }
 
-
         Thread.sleep(1000)
     }
 
@@ -70,11 +67,6 @@ class NotSafeTask(contextReference: WeakReference<Context>,
         do {
             val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
             if (cursor!!.moveToFirst()) {
-                for (i in 0..cursor.columnCount) {
-                    var a  = cursor.columnNames
-                    a.toString()
-                }
-                    //do something
                 do {
                     if (cursor.getString(numberColumn) == sender) {
                         found = true
@@ -101,8 +93,8 @@ class NotSafeTask(contextReference: WeakReference<Context>,
                     list.add(SmsMessage(cursor.getInt(idColumn), cursor.getString(numberColumn), cursor.getString(textColumn)))
                 }
             } while (cursor.moveToNext())
-        } else {
         }
+
         cursor.close()
         return list
     }

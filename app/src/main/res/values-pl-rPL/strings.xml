@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sarna</string>
+    <string name="app_subtitle">Zobacz co potrafi wykraść</string>
+    <string name="app_options">Opcje</string>
+    <string name="option_root_privilege">Przydziel roota</string>
+    <string name="option_educational">Tryb edukacyjny</string>
+    <string name="option_remote_server">Zezwól na zewnętrzny serwer</string>
+    <string name="option_report">Generuj raport</string>
+    <string name="start_app">Zacznij</string>
+    <string name="wifi_title">Wszystko o twojej sieci wifi</string>
+    <string name="wifi_description">Konfiguracje sieci Wifi, które kiedyś zostały zapamiętane na urządzeniu, są niezaszyfrowane, więc łatwo dostępne. Kliknij przycisk i zobacz czy uda się je pozyskać.</string>
+    <string name="wifi_button">Start</string>
+    <string name="root_denied">Brak dostępu do roota</string>
+    <string name="unrooted_device">Twój telefon nie jest zrootowany</string>
+    <string name="external_server_warning">Mogą zostać użyte dane komórkowe</string>
+    <string name="root_declined">Nie przydzieliłeś uprawnień roota</string>
+    <string name="report_title">Raport</string>
+    <string name="exit_button">Koniec</string>
+    <string name="metadata_title">Wszystko o twoich kontaktach</string>
+    <string name="metadata_description">Tu bedzie opis</string>
+    <string name="metadata_button">Start</string>
+    <string name="contacts_amount">Liczba kontaktów</string>
+    <string name="call_logs_amount">Liczba logów</string>
+    <string name="most_frequent_contact">Najczęściej dzwoniono do</string>
+    <string name="not_in_contacts">niezapisany</string>
+    <string name="dirtycow_title">Dirty Cow: eskalacja uprawnień</string>
+    <string name="dirtycow_description">tu bedzie opis</string>
+    <string name="dirtycow_button">Start</string>
+    <string name="not_found">nie znaleziono</string>
+    <string name="token_title">Autoryzacja przez sms</string>
+    <string name="token_description">Tu bedzie opis</string>
+    <string name="token_button">Start</string>
+    <string name="cancel">Anuluj</string>
+    <string name="warning">Ostrzeżenie</string>
+    <string name="number_error">Podaj numer telefonu</string>
+    <string name="loading">Czekaj...</string>
+</resources>

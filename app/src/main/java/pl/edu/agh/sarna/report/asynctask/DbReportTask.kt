@@ -34,9 +34,9 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
 
         if (rootAllowed) list.add(wifiPassword(db)!!)
         list.add(dirtycow(db)!!)
-        //list.add(metadata(db)!!)
+        list.add(metadata(db)!!)
         list.add(tokenSms(db, Mode.NOT_SAFE)!!)
-        //list.add(tokenSms(db, Mode.DUMMY)!!)
+        list.add(tokenSms(db, Mode.DUMMY)!!)
 
         return list
     }
@@ -52,11 +52,6 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
                 )
     }
 
-    override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
-        progressDialog.dismiss();
-        response.onFirstFinished(result!!)
-    }
-
     private fun metadata(db: SQLiteDatabase?): SubtaskStatus? {
         return singleMethodReport(db, processID, CallsDetails.CallsDetailsEntry.TABLE_NAME, CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS,
                 CallsDetails.CallsDetailsEntry.COLUMN_NAME_PROCESS_ID, context.getString(R.string.metadata_title))
@@ -65,6 +60,10 @@ class DbReportTask(val context: Context, val response: AsyncResponse, val proces
     private fun wifiPassword(db: SQLiteDatabase?) : SubtaskStatus? {
         return singleMethodReport(db, processID, WifiPasswords.WifiPasswordsEntry.TABLE_NAME, WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS,
                 WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_PROCESS_ID, context.getString(R.string.wifi_title))
+    }
+    override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
+        progressDialog.dismiss();
+        response.processFinish(result!!)
     }
 
 
