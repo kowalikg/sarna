@@ -7,11 +7,12 @@ import android.os.AsyncTask
 import android.provider.BaseColumns
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.report.ReportEntry
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.lang.ref.WeakReference
 
-abstract class ReportTask(protected val contextReference: WeakReference<Context>, private val response : AsyncResponse) : AsyncTask<Void, Void, ArrayList<SubtaskStatus>>() {
+abstract class ReportTask(protected val contextReference: WeakReference<Context>, private val response : AsyncResponse) : AsyncTask<Void, Void, List<ReportEntry>>() {
     private var progressDialog = ProgressDialog(contextReference.get())
 
     override fun onPreExecute() {
@@ -21,14 +22,13 @@ abstract class ReportTask(protected val contextReference: WeakReference<Context>
         progressDialog.setCancelable(true)
         progressDialog.show()
     }
-    abstract override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus>?
-    override fun onPostExecute(result: ArrayList<SubtaskStatus>?) {
+    abstract override fun doInBackground(vararg p0: Void?): List<ReportEntry>?
+    override fun onPostExecute(result: List<ReportEntry>?) {
         progressDialog.dismiss();
         response.processFinish(result!!)
 
     }
     protected fun generateTableReport(runID : Long, tableName : String, projection: Array<String>, matchColumn : String = BaseColumns._ID ): ArrayList<SubtaskStatus>? {
-
         val db = DbHelper.getInstance(contextReference.get())!!.readableDatabase
         val cursor = db.query(
                 tableName,
@@ -50,7 +50,7 @@ abstract class ReportTask(protected val contextReference: WeakReference<Context>
         for (task in projection){
             list.add(SubtaskStatus(
                     task.replace("_", " "),
-                    cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
+                    cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()))
         }
         return list
     }

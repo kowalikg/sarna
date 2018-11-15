@@ -35,7 +35,7 @@
     <string name="cancel">Cancel</string>
     <string name="ok" translatable="false">OK</string>
     <string name="warning">Warning</string>
-    <string name="password_regexp" translatable="false">Haslo: </string>
+    <string name="password_regexp" translatable="false">haslo:[ ]*</string>
     <string name="number_error">Please input phone number!</string>
     <string name="loading">Loading</string>
 

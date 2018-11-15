@@ -1,6 +1,5 @@
 package pl.edu.agh.sarna.report
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -14,14 +13,9 @@ import android.widget.Button
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_report.*
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.dirtycow.task.DirtyCowReportTask
-import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
-import pl.edu.agh.sarna.smsToken.model.Mode
-import pl.edu.agh.sarna.smsToken.task.TokenReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
-import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordsReportTask
 import java.lang.ref.WeakReference
 
 
@@ -51,7 +45,6 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             launchExtendedReport(runID, view.tag.toString())
         }
     }
-
 
     private fun initialiseLayout() {
         layoutParams.setMargins(0, 0, 0, 10)

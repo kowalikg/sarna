@@ -76,7 +76,8 @@ object DbQueries {
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME} text, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} text, " +
                     "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE} integer, " +
-                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_TIME} text, " +
+                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_DATE} text, " +
+                    "${CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION} text, " +
                     "FOREIGN KEY (${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
@@ -101,6 +102,17 @@ object DbQueries {
     const val MOST_FREQUENT_CONTACT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(*) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
             "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY ile DESC LIMIT 1"
 
+    const val TOP_5_DURATION ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, SUM(${CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION}) AS Duration FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY Duration DESC LIMIT 5"
+
+    const val TOP_LOGS_AMOUNT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(*) AS Amount FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY Amount DESC LIMIT 5"
+    const val TOP_NIGHT =
+            "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, Count(*) as LogCount from ${CallsLogs.CallsLogsEntry.TABLE_NAME}\n" +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_DATE} like \"2%\"\n" +
+            " and ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ?" +
+            "group by ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}\n" +
+            "order by LogCount desc"
     const val SQL_DELETE_ENTRIES = "" +
             "DROP TABLE IF EXISTS ${Processes.ProcessEntry.TABLE_NAME}" +
             "DROP TABLE IF EXISTS ${WifiUtils.WifiUtilsEntry.TABLE_NAME}" +

@@ -2,7 +2,9 @@ package pl.edu.agh.sarna.smsToken
 
 import android.Manifest
 import android.annotation.TargetApi
+import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Telephony
@@ -11,14 +13,11 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
-import pl.edu.agh.sarna.report.ReportActivity
-import pl.edu.agh.sarna.smsToken.task.method.DummyTask
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
-import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.isNetworkAvailable
 import java.lang.ref.WeakReference
 
@@ -29,7 +28,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private var serverState: Boolean = false
     private var reportState: Boolean = false
     private var processID: Long = 0
-
+    private var mode = Mode.TEST
     private var sendSmsPermissionGranted = false
     private var readSmsPermissionGranted = false
 
@@ -100,11 +99,22 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun classicTokenJob() {
-        NotSafeTask(WeakReference(this), this, processID, serverState, phoneNumber).execute()
+        NotSafeTask(WeakReference(this), this, processID, serverState, phoneNumber, mode).execute()
+
     }
 
+
     override fun processFinish(output: Any) {
-        if(output == 0) nextActivity()
+        when (output) {
+            Mode.TEST.ordinal -> runListening()
+            -1 -> smsDescriptionTextView.text = "FAILED"
+            Mode.NOT_SAFE.ordinal -> nextActivity()
+        }
+    }
+
+    private fun runListening() {
+        smsDescriptionTextView.text = "TESTED"
+        mode = Mode.NOT_SAFE
     }
 
     private fun initialiseOptions() {

@@ -2,16 +2,24 @@ package pl.edu.agh.sarna
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
-import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
+import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.wifiPasswords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import java.util.*
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.utils.ColorTemplate
+import pl.edu.agh.sarna.utils.kotlin.PieDrawer
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         rootSwitch.setOnCheckedChangeListener { _, isChecked ->
 
             rootAllowed = if (isChecked) {
@@ -44,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 false
             }
-        };
+        }
         serverSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val dialogBuilder = AlertDialog.Builder(this)
@@ -78,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         })
         else {
-            startActivity(Intent(this, DirtyCowActivity::class.java).apply {
+            startActivity(Intent(this, MetadataActivity::class.java).apply {
                 putExtra("root_state", rootAllowed)
                 putExtra("edu_state", educationalMode)
                 putExtra("report_state", reportMode)

@@ -9,6 +9,7 @@ object CallsLogs {
         const val COLUMN_NAME_NAME = "Name"
         const val COLUMN_NAME_NUMBER = "Number"
         const val COLUMN_NAME_TYPE = "Type"
-        const val COLUMN_NAME_TIME = "Time"
+        const val COLUMN_NAME_DATE = "Date"
+        const val COLUMN_NAME_DURATION = "Duration"
     }
 }

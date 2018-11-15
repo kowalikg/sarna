@@ -1,5 +1,6 @@
 package pl.edu.agh.sarna.db.scripts
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.DatabaseUtils
@@ -14,7 +15,9 @@ import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 import pl.edu.agh.sarna.utils.kotlin.toInt
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 fun insertCallsQuery(context: Context?, processID: Long) : Long? {
     val dbHelper = DbHelper.getInstance(context!!)
@@ -68,7 +71,8 @@ fun insertCallsLogsInfoQuery(context: Context?, runID: Long, callLogsPermissionG
 
 }
 
-fun insertCallsLogs(context: Context?, runID: Long, name: String?, number: String?, type: String?, time: String?) : Long {
+@SuppressLint("SimpleDateFormat")
+fun insertCallsLogs(context: Context?, runID: Long, name: String?, number: String?, type: String?, date: String?, duration: String) : Long {
     val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
@@ -77,7 +81,8 @@ fun insertCallsLogs(context: Context?, runID: Long, name: String?, number: Strin
         put(CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME, name)
         put(CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER, number)
         put(CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE, type!!.toInt())
-        put(CallsLogs.CallsLogsEntry.COLUMN_NAME_TIME, time)
+        put(CallsLogs.CallsLogsEntry.COLUMN_NAME_DATE, SimpleDateFormat("HH:mm:ss").format(Date(date!!.toLong()).time).toString())
+        put(CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION, duration)
     }
 
     return db?.insert(CallsLogs.CallsLogsEntry.TABLE_NAME, null, values)!!
@@ -132,4 +137,39 @@ fun mostFrequentContact(context: Context, runID: Long): String {
         return cursor.getString(1)?.let { cursor.getString(1) } ?: run {context.getString(R.string.not_in_contacts)}
     }
     return context.getString(R.string.not_found)
+}
+
+fun top5duration(context: Context, runID: Long) : Map<String, Float> {
+    val map = HashMap<String, Float>()
+    val db = DbHelper.getInstance(context)!!.readableDatabase
+    val cursor = db.rawQuery(DbQueries.TOP_5_DURATION, arrayOf(runID.toString()))
+    if(cursor.moveToFirst()){
+        while(cursor.moveToNext()){
+            map[cursor.getString(0)?: "niezapisane"] = cursor.getInt(1).toFloat()
+        }
+    }
+    return map
+}
+fun top5amount(context: Context, runID: Long) : Map<String, Float> {
+    val map = HashMap<String, Float>()
+    val db = DbHelper.getInstance(context)!!.readableDatabase
+    val cursor = db.rawQuery(DbQueries.TOP_LOGS_AMOUNT, arrayOf(runID.toString()))
+    if(cursor.moveToFirst()){
+        while(cursor.moveToNext()){
+            map[cursor.getString(0)?: "niezapisane"] = cursor.getInt(1).toFloat()
+        }
+    }
+    return map
+}
+
+fun topNight(context: Context, runID: Long) : Map<String, Float> {
+    val map = HashMap<String, Float>()
+    val db = DbHelper.getInstance(context)!!.readableDatabase
+    val cursor = db.rawQuery(DbQueries.TOP_NIGHT, arrayOf(runID.toString()))
+    if(cursor.moveToFirst()){
+        while(cursor.moveToNext()){
+            map[cursor.getString(0)?: "niezapisane"] = cursor.getInt(1).toFloat()
+        }
+    }
+    return map
 }

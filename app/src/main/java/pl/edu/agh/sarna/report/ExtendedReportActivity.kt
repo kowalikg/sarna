@@ -1,27 +1,65 @@
 package pl.edu.agh.sarna.report
 
-import android.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
+import android.widget.TextView
+import com.github.mikephil.charting.charts.PieChart
 import kotlinx.android.synthetic.main.activity_extended_report.*
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.dirtycow.task.DirtyCowReportTask
 import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
-import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.TokenReportTask
+import pl.edu.agh.sarna.utils.kotlin.PieDrawer
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordsReportTask
 import java.lang.ref.WeakReference
 
 class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
+    @SuppressLint("SetTextI18n")
     override fun processFinish(output: Any) {
-        val info = StringBuilder()
-        for(subtask in output as ArrayList<SubtaskStatus>){
-            info.append("${subtask.description} : ${subtask.value}\n")
+        val reportEntry = output as List<ReportEntry>
+        for(entry in reportEntry){
+            generateStatus(entry)
+            generateDescription(entry)
+            generateGraph(entry)
         }
-        descriptionTextView.text = info
+
         titleTextView.text = methodTitle
+
+    }
+
+    private fun generateGraph(entry: ReportEntry) {
+        if (entry.graphList != null){
+            val title = TextView(this)
+            title.gravity = Gravity.CENTER_HORIZONTAL
+            title.text = entry.graphList.title
+            linear.addView(title)
+
+            val pieChart = PieChart(this)
+            val pie = PieDrawer(pieChart)
+            pie.setData(entry.graphList.data)
+            pie.generate()
+            linear.addView(pieChart)
+        }
+    }
+
+    private fun generateStatus(entry: ReportEntry) {
+        if (entry.status != null){
+            val status = TextView(this)
+            linear.addView(status)
+            status.text = "${entry.status.description} : ${entry.status.value}\n"
+        }
+    }
+
+    private fun generateDescription(entry: ReportEntry) {
+        if (entry.description != "") {
+            val description = TextView(this)
+            linear.addView(description)
+            description.text = "${entry.description} \n"
+        }
     }
 
     private var rootState: Boolean = false
@@ -36,7 +74,9 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_extended_report)
         initialiseOptions()
+
         getData()
+
     }
 
     private fun getData() {

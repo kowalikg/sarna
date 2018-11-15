@@ -7,6 +7,7 @@ import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.report.ReportEntry
 import pl.edu.agh.sarna.report.asynctask.ReportTask
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
@@ -23,14 +24,17 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE,
             SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_SEND
-
     )
 
-    override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus> {
+    override fun doInBackground(vararg p0: Void?): List<ReportEntry>? {
         val list = ArrayList<SubtaskStatus>()
         list.addAll(generateTableReport(runID, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission)!!)
         list.addAll(generateTableModeReport(runID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
-        return list
+        val reportList = ArrayList<ReportEntry>()
+        list.forEach {
+            reportList.add(ReportEntry(it))
+        }
+        return reportList
     }
 
     private fun generateTableModeReport(runID: Long, tableName: String, projection: Array<String>): ArrayList<SubtaskStatus>? {
@@ -61,7 +65,7 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
                             Mode.values()[cursor!!.getInt(cursor.getColumnIndex(task))].description))
                 else -> list.add(SubtaskStatus(
                         task.replace("_", " "),
-                        cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
+                        cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()))
             }
         }
         return list

@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.util.Log
 import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 import pl.edu.agh.sarna.model.SubtaskStatus
+import pl.edu.agh.sarna.report.ReportEntry
 import pl.edu.agh.sarna.report.asynctask.ReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
@@ -28,10 +29,15 @@ class WifiPasswordsReportTask(contextReference: WeakReference<Context>, response
             WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD
     )
 
-    override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus>? {
+    override fun doInBackground(vararg p0: Void?): List<ReportEntry>? {
         Thread.sleep(1000)
         val usedProjection = if (isOreo8_1()) projection8_1 else projection
-        return generateTableReport(runID, WifiUtils.WifiUtilsEntry.TABLE_NAME, usedProjection)
+        val list = generateTableReport(runID, WifiUtils.WifiUtilsEntry.TABLE_NAME, usedProjection)!!
+        val reportList = ArrayList<ReportEntry>()
+        list.forEach {
+            reportList.add(ReportEntry(it))
+        }
+        return reportList
     }
 
     override fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>{
@@ -47,7 +53,7 @@ class WifiPasswordsReportTask(contextReference: WeakReference<Context>, response
                         cursor.getString(cursor.getColumnIndex(task))))
                 else -> list.add(SubtaskStatus(
                         task.replace("_", " "),
-                        cursor.getInt(cursor.getColumnIndex(task)).toBoolean()).toEmoji())
+                        cursor.getInt(cursor.getColumnIndex(task)).toBoolean()))
             }
         }
         return list

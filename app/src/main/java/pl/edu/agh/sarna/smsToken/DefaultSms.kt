@@ -18,13 +18,11 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     override fun processFinish(output: Any) {
         if(output == 0) nextActivity()
     }
-
     private var rootState: Boolean = false
     private var eduState: Boolean = false
     private var serverState: Boolean = false
     private var reportState: Boolean = false
     private var processID: Long = 0
-    private var phoneNumber : String = "+48731464100"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +35,6 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
             dummyTask()
         } else {
             requestDefaultApp()
-
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -45,7 +42,7 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun dummyTask(){
-        DummyTask(WeakReference(this), this, processID, serverState, phoneNumber).execute()
+        DummyTask(WeakReference(this), this, processID, serverState).execute()
     }
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun requestDefaultApp() {
@@ -60,7 +57,6 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         serverState = intent.getBooleanExtra("server_state", false)
         reportState = intent.getBooleanExtra("report_state", false)
         processID = intent.getLongExtra("process_id", 0)
-        phoneNumber = intent.getStringExtra("number")
     }
     private fun nextActivity() {
         startActivity(Intent(this, MetadataActivity ::class.java).apply {

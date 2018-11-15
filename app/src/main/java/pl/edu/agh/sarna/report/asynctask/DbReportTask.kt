@@ -27,6 +27,7 @@ class DbReportTask(private val contextReference: WeakReference<Context>, val res
         progressDialog.setCancelable(true)
         progressDialog.show()
     }
+
     override fun doInBackground(vararg p0: Void?): ArrayList<SubtaskStatus> {
         updateProcess(contextReference.get()!!, processID);
         val list = ArrayList<SubtaskStatus>()
@@ -55,7 +56,6 @@ class DbReportTask(private val contextReference: WeakReference<Context>, val res
                 contextReference.get()!!.getString(R.string.dirtycow_title)
                 )
     }
-
     private fun metadata(db: SQLiteDatabase?): SubtaskStatus? {
         return singleMethodReport(db, processID, CallsDetails.CallsDetailsEntry.TABLE_NAME, CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS,
                 CallsDetails.CallsDetailsEntry.COLUMN_NAME_PROCESS_ID, contextReference.get()!!.getString(R.string.metadata_title))
@@ -69,6 +69,5 @@ class DbReportTask(private val contextReference: WeakReference<Context>, val res
         progressDialog.dismiss();
         response.processFinish(result!!)
     }
-
 
 }

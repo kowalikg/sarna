@@ -74,10 +74,10 @@ class MetadataTaskMethod(contextReference: WeakReference<Context>,
 
     @SuppressLint("MissingPermission")
     private fun getAccessToCalls(runID : Long) : TaskStatus {
-        val projection = arrayOf(CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DATE)
+        val projection = arrayOf(CallLog.Calls.CACHED_NAME, CallLog.Calls.NUMBER, CallLog.Calls.TYPE, CallLog.Calls.DATE, CallLog.Calls.DURATION)
         val cursor = contextReference.get()!!.contentResolver.query(CallLog.Calls.CONTENT_URI, projection, null, null, null)
         while (cursor.moveToNext()) {
-            val status = insertCallsLogs(contextReference.get(), runID, cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3))
+            val status = insertCallsLogs(contextReference.get(), runID, cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4))
             if (status.toInt() == -1) return TaskStatus.CALL_ERROR
         }
         cursor.close()
