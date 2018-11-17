@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sarna</string>
     <string name="app_subtitle">Zobacz co potrafi wykraść</string>
     <string name="app_options">Opcje</string>
     <string name="option_root_privilege">Przydziel roota</string>
@@ -21,8 +20,8 @@
     <string name="metadata_description">Tu bedzie opis</string>
     <string name="metadata_button">Start</string>
     <string name="contacts_amount">Liczba kontaktów</string>
-    <string name="call_logs_amount">Liczba logów</string>
-    <string name="most_frequent_contact">Najczęściej dzwoniono do</string>
+    <string name="call_logs_amount">Pozyskana liczba logów</string>
+    <string name="most_frequent_contact">Z kim masz najwięcej połączeń</string>
     <string name="not_in_contacts">niezapisany</string>
     <string name="dirtycow_title">Dirty Cow: eskalacja uprawnień</string>
     <string name="dirtycow_description">tu bedzie opis</string>
@@ -37,4 +36,21 @@
     <string name="loading">Czekaj...</string>
     <string name="token_mode_not_safe">Autoryzacja sms</string>
     <string name="token_mode_for_dummies">Domyślna aplikacja sms</string>
+    <string name="log_condition">Aby uzyskać raport należało przydzielić uprawnienia do spisu połączeń.</string>
+    <string name="permission_granted">Uprawnienie przydzielono!</string>
+    <string name="permission_not_granted">Uprawnienia nie przydzielono!</string>
+    <string name="log_analyze_title">Na podstawie analizy logów, udało sie uzyskać nastepujące informacje:</string>
+    <string name="long_duration_contact">Z kim rozmawiasz najdłużej:</string>
+    <string name="frequent_short_contact">Z kim rozmawiasz często, ale krótko:</string>
+    <string name="night_contact">Z kim rozmawiasz wieczorem (po 20):</string>
+    <string name="missed_contact">Od kogo nie odbierasz telefonu:</string>
+    <string name="rare_long_contact">Z kim rozmawiasz rzadko, ale długo:</string>
+    <string name="most_frequent_contact_description">Osoby z którymi wykonałeś najwięcej połączeń.</string>
+    <string name="long_duration_contact_description">Osoby z którymi łączna długosć rozmów była najdłuższa.</string>
+    <string name="frequent_short_contact_description">Osoby z którymi rozmawiasz często, ale krótko. Prawdopodobnie są to: Twoi sąsiedzi, domownicy, przyjaciele.</string>
+    <string name="rare_long_contact_description">Osoby z którymi rozmawiasz długo, ale rzadko. Prawdopodobnie są to: Twoja dalsza rodzina, infolinie z którymi się łączyłeś.</string>
+    <string name="night_contact_description">Osoby z którymi rozmawiałeś po 20. Prawdopodnie są to: ludzie z którymi nie mieszkasz, przyjaciele z którymi umawiasz się na imprezy.</string>
+    <string name="missed_contact_description">Osoby z nieodebranymi połączeniami. Jeżeli są to numery niezapisane w kontaktach, są to albo potencjalni klienci, albo numery z call center które ignorujesz.</string>
+    <string name="contact_condition">Aby uzyskać raport należało przydzielić uprawnienia do kontaktów.</string>
+    <string name="contacts_description">Twoje kontakty mogą zostać wykorzystane min. do tworzenia baz numerów w call center, bądź wyciec do wiadomości publicznej. Zastanów się czy Twoi znajomi chcieliby, aby każdy miał ich numer.</string>
 </resources>

@@ -21,7 +21,6 @@
     <string name="metadata_button">Launch</string>
     <string name="contacts_amount">Contacts amount</string>
     <string name="call_logs_amount">Call logs amount</string>
-    <string name="most_frequent_contact">Most frequent contact</string>
     <string name="not_in_contacts">not saved in contacts</string>
     <string name="dirtycow_title">Dirty cow vulnerability</string>
     <string name="dirtycow_description">Check whether your phone is vulnerable</string>
@@ -38,5 +37,24 @@
     <string name="password_regexp" translatable="false">haslo:[ ]*</string>
     <string name="number_error">Please input phone number!</string>
     <string name="loading">Loading</string>
+    <string name="log_condition">To generate report you need to grant log permission</string>
+    <string name="contact_condition">To generate report you need to grant contact permission</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="permission_not_granted">Permission not granted</string>
+    <string name="log_analyze_title">Based on call logs we found out that</string>
+    <string name="long_duration_contact">With who you speak long</string>
+    <string name="long_duration_contact_description">With who you speak long</string>
+    <string name="frequent_short_contact">With who you speak frequent, but short</string>
+    <string name="frequent_short_contact_description">With who you speak frequent, but short</string>
+    <string name="rare_long_contact">With who you speak rarely, but long</string>
+    <string name="rare_long_contact_description">With who you speak rarely, but long</string>
+    <string name="night_contact">With who you speak nights</string>
+    <string name="night_contact_description">With who you speak nights</string>
+    <string name="missed_contact">With who you not speak</string>
+    <string name="missed_contact_description">With who you not speak</string>
+    <string name="most_frequent_contact">With who you speak frequent</string>
+    <string name="most_frequent_contact_description">With who you speak frequent</string>
+    <string name="contacts_description" />
+
 
 </resources>

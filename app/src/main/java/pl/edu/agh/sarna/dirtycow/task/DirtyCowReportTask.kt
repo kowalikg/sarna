@@ -29,7 +29,7 @@ class DirtyCowReportTask(contextReference: WeakReference<Context>, response: Asy
         list.addAll(generateTableReport(runID, DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME, projectionStatus)!!)
         val reportList = ArrayList<ReportEntry>()
         list.forEach {
-            reportList.add(ReportEntry(it))
+            reportList.add(ReportEntry(""))
         }
         return reportList
     }

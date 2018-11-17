@@ -32,7 +32,7 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
         list.addAll(generateTableModeReport(runID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
         val reportList = ArrayList<ReportEntry>()
         list.forEach {
-            reportList.add(ReportEntry(it))
+            reportList.add(ReportEntry(""))
         }
         return reportList
     }

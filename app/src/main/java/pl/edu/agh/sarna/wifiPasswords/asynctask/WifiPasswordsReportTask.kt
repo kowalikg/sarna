@@ -35,7 +35,7 @@ class WifiPasswordsReportTask(contextReference: WeakReference<Context>, response
         val list = generateTableReport(runID, WifiUtils.WifiUtilsEntry.TABLE_NAME, usedProjection)!!
         val reportList = ArrayList<ReportEntry>()
         list.forEach {
-            reportList.add(ReportEntry(it))
+            reportList.add(ReportEntry(""))
         }
         return reportList
     }

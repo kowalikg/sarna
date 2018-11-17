@@ -1,6 +1,7 @@
 package pl.edu.agh.sarna.metadata.asynctask
 
 import android.content.Context
+import android.provider.CallLog
 import android.util.Log
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
@@ -25,48 +26,59 @@ class MetadataReportTask(contextReference: WeakReference<Context>, response: Asy
     override fun doInBackground(vararg p0: Void?): List<ReportEntry>? {
         val metaList = ArrayList<ReportEntry>()
 
-        val description = "Aby uzyskac dostep do logow nalezalo przydzielic dostep do uprawnien logow"
-        val status =  generateTableReport(runID, CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, projectionCalls, CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID)!!
-        Log.i("STATUS", status[0].value.toString())
-        val result = if(status[0].value as Boolean) "Zostalo przydzielone" else "Nie zostalo przydzielone"
+        metaList.addAll(generateContactReport())
+        metaList.addAll(generateCallReport())
+        return metaList
 
-        metaList.add(ReportEntry(null, description))
-        metaList.add(ReportEntry(status[0].toEmoji(), result))
+    }
+
+    private fun generateContactReport(): Collection<ReportEntry> {
+        val metaList = ArrayList<ReportEntry>()
+        val status =  generateTableReport(runID, ContactsInfo.ContactsInfoEntry.TABLE_NAME, projectionContacts, ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID)!!
+        val result = if(status[0].value as Boolean) contextReference.get()!!.getString(R.string.permission_granted) else contextReference.get()!!.getString(R.string.permission_granted)
+
+        metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.contact_condition)))
+        metaList.add(ReportEntry(result))
         if (status[0].value as Boolean){
-            metaList.add(ReportEntry(generateCallLogsReport()))
-
-            val graphDescription = "Na podstawie analizy logow, udalo sie uzyskac nastepujace informacje.\n"
-            val graph = GraphEntry("Kontakty z najwieksza liczba polaczen kazdego typu:", top5amount(contextReference.get()!!, runID))
-            metaList.add(ReportEntry(null, graphDescription, graph))
-            val graph2 = GraphEntry("Kontakty z ktorymi rozmawiales najdluzej:", top5duration(contextReference.get()!!, runID))
-            val graph3 = GraphEntry("Kontakty z ktorymi rozmawiasz wieczorem:", topNight(contextReference.get()!!, runID))
-            metaList.add(ReportEntry(null, "", graph2))
-            metaList.add(ReportEntry(null, "", graph3))
-
+            val bum = generateContactsReport()
+            metaList.add(ReportEntry(bum.description + ":" + bum.value))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.contacts_description)))
         }
-
-//        for (task in generateTableReport(runID, CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, projectionCalls, CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID)!!){
-//            metaList.add(ReportEntry(task, "", GraphEntry("Top duration length", top5duration(contextReference.get()!!, runID))))
-//        }
-//        metaList.add(ReportEntry(generateCallLogsReport(), "", GraphEntry("Top duration length", top5duration(contextReference.get()!!, runID))))
-//
-//
-//        for (task in generateTableReport(runID, ContactsInfo.ContactsInfoEntry.TABLE_NAME, projectionContacts, ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID)!!){
-//            metaList.add(ReportEntry(task))
-//        }
-//        for (task in generateContactsReport()!!){
-//            metaList.add(ReportEntry(task))
-//        }
         return metaList
     }
 
-    private fun generateContactsReport(): ArrayList<SubtaskStatus>? {
-        val list = ArrayList<SubtaskStatus>()
+    private fun generateCallReport(): Collection<ReportEntry> {
+        val metaList = ArrayList<ReportEntry>()
+        val status =  generateTableReport(runID, CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME, projectionCalls, CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID)!!
+        val result = if(status[0].value as Boolean) contextReference.get()!!.getString(R.string.permission_granted) else contextReference.get()!!.getString(R.string.permission_granted)
 
-        list.add(SubtaskStatus(contextReference.get()!!.getString(R.string.contacts_amount), contactsAmount(contextReference.get(), runID)))
-        list.add(SubtaskStatus(contextReference.get()!!.getString(R.string.most_frequent_contact), mostFrequentContact(contextReference.get()!!, runID)))
+        metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.log_condition)))
+        metaList.add(ReportEntry(result))
 
-        return list
+        if (status[0].value as Boolean){
+            val bum = generateCallLogsReport()
+            metaList.add(ReportEntry(bum.description + ":" + bum.value))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.log_analyze_title)))
+
+            val graph = GraphEntry(contextReference.get()!!.getString(R.string.most_frequent_contact), top5amount(contextReference.get()!!, runID))
+            val graph2 = GraphEntry(contextReference.get()!!.getString(R.string.long_duration_contact), top5duration(contextReference.get()!!, runID))
+            val graph3 = GraphEntry(contextReference.get()!!.getString(R.string.night_contact), topNight(contextReference.get()!!, runID))
+            val graph4 = GraphEntry(contextReference.get()!!.getString(R.string.frequent_short_contact), top3callFactor(contextReference.get()!!, runID))
+            val graph5 = GraphEntry(contextReference.get()!!.getString(R.string.rare_long_contact), top3callFactor(contextReference.get()!!, runID, -1))
+            val graph6 = GraphEntry(contextReference.get()!!.getString(R.string.missed_contact), missedCalls(contextReference.get()!!, runID))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.most_frequent_contact_description), graph))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.long_duration_contact_description), graph2))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.night_contact_description), graph3))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.frequent_short_contact_description), graph4))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.rare_long_contact_description), graph5))
+            metaList.add(ReportEntry(contextReference.get()!!.getString(R.string.missed_contact_description), graph6))
+        }
+        return metaList
+    }
+
+    private fun generateContactsReport(): SubtaskStatus {
+        return SubtaskStatus(contextReference.get()!!.getString(R.string.contacts_amount), contactsAmount(contextReference.get(), runID))
+
     }
     private fun generateCallLogsReport(): SubtaskStatus {
         return SubtaskStatus(contextReference.get()!!.getString(R.string.call_logs_amount), callLogsAmount(contextReference.get(), runID))

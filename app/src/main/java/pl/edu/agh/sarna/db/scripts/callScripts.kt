@@ -17,6 +17,7 @@ import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 fun insertCallsQuery(context: Context?, processID: Long) : Long? {
@@ -142,10 +143,12 @@ fun mostFrequentContact(context: Context, runID: Long): String {
 fun top5duration(context: Context, runID: Long) : Map<String, Float> {
     val map = HashMap<String, Float>()
     val db = DbHelper.getInstance(context)!!.readableDatabase
-    val cursor = db.rawQuery(DbQueries.TOP_5_DURATION, arrayOf(runID.toString()))
+    val cursor = db.rawQuery(DbQueries.GET_DURATION, arrayOf(runID.toString()))
     if(cursor.moveToFirst()){
-        while(cursor.moveToNext()){
-            map[cursor.getString(0)?: "niezapisane"] = cursor.getInt(1).toFloat()
+        var i = 0
+        while(cursor.moveToNext() and (i < 5)){
+            map[cursor.getString(0) ?: cursor.getString(1)] = cursor.getInt(2).toFloat()
+            i++
         }
     }
     return map
@@ -153,10 +156,12 @@ fun top5duration(context: Context, runID: Long) : Map<String, Float> {
 fun top5amount(context: Context, runID: Long) : Map<String, Float> {
     val map = HashMap<String, Float>()
     val db = DbHelper.getInstance(context)!!.readableDatabase
-    val cursor = db.rawQuery(DbQueries.TOP_LOGS_AMOUNT, arrayOf(runID.toString()))
+    val cursor = db.rawQuery(DbQueries.TOP_5_AMOUNT, arrayOf(runID.toString()))
+    var i = 0
     if(cursor.moveToFirst()){
-        while(cursor.moveToNext()){
-            map[cursor.getString(0)?: "niezapisane"] = cursor.getInt(1).toFloat()
+        while(cursor.moveToNext() and (i < 5)){
+            map[cursor.getString(0) ?: cursor.getString(1)] = cursor.getInt(2).toFloat()
+            i++
         }
     }
     return map
@@ -167,9 +172,54 @@ fun topNight(context: Context, runID: Long) : Map<String, Float> {
     val db = DbHelper.getInstance(context)!!.readableDatabase
     val cursor = db.rawQuery(DbQueries.TOP_NIGHT, arrayOf(runID.toString()))
     if(cursor.moveToFirst()){
-        while(cursor.moveToNext()){
-            map[cursor.getString(0)?: "niezapisane"] = cursor.getInt(1).toFloat()
+        var i = 0
+        while(cursor.moveToNext()  and (i < 5)){
+            map[cursor.getString(0) ?: cursor.getString(1)] = cursor.getInt(2).toFloat()
+            i++
         }
     }
     return map
+}
+fun missedCalls(context: Context, runID: Long) : Map<String, Float>{
+    val map = TreeMap<String, Float>()
+    val db = DbHelper.getInstance(context)!!.readableDatabase
+    val cursor = db.rawQuery(DbQueries.MISSED, arrayOf(runID.toString()))
+    var i = 0
+    if(cursor.moveToFirst()){
+        while(cursor.moveToNext() and (i < 5)){
+            map[cursor.getString(0) ?: cursor.getString(1)] = cursor.getInt(2).toFloat()
+            i++
+        }
+    }
+    return map
+}
+fun top3callFactor(context: Context, runID: Long, order: Int = 1) : Map<String, Float>{
+    val map = TreeMap<String, Float>()
+    val db = DbHelper.getInstance(context)!!.readableDatabase
+    var cursor = db.rawQuery(DbQueries.GET_DURATION, arrayOf(runID.toString()))
+    if(cursor.moveToFirst()){
+        while(cursor.moveToNext()){
+            if(cursor.getInt(2).toFloat() > 0){
+                map[cursor.getString(0) ?: cursor.getString(1)] = cursor.getInt(2).toFloat()
+            }
+        }
+    }
+    cursor = db.rawQuery(DbQueries.TOP_LOGS_AMOUNT, arrayOf(runID.toString()))
+    if(cursor.moveToFirst()){
+        while(cursor.moveToNext()){
+            val duration = map[cursor.getString(0) ?: cursor.getString(1)]
+            if (duration != null) map[cursor.getString(0) ?: cursor.getString(1)] = duration / cursor.getInt(2).toFloat()
+        }
+    }
+    var i = 0
+    val map3 = TreeMap<String, Float>()
+    val sortedMap =
+            if (order < 0) map.toList().sortedBy { (_, value) -> value}.reversed().toMap()
+            else map.toList().sortedBy { (_, value) -> value}.toMap()
+    for (entry in sortedMap){
+        if (i == 3) break
+        i++
+        map3[entry.key] = entry.value
+    }
+    return map3
 }

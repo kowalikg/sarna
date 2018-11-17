@@ -22,9 +22,8 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
     override fun processFinish(output: Any) {
         val reportEntry = output as List<ReportEntry>
         for(entry in reportEntry){
-            generateStatus(entry)
-            generateDescription(entry)
             generateGraph(entry)
+            generateDescription(entry)
         }
 
         titleTextView.text = methodTitle
@@ -35,6 +34,7 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
         if (entry.graphList != null){
             val title = TextView(this)
             title.gravity = Gravity.CENTER_HORIZONTAL
+            title.setTextAppearance(this, R.style.TextAppearance_AppCompat_Medium)
             title.text = entry.graphList.title
             linear.addView(title)
 
@@ -46,19 +46,12 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
         }
     }
 
-    private fun generateStatus(entry: ReportEntry) {
-        if (entry.status != null){
-            val status = TextView(this)
-            linear.addView(status)
-            status.text = "${entry.status.description} : ${entry.status.value}\n"
-        }
-    }
-
     private fun generateDescription(entry: ReportEntry) {
         if (entry.description != "") {
             val description = TextView(this)
             linear.addView(description)
             description.text = "${entry.description} \n"
+            description.gravity = Gravity.CENTER_HORIZONTAL
         }
     }
 

@@ -18,19 +18,19 @@ import pl.edu.agh.sarna.db.model.wifi.WifiUtils
 object DbQueries {
     const val CREATE_PROCESS =
             "CREATE TABLE ${Processes.ProcessEntry.TABLE_NAME} (" +
-            "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_START_TIME} text, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_END_TIME} text, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER} integer DEFAULT 0, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED} integer DEFAULT 0, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL} integer DEFAULT 0, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_REPORT} integer DEFAULT 0, " +
-            "${Processes.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION} real) "
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_START_TIME} text, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_END_TIME} text, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER} integer DEFAULT 0, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED} integer DEFAULT 0, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL} integer DEFAULT 0, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_REPORT} integer DEFAULT 0, " +
+                    "${Processes.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION} real) "
 
     const val CREATE_WIFI_UTILS =
             "CREATE TABLE ${WifiUtils.WifiUtilsEntry.TABLE_NAME} (" +
                     "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                    "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_RUN_ID} integer, "  +
+                    "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_RUN_ID} integer, " +
                     "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_STORAGE_PERMISSION_STATUS} integer DEFAULT 0, " +
                     "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_LOCATION_PERMISSION_STATUS} integer DEFAULT 0, " +
                     "${WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_CONNECTED_STATUS} integer DEFAULT 0, " +
@@ -99,20 +99,30 @@ object DbQueries {
                     "FOREIGN KEY (${Contacts.ContactsEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
-    const val MOST_FREQUENT_CONTACT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(*) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
-            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY ile DESC LIMIT 1"
+    const val MOST_FREQUENT_CONTACT = "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, COUNT(*) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY ile DESC LIMIT 1"
+    const val GET_DURATION = "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} , SUM(${CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION}) AS SumDuration FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY SumDuration DESC"
+    const val TOP_LOGS_AMOUNT = "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, COUNT(*) AS Amount FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY Amount DESC"
 
-    const val TOP_5_DURATION ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, SUM(${CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION}) AS Duration FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
-            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY Duration DESC LIMIT 5"
+    const val MISSED =
+            "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, Count(*) as LogCount from ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
+                    "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE} = 3" +
+                    " and ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ?" +
+                    " group by ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} " +
+                    "order by LogCount desc"
 
-    const val TOP_LOGS_AMOUNT ="SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, COUNT(*) AS Amount FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
-            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY Amount DESC LIMIT 5"
+    const val TOP_5_DURATION = "$GET_DURATION "
+    const val TOP_5_AMOUNT = "$TOP_LOGS_AMOUNT "
+
+
     const val TOP_NIGHT =
-            "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, Count(*) as LogCount from ${CallsLogs.CallsLogsEntry.TABLE_NAME}\n" +
-            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_DATE} like \"2%\"\n" +
-            " and ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ?" +
-            "group by ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}\n" +
-            "order by LogCount desc"
+            "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER},  Count(*) as LogCount from ${CallsLogs.CallsLogsEntry.TABLE_NAME}\n" +
+                    "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_DATE} like \"2%\"\n" +
+                    " and ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ?" +
+                    "group by ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} " +
+                    "order by LogCount desc"
     const val SQL_DELETE_ENTRIES = "" +
             "DROP TABLE IF EXISTS ${Processes.ProcessEntry.TABLE_NAME}" +
             "DROP TABLE IF EXISTS ${WifiUtils.WifiUtilsEntry.TABLE_NAME}" +
@@ -170,4 +180,5 @@ object DbQueries {
                     "${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_VENDOR} text, " +
                     "FOREIGN KEY (${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
 }
