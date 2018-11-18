@@ -13,8 +13,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.scripts.codesAmount
+import pl.edu.agh.sarna.db.scripts.insertTokenQuery
+import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
+import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
@@ -31,6 +35,8 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private var mode = Mode.TEST
     private var sendSmsPermissionGranted = false
     private var readSmsPermissionGranted = false
+
+    private var runID: Long = 0
 
     private var phoneNumber : String = "+48731464100"
 
@@ -64,7 +70,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         }
     }
 
-    private fun nextActivity() {
+    fun nextActivity(view: View) {
         startActivity(Intent(this, DefaultSms::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
@@ -98,23 +104,39 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         classicTokenJob()
     }
 
-    private fun classicTokenJob() {
-        NotSafeTask(WeakReference(this), this, processID, serverState, phoneNumber, mode).execute()
 
+    private fun classicTokenJob() {
+        runID = insertTokenQuery(this, processID, mode.ordinal)!!
+        NotSafeTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
     }
 
 
     override fun processFinish(output: Any) {
         when (output) {
             Mode.TEST.ordinal -> runListening()
-            -1 -> smsDescriptionTextView.text = "FAILED"
-            Mode.NOT_SAFE.ordinal -> nextActivity()
+            -1 -> failedProcedure()
+            Mode.NOT_SAFE.ordinal -> endMethod()
         }
+    }
+
+    private fun endMethod() {
+        smsDescriptionTextView.text = "OK"
+        updateTokenMethod(this, runID, codesAmount(this, runID) > 0)
+    }
+
+    private fun failedProcedure() {
+        smsDescriptionTextView.text = "FAILED"
+        nextButton.visibility = View.VISIBLE
+        defaultButton.isEnabled = false
+        updateTokenMethod(this, runID, false)
     }
 
     private fun runListening() {
         smsDescriptionTextView.text = "TESTED"
         mode = Mode.NOT_SAFE
+        nextButton.visibility = View.VISIBLE
+        updateTokenMethod(this, runID, true)
+
     }
 
     private fun initialiseOptions() {

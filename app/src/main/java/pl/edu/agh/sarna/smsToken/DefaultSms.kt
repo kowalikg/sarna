@@ -7,22 +7,30 @@ import android.os.Bundle
 import android.provider.Telephony
 import android.support.annotation.RequiresApi
 import android.view.View
+import kotlinx.android.synthetic.main.activity_default_sms.*
+import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.scripts.codesAmount
+import pl.edu.agh.sarna.db.scripts.insertTokenQuery
+import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.metadata.MetadataActivity
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import java.lang.ref.WeakReference
 
 class DefaultSms : AppCompatActivity(), AsyncResponse {
-    override fun processFinish(output: Any) {
-        if(output == 0) nextActivity()
-    }
     private var rootState: Boolean = false
     private var eduState: Boolean = false
     private var serverState: Boolean = false
     private var reportState: Boolean = false
     private var processID: Long = 0
+
+    private var phoneNumber = ""
+
+    private var mode = Mode.TEST_DUMMY
+    private var runID: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +50,8 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun dummyTask(){
-        DummyTask(WeakReference(this), this, processID, serverState).execute()
+        runID = insertTokenQuery(this, processID, mode.ordinal)!!
+        DummyTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
     }
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun requestDefaultApp() {
@@ -51,14 +60,17 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, packageName)
         startActivityForResult(intent, 0)
     }
+
+
     private fun initialiseOptions() {
         rootState = intent.getBooleanExtra("root_state", false)
         eduState = intent.getBooleanExtra("edu_state", false)
         serverState = intent.getBooleanExtra("server_state", false)
         reportState = intent.getBooleanExtra("report_state", false)
         processID = intent.getLongExtra("process_id", 0)
+        phoneNumber = intent.getStringExtra("number")
     }
-    private fun nextActivity() {
+    fun nextActivity(view: View) {
         startActivity(Intent(this, MetadataActivity ::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
@@ -67,5 +79,35 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
             putExtra("process_id", processID)
         })
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
+    }
+    override fun onBackPressed() {
+
+    }
+
+    override fun processFinish(output: Any) {
+        when (output) {
+            Mode.TEST_DUMMY.ordinal -> runListening()
+            -1 -> failedProcedure()
+            Mode.DUMMY.ordinal -> endMethod()
+        }
+    }
+
+    private fun endMethod() {
+        defaultDescriptionTextView.text = "OK"
+    }
+
+    private fun failedProcedure() {
+        defaultDescriptionTextView.text = "FAILED"
+        defaultNextButton.visibility = View.VISIBLE
+        defaultLaunchButton.isEnabled = false
+        updateTokenMethod(this, runID, false)
+    }
+
+    private fun runListening() {
+        defaultDescriptionTextView.text = "TESTED"
+        mode = Mode.DUMMY
+        defaultNextButton.visibility = View.VISIBLE
+        updateTokenMethod(this, runID, true)
+
     }
 }

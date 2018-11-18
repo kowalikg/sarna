@@ -39,7 +39,7 @@ class SmsSender(val contextReference: WeakReference<Context>, private val server
             val jsonParam = JSONArray()
             val jsonObject = JSONObject()
             jsonObject.put("phone_number", phoneNumber)
-            jsonObject.put("message", "haslo: ${nextPassword()}")
+            jsonObject.put("message", "test:${nextPassword()}")
             jsonObject.put("device_id", deviceID)
             jsonParam.put(jsonObject)
 
@@ -61,7 +61,7 @@ class SmsSender(val contextReference: WeakReference<Context>, private val server
         if (checkSendSmsPermission(contextReference.get()!!)) {
             val smsManager = SmsManager.getDefault()
             smsManager.sendTextMessage(phoneNumber, null,
-                    "haslo: ${nextPassword()}",
+                    "test:${nextPassword()}",
                     null, null)
             return true
         }

@@ -18,6 +18,9 @@ fun isOreo8_0(): Boolean {
 fun isKitKat4_4(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
 }
+fun isNougat7_1_2(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1
+}
 @TargetApi(Build.VERSION_CODES.KITKAT)
 fun isDefaultSmsApp(context: Context): Boolean {
     return try {

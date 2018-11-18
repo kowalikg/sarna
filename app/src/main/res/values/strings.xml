@@ -55,6 +55,7 @@
     <string name="most_frequent_contact">With who you speak frequent</string>
     <string name="most_frequent_contact_description">With who you speak frequent</string>
     <string name="contacts_description" />
+    <string name="next_button">Skip</string>
 
 
 </resources>

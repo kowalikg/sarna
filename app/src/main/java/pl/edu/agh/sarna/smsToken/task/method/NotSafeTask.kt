@@ -15,21 +15,21 @@ import pl.edu.agh.sarna.smsToken.model.SmsMessage
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
+import pl.edu.agh.sarna.utils.kotlin.isNougat7_1_2
 import java.lang.ref.WeakReference
 
 
 class NotSafeTask(contextReference: WeakReference<Context>,
                   response: AsyncResponse,
                   processID: Long,
+                  private var runID: Long,
                   serverState: Boolean,
                   private val phoneNumber: String, private val mode: Mode) : MethodAsyncTask(contextReference, response, processID, serverState) {
     private val sender = "+48731464100"
 
     private val idColumn = 0
     private val numberColumn = if (isKitKat4_4()) 2 else 3
-    private val textColumn = if (isKitKat4_4()) 12 else 13
-
-    private var runID: Long = 0
+    private val textColumn = if (isNougat7_1_2()) 12 else 13
 
     override fun doInBackground(vararg p0: Void?): Int {
         if (mode == Mode.TEST){
@@ -41,12 +41,14 @@ class NotSafeTask(contextReference: WeakReference<Context>,
             }
         }
         else {
-            runID = insertTokenQuery(contextReference.get(), processID, Mode.NOT_SAFE.ordinal)!!
             if (insertSmsPermissions(contextReference.get(), runID) < 0) return -1
-            if (checkReadSmsPermission(contextReference.get()!!))
-                if(verifySms()) extract()
-            updateTokenMethod(contextReference.get(), runID, codesAmount(contextReference.get(), runID) > 0)
-            return Mode.NOT_SAFE.ordinal
+            if (checkReadSmsPermission(contextReference.get()!!)) {
+                if(verifySms()){
+                    extract()
+                }
+                else return -1
+                return Mode.NOT_SAFE.ordinal
+            }
         }
         return -1
     }
@@ -70,8 +72,8 @@ class NotSafeTask(contextReference: WeakReference<Context>,
     }
 
     private fun verifySms() : Boolean {
-
         var found = false
+        var iteration = 0
         do {
             Thread.sleep(1000)
             val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
@@ -82,7 +84,8 @@ class NotSafeTask(contextReference: WeakReference<Context>,
                     }
                 } while (cursor.moveToNext() and !found)
             }
-        } while (!found)
+            iteration++
+        } while (!found and (iteration < 20))
         return found
     }
 
@@ -108,8 +111,10 @@ class NotSafeTask(contextReference: WeakReference<Context>,
 
     private fun containsCode(number: String, body: String) : Boolean {
         if ((mode == Mode.NOT_SAFE) and (number in arrayOf(sender, phoneNumber))) return false
-        if ((mode == Mode.TEST) and (number != sender)) return false
-        val pattern = """${contextReference.get()!!.getString(R.string.password_regexp)}(\d+)"""
+        if ((mode == Mode.TEST) and (number !in arrayOf(sender, phoneNumber))) return false
+        val pattern = if (mode == Mode.NOT_SAFE)
+                        """${contextReference.get()!!.getString(R.string.password_regexp)}(\d+)"""
+                    else """test:[ ]*(\d+)"""
         val regex = pattern.toRegex()
         regex.find(body)?.let { return true } ?: run { return false }
     }

@@ -53,4 +53,5 @@
     <string name="missed_contact_description">Osoby z nieodebranymi połączeniami. Jeżeli są to numery niezapisane w kontaktach, są to albo potencjalni klienci, albo numery z call center które ignorujesz.</string>
     <string name="contact_condition">Aby uzyskać raport należało przydzielić uprawnienia do kontaktów.</string>
     <string name="contacts_description">Twoje kontakty mogą zostać wykorzystane min. do tworzenia baz numerów w call center, bądź wyciec do wiadomości publicznej. Zastanów się czy Twoi znajomi chcieliby, aby każdy miał ich numer.</string>
+    <string name="next_button">Dalej</string>
 </resources>

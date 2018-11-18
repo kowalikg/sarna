@@ -13,6 +13,7 @@ import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkReceiveSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
+import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*

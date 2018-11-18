@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tokenTextView" />
 
     <Button
-        android:id="@+id/defaultButton"
+        android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -44,12 +44,29 @@
         android:layout_marginEnd="3dp"
         android:layout_marginRight="3dp"
         android:layout_marginBottom="96dp"
-        android:onClick="startTokenMethod"
-        android:text="@string/token_button"
+        android:onClick="nextActivity"
+        android:text="@string/next_button"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/defaultButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="startTokenMethod"
+        android:text="@string/token_button"
+        app:layout_constraintBottom_toTopOf="@+id/nextButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <EditText
         android:id="@+id/tokenEditText"
@@ -57,6 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
@@ -65,6 +83,9 @@
         android:inputType="phone"
         app:layout_constraintBottom_toTopOf="@+id/defaultButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/smsDescriptionTextView"
+        app:layout_constraintVertical_bias="0.65" />
 
 </android.support.constraint.ConstraintLayout>
