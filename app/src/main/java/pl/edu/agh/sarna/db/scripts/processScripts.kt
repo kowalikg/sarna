@@ -63,7 +63,8 @@ fun singleMethodReport(db: SQLiteDatabase?, processID: Long, tableName : String,
     return SubtaskStatus(title, false)
 }
 fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode, title: String) : SubtaskStatus?{
-    val cursor = db!!.query(
+    Log.i("BAZA", "Dane: $processID, mode: $mode, tytul $title")
+    var cursor = db!!.query(
             TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME,
             arrayOf(BaseColumns._ID, TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS),
             "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID}=? and ${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE}=?",
@@ -73,11 +74,32 @@ fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode, title: Str
             "1"
     )
     if (cursor.moveToFirst()) {
+        Log.i("BAZA", "Przeszło z id = ${cursor.getLong(cursor.getColumnIndex(BaseColumns._ID))} ")
         return SubtaskStatus(
                 title,
                 cursor.getInt(cursor.getColumnIndex( TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS)).toBoolean(),
                 cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)))
     }
+    else{
+        val testMode = if(mode == Mode.NOT_SAFE) Mode.TEST else Mode.TEST_DUMMY
+        cursor = db.query(
+                TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME,
+                arrayOf(BaseColumns._ID),
+                "${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID}=? and ${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE}=?",
+                arrayOf(processID.toString(), testMode.ordinal.toString()),
+                null, null,
+                "_id DESC" ,
+                "1"
+        )
+        if (cursor.moveToFirst()) {
+            Log.i("BAZA", "Przeszło z id = ${cursor.getLong(cursor.getColumnIndex(BaseColumns._ID))} ")
+            return SubtaskStatus(
+                    title,
+                    false,
+                    cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)))
+        }
+    }
     cursor.close()
-    return SubtaskStatus(mode.description, false)
+
+    return SubtaskStatus(title, false)
 }

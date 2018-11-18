@@ -19,6 +19,7 @@ import java.util.*
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.utils.ColorTemplate
+import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.smsToken.DefaultSms
 import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.utils.kotlin.PieDrawer
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         })
         else {
-            startActivity(Intent(this, TokenSms::class.java).apply {
+            startActivity(Intent(this, DirtyCowActivity::class.java).apply {
                 putExtra("root_state", rootAllowed)
                 putExtra("edu_state", educationalMode)
                 putExtra("report_state", reportMode)

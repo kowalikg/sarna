@@ -77,8 +77,8 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
             getString(R.string.dirtycow_title) -> generateExtendedDirtycowReport(runID)
             getString(R.string.wifi_title) -> generateExtendedWifiReport(runID)
             getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
-            getString(R.string.token_mode_not_safe) -> generateExtendTokenReport(runID, Mode.NOT_SAFE)
-            getString(R.string.token_mode_for_dummies) -> generateExtendTokenReport(runID, Mode.DUMMY)
+            getString(R.string.token_mode_not_safe) -> generateExtendTokenReport(runID)
+            getString(R.string.token_mode_for_dummies) -> generateExtendTokenReport(runID)
         }
     }
 
@@ -87,8 +87,8 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
         DirtyCowReportTask(WeakReference(this), this, runID).execute()
     }
 
-    private fun generateExtendTokenReport(runID: Long, mode : Mode) {
-        TokenReportTask(WeakReference(this), this, runID, mode).execute()
+    private fun generateExtendTokenReport(runID: Long) {
+        TokenReportTask(WeakReference(this), this, runID).execute()
     }
 
     private fun generateExtendMetadataReport(runID: Long) {

@@ -17,6 +17,9 @@ import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.isNougat7_1_2
 import java.lang.ref.WeakReference
+import android.content.Intent
+
+
 
 
 class NotSafeTask(contextReference: WeakReference<Context>,
@@ -41,7 +44,6 @@ class NotSafeTask(contextReference: WeakReference<Context>,
             }
         }
         else {
-            if (insertSmsPermissions(contextReference.get(), runID) < 0) return -1
             if (checkReadSmsPermission(contextReference.get()!!)) {
                 if(verifySms()){
                     extract()
@@ -75,12 +77,15 @@ class NotSafeTask(contextReference: WeakReference<Context>,
         var found = false
         var iteration = 0
         do {
-            Thread.sleep(1000)
+            Thread.sleep(1)
             val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
             if (cursor!!.moveToFirst()) {
                 do {
                     if (containsCode(cursor.getString(numberColumn), cursor.getString(textColumn))) {
                         found = true
+                        val i = Intent("notifyService")
+                            i.putExtra("command", "clearall")
+                            contextReference.get()!!.sendBroadcast(i)
                     }
                 } while (cursor.moveToNext() and !found)
             }

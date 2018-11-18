@@ -103,7 +103,14 @@
         <activity android:name=".dirtycow.DirtyCowActivity" />
         <activity android:name=".smsToken.TokenSms" />
         <activity android:name=".report.ExtendedReportActivity" />
-        <activity android:name=".smsToken.DefaultSms"></activity>
+        <activity android:name=".smsToken.DefaultSms" />
+        <service android:name=".smsToken.NLService"
+            android:label="notification_service_sarna"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

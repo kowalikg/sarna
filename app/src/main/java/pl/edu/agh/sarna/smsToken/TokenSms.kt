@@ -14,6 +14,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.scripts.codesAmount
+import pl.edu.agh.sarna.db.scripts.insertSmsPermissions
 import pl.edu.agh.sarna.db.scripts.insertTokenQuery
 import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
@@ -107,6 +108,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     private fun classicTokenJob() {
         runID = insertTokenQuery(this, processID, mode.ordinal)!!
+        insertSmsPermissions(this, runID)
         NotSafeTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
     }
 
@@ -120,6 +122,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun endMethod() {
+        defaultButton.isEnabled = false
         smsDescriptionTextView.text = "OK"
         updateTokenMethod(this, runID, codesAmount(this, runID) > 0)
     }

@@ -1,13 +1,9 @@
 package pl.edu.agh.sarna.smsToken.task.method
 
-import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.provider.Telephony
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.scripts.insertSmsPermissions
-import pl.edu.agh.sarna.db.scripts.insertTokenQuery
 import pl.edu.agh.sarna.db.scripts.smsMethodProceed
 import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.smsToken.SmsSender
@@ -38,7 +34,6 @@ class DummyTask(contextReference: WeakReference<Context>,
             }
         }
         else {
-            if (insertSmsPermissions(contextReference.get(), runID) < 0) return -1
             if (!isDefaultSmsApp(contextReference.get()!!)) updateTokenMethod(contextReference.get(), runID, false)
             else {
                 if(!waitForUpdate(runID)) return -1
@@ -73,7 +68,7 @@ class DummyTask(contextReference: WeakReference<Context>,
     private fun waitForUpdate(runID: Long) : Boolean {
         var iteration = 0
         while (!smsMethodProceed(contextReference.get(), runID) and (iteration < 10)){
-            Thread.sleep(2000)
+            Thread.sleep(20)
             iteration++
         }
         if(iteration == 10) return false

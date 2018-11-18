@@ -72,6 +72,23 @@ fun getLastRunID(context: Context?) : Long {
     }
     return -1
 }
+fun getModeByRunID(context: Context?, runID: Long) : Int {
+    val dbHelper = DbHelper.getInstance(context!!)
+    val db = dbHelper!!.writableDatabase
+    val cursor = db!!.query(
+            TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME,
+            arrayOf(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE),
+            "${BaseColumns._ID}=?",
+            arrayOf(runID.toString()),
+            null, null,
+            "_id DESC" ,
+            "1"
+    )
+    if (cursor.moveToFirst()) {
+        return cursor.getInt(cursor.getColumnIndex(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE))
+    }
+    return -1
+}
 fun insertCodes(context: Context?, runID: Long, sms: SmsMessage) : Long {
     val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase

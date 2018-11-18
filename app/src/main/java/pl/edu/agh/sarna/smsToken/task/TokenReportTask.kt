@@ -6,6 +6,7 @@ import android.provider.BaseColumns
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
+import pl.edu.agh.sarna.db.scripts.getModeByRunID
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.ReportEntry
 import pl.edu.agh.sarna.report.asynctask.ReportTask
@@ -15,7 +16,7 @@ import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.lang.ref.WeakReference
 
 
-class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long, val mode: Mode) : ReportTask(contextReference, response) {
+class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncResponse, val runID: Long) : ReportTask(contextReference, response) {
     private val projectionGeneral = arrayOf(
             TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS
     )
@@ -28,7 +29,12 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
 
     override fun doInBackground(vararg p0: Void?): List<ReportEntry>? {
         val list = ArrayList<SubtaskStatus>()
-        list.addAll(generateTableReport(runID, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission)!!)
+        val mode = getModeByRunID(contextReference.get(), runID)
+        if (mode !in arrayOf(Mode.TEST.ordinal, Mode.TEST_DUMMY.ordinal)){
+            list.addAll(generateTableReport(runID-1, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission, SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID )!!)
+            list.addAll(generateTableModeReport(runID-1, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
+        }
+        list.addAll(generateTableReport(runID, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission, SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID )!!)
         list.addAll(generateTableModeReport(runID, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
         val reportList = ArrayList<ReportEntry>()
         list.forEach {
@@ -42,8 +48,8 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
         val cursor = db.query(
                 tableName,
                 projection,
-                "${BaseColumns._ID}=? and ${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE}=?",
-                arrayOf("$runID", "${mode.ordinal}"),
+                "${BaseColumns._ID}=?",
+                arrayOf("$runID"),
                 null, null,
                 null
         )
@@ -57,16 +63,9 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
     override fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>{
         val list = ArrayList<SubtaskStatus>()
         for (task in projection){
-            when(task){
-                TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE
-                    ->
-                        list.add(SubtaskStatus(
-                            task.replace("_", " "),
-                            Mode.values()[cursor!!.getInt(cursor.getColumnIndex(task))].description))
-                else -> list.add(SubtaskStatus(
-                        task.replace("_", " "),
-                        cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()))
-            }
+            list.add(SubtaskStatus(
+                    task.replace("_", " "),
+                    cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()))
         }
         return list
     }

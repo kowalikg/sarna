@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_default_sms.*
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.scripts.codesAmount
+import pl.edu.agh.sarna.db.scripts.insertSmsPermissions
 import pl.edu.agh.sarna.db.scripts.insertTokenQuery
 import pl.edu.agh.sarna.db.scripts.updateTokenMethod
 import pl.edu.agh.sarna.metadata.MetadataActivity
@@ -51,7 +52,12 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
 
     private fun dummyTask(){
         runID = insertTokenQuery(this, processID, mode.ordinal)!!
-        DummyTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
+        insertSmsPermissions(this, runID)
+        if (!isDefaultSmsApp(this)){
+            updateTokenMethod(this, runID, false)
+            endMethod()
+        }
+        else DummyTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
     }
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun requestDefaultApp() {
@@ -94,6 +100,8 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
 
     private fun endMethod() {
         defaultDescriptionTextView.text = "OK"
+        defaultLaunchButton.isEnabled = false
+        defaultNextButton.visibility = View.VISIBLE
     }
 
     private fun failedProcedure() {
