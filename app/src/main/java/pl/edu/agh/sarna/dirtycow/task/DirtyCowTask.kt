@@ -38,10 +38,15 @@ class DirtyCowTask(contextReference: WeakReference<Context>, response: AsyncResp
                 systemInfo.kernelVersion
         )
 
-        if (s == "success") {
+        val logStages = s.split(";");
+        logStages.forEach{ s: String -> Log.i("DIRTYCOW" , " ${s}") }
+
+
+        if (logStages.last().startsWith("Success")) {
             updateDirtyCowMethod(contextReference.get(), runID, true)
             return 1
         }
+
         updateDirtyCowMethod(contextReference.get(), runID, false)
         return 0
     }
