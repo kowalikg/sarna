@@ -40,6 +40,7 @@ repositories {
 }
 dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation files('libs/mongo-java-driver-3.4.0-SNAPSHOT.jar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.1'
