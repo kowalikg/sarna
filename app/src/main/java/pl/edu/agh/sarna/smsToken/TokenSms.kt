@@ -17,12 +17,14 @@ import pl.edu.agh.sarna.db.scripts.codesAmount
 import pl.edu.agh.sarna.db.scripts.insertSmsPermissions
 import pl.edu.agh.sarna.db.scripts.insertTokenQuery
 import pl.edu.agh.sarna.db.scripts.updateTokenMethod
+import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
 import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.isNetworkAvailable
 import java.lang.ref.WeakReference
 
@@ -72,14 +74,26 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     }
 
     fun nextActivity(view: View) {
-        startActivity(Intent(this, DefaultSms::class.java).apply {
-            putExtra("root_state", rootState)
-            putExtra("edu_state", eduState)
-            putExtra("report_state", reportState)
-            putExtra("server_state", serverState)
-            putExtra("process_id", processID)
-            putExtra("number", phoneNumber)
-        })
+        if (isKitKat4_4()){
+            startActivity(Intent(this, DefaultSms::class.java).apply {
+                putExtra("root_state", rootState)
+                putExtra("edu_state", eduState)
+                putExtra("report_state", reportState)
+                putExtra("server_state", serverState)
+                putExtra("process_id", processID)
+                putExtra("number", phoneNumber)
+            })
+        }
+        else {
+            startActivity(Intent(this, MetadataActivity::class.java).apply {
+                putExtra("root_state", rootState)
+                putExtra("edu_state", eduState)
+                putExtra("report_state", reportState)
+                putExtra("server_state", serverState)
+                putExtra("process_id", processID)
+                putExtra("number", phoneNumber)
+            })
+        }
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
 

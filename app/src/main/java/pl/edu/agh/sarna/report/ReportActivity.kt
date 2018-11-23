@@ -16,6 +16,7 @@ import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import java.lang.ref.WeakReference
 
 
@@ -41,7 +42,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun extendedReportOnClickListener(runID: Long): View.OnClickListener? {
-        return View.OnClickListener {view ->
+        return View.OnClickListener { view ->
             launchExtendedReport(runID, view.tag.toString())
         }
     }
@@ -61,6 +62,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
     override fun onBackPressed() {
 
     }
+
     private fun initialiseOptions() {
         rootState = intent.getBooleanExtra("root_state", false)
         eduState = intent.getBooleanExtra("edu_state", false)
@@ -71,7 +73,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun processFinish(output: Any) {
-        for (subtask in output as ArrayList<SubtaskStatus>){
+        for (subtask in output as ArrayList<SubtaskStatus>) {
             val button = Button(this)
             button.tag = subtask.description
             button.text = subtask.description
@@ -79,16 +81,24 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             val runID = subtask._id
             if (reportState) button.setOnClickListener(extendedReportOnClickListener(runID))
 
-            button.background = if (subtask.value as Boolean) successDrawable else failDrawable
-
+            if (isKitKat4_4()) {
+                button.background = if (subtask.value as Boolean) successDrawable else failDrawable
+            }
+            else {
+                val background = if (subtask.value as Boolean) resources.getColor(R.color.success) else resources.getColor(R.color.fail)
+                button.setBackgroundColor(background )
+            }
             reportLayout.addView(button, layoutParams)
+
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-    fun terminateApp(view : View){
+    fun terminateApp(view: View) {
         this.finishAffinity()
         System.exit(0)
     }
+
     private fun launchExtendedReport(runID: Long, methodTitle: String) {
         startActivity(Intent(this, ExtendedReportActivity::class.java).apply {
             putExtra("root_state", rootState)

@@ -34,7 +34,7 @@ class DbReportTask(private val contextReference: WeakReference<Context>, val res
 
         val db = DbHelper.getInstance(contextReference.get())!!.readableDatabase
 
-        if (rootAllowed) list.add(wifiPassword(db)!!)
+        list.add(wifiPassword(db)!!)
         list.add(dirtycow(db)!!)
         list.add(tokenSms(db, Mode.NOT_SAFE)!!)
         list.add(tokenSms(db, Mode.DUMMY)!!)

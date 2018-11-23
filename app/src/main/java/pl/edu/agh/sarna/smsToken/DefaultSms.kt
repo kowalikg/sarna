@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.Telephony
 import android.support.annotation.RequiresApi
 import android.view.View
@@ -77,6 +78,7 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         phoneNumber = intent.getStringExtra("number")
     }
     fun nextActivity(view: View) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
         startActivity(Intent(this, MetadataActivity ::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)

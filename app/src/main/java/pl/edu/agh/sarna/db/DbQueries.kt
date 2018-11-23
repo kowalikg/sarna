@@ -99,8 +99,10 @@ object DbQueries {
                     "FOREIGN KEY (${Contacts.ContactsEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${CallsDetails.CallsDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
-    const val MOST_FREQUENT_CONTACT = "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, COUNT(*) AS ile FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
-            "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY ile DESC LIMIT 1"
+    const val LOG_PERMISSION = "SELECT ${CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_LOG_PERMISSION} FROM ${CallsLogsInfo.CallsLogsInfoEntry.TABLE_NAME} " +
+            "WHERE ${CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID} = ?"
+    const val CONTACT_PERMISSION = "SELECT ${ContactsInfo.ContactsInfoEntry.COLUMN_NAME_CONTACTS_PERMISSION} FROM ${ContactsInfo.ContactsInfoEntry.TABLE_NAME} " +
+            "WHERE ${ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID} = ?"
     const val GET_DURATION = "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} , SUM(${CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION}) AS SumDuration FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +
             "WHERE ${CallsLogs.CallsLogsEntry.COLUMN_NAME_RUN_ID} = ? GROUP BY ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER} ORDER BY SumDuration DESC"
     const val TOP_LOGS_AMOUNT = "SELECT ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NAME}, ${CallsLogs.CallsLogsEntry.COLUMN_NAME_NUMBER}, COUNT(*) AS Amount FROM ${CallsLogs.CallsLogsEntry.TABLE_NAME} " +

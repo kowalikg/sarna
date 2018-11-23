@@ -14,6 +14,7 @@ import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
+import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.text.SimpleDateFormat
 import java.util.*
@@ -129,17 +130,26 @@ fun insertContacts(context: Context?, runID: Long, name: String?, number: String
     return db?.insert(Contacts.ContactsEntry.TABLE_NAME, null, values)!!
 }
 
-fun mostFrequentContact(context: Context, runID: Long): String {
+fun callLogPermission(context: Context, runID: Long): Boolean {
     val db = DbHelper.getInstance(context)!!.readableDatabase
 
-    val cursor = db.rawQuery(DbQueries.MOST_FREQUENT_CONTACT, arrayOf(runID.toString()))
+    val cursor = db.rawQuery(DbQueries.LOG_PERMISSION, arrayOf(runID.toString()))
 
     if(cursor.moveToFirst()){
-        return cursor.getString(1)?.let { cursor.getString(1) } ?: run {context.getString(R.string.not_in_contacts)}
+        return cursor.getInt(0).toBoolean()
     }
-    return context.getString(R.string.not_found)
+    return false
 }
+fun contactPermission(context: Context, runID: Long): Boolean {
+    val db = DbHelper.getInstance(context)!!.readableDatabase
 
+    val cursor = db.rawQuery(DbQueries.CONTACT_PERMISSION, arrayOf(runID.toString()))
+
+    if(cursor.moveToFirst()){
+        return cursor.getInt(0).toBoolean()
+    }
+    return false
+}
 fun top5duration(context: Context, runID: Long) : Map<String, Float> {
     val map = HashMap<String, Float>()
     val db = DbHelper.getInstance(context)!!.readableDatabase

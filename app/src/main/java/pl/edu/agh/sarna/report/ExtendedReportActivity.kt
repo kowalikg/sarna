@@ -30,6 +30,7 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
 
     }
 
+
     private fun generateGraph(entry: ReportEntry) {
         if (entry.graphList != null){
             val title = TextView(this)

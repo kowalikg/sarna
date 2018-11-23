@@ -37,8 +37,9 @@ class DirtyCowTask(contextReference: WeakReference<Context>, response: AsyncResp
                 systemInfo.isSELinuxInstalled,
                 systemInfo.kernelVersion
         )
-
-        if (s == "success") {
+        val meh = s.split(";")
+        Log.i("MEH", meh.toString())
+        if (meh.last().contains("Success")) {
             updateDirtyCowMethod(contextReference.get(), runID, true)
             return 1
         }

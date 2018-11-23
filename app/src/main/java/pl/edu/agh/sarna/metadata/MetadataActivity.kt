@@ -14,6 +14,7 @@ import pl.edu.agh.sarna.permissions.checkCallLogsPermission
 import pl.edu.agh.sarna.permissions.checkContactsPermission
 import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import java.lang.ref.WeakReference
 
 
@@ -50,16 +51,22 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun startMetadataTaking(view: View){
-        if(!checkCallLogsPermission(this) and !checkContactsPermission(this)){
-            requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS), 1)
-        }
-        else if (!checkCallLogsPermission(this)) {
-            contactPermissionGranted = true
-            //requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG), 2)
-        }
-        else if (!checkContactsPermission(this)){
-            callLogPermissionGranted = true
-            requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), 3)
+        if (isKitKat4_4()){
+            if(!checkCallLogsPermission(this) and !checkContactsPermission(this)){
+                requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS), 1)
+            }
+            else if (!checkCallLogsPermission(this)) {
+                contactPermissionGranted = true
+                //requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG), 2)
+            }
+            else if (!checkContactsPermission(this)){
+                callLogPermissionGranted = true
+                requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), 3)
+            }
+            else {
+                permissionsGranted = true
+                doJob()
+            }
         }
         else {
             permissionsGranted = true
