@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="success">#00cc66</color>
     <color name="fail">#ff3333</color>
+
+    <!-- Cloak&Dagger overlay background color -->
+    <color name="overlayBackground">#DDDDFFDD</color>
 </resources>

