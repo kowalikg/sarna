@@ -67,24 +67,14 @@ class MainActivity : AppCompatActivity() {
         reportMode = reportSwitch.isChecked
         serverMode = serverSwitch.isChecked
 
-        val processID = launchDatabaseConnection(this, educationalMode, reportMode, serverMode, rootAllowed)
+        launchDatabaseConnection(this, educationalMode, reportMode, serverMode, rootAllowed)
 
-        if (rootAllowed) startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
-            putExtra("root_state", rootAllowed)
-            putExtra("edu_state", educationalMode)
-            putExtra("report_state", reportMode)
-            putExtra("server_state", serverMode)
-            putExtra("process_id", processID)
+        if (rootAllowed) {
+            startActivity(Intent(this, WifiPasswordActivity::class.java))
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
-        })
+        }
         else {
-            startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
-                putExtra("root_state", rootAllowed)
-                putExtra("edu_state", educationalMode)
-                putExtra("report_state", reportMode)
-                putExtra("server_state", serverMode)
-                putExtra("process_id", processID)
-            })
+            startActivity(Intent(this, WifiPasswordActivity::class.java))
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         }
     }

@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_report.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.scripts.getLastProcess
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.asynctask.DbReportTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
@@ -21,11 +22,10 @@ import java.lang.ref.WeakReference
 
 
 class ReportActivity : AppCompatActivity(), AsyncResponse {
-    private var rootState: Boolean = false
-    private var eduState: Boolean = false
-    private var serverState: Boolean = false
-    private var reportState: Boolean = false
     private var processID: Long = 0
+
+    private var rootAllowed = false
+
     private val successDrawable = GradientDrawable()
     private val failDrawable = GradientDrawable()
 
@@ -37,7 +37,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
         setContentView(R.layout.activity_report)
         initialiseLayout()
         initialiseOptions()
-        DbReportTask(WeakReference(this), this, processID, rootState).execute()
+        DbReportTask(WeakReference(this), this, processID, rootAllowed).execute()
 
     }
 
@@ -63,12 +63,11 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
 
     }
 
+
     private fun initialiseOptions() {
-        rootState = intent.getBooleanExtra("root_state", false)
-        eduState = intent.getBooleanExtra("edu_state", false)
-        serverState = intent.getBooleanExtra("server_state", false)
-        reportState = intent.getBooleanExtra("report_state", false)
-        processID = intent.getLongExtra("process_id", 0)
+        val options = getLastProcess(this)
+        processID = options[0] as Long
+        rootAllowed = options[1] as Boolean
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -79,7 +78,7 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
             button.text = subtask.description
 
             val runID = subtask._id
-            if (reportState) button.setOnClickListener(extendedReportOnClickListener(runID))
+            button.setOnClickListener(extendedReportOnClickListener(runID))
 
             if (isKitKat4_4()) {
                 button.background = if (subtask.value as Boolean) successDrawable else failDrawable
@@ -101,10 +100,6 @@ class ReportActivity : AppCompatActivity(), AsyncResponse {
 
     private fun launchExtendedReport(runID: Long, methodTitle: String) {
         startActivity(Intent(this, ExtendedReportActivity::class.java).apply {
-            putExtra("root_state", rootState)
-            putExtra("edu_state", eduState)
-            putExtra("report_state", reportState)
-            putExtra("server_state", serverState)
             putExtra("process_id", processID)
             putExtra("run_id", runID)
             putExtra("title", methodTitle)

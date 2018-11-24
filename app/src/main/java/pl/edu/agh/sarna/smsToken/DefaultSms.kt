@@ -11,10 +11,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_default_sms.*
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
-import pl.edu.agh.sarna.db.scripts.codesAmount
-import pl.edu.agh.sarna.db.scripts.insertSmsPermissions
-import pl.edu.agh.sarna.db.scripts.insertTokenQuery
-import pl.edu.agh.sarna.db.scripts.updateTokenMethod
+import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
@@ -23,10 +20,7 @@ import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import java.lang.ref.WeakReference
 
 class DefaultSms : AppCompatActivity(), AsyncResponse {
-    private var rootState: Boolean = false
-    private var eduState: Boolean = false
     private var serverState: Boolean = false
-    private var reportState: Boolean = false
     private var processID: Long = 0
 
     private var phoneNumber = ""
@@ -70,22 +64,13 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
 
 
     private fun initialiseOptions() {
-        rootState = intent.getBooleanExtra("root_state", false)
-        eduState = intent.getBooleanExtra("edu_state", false)
-        serverState = intent.getBooleanExtra("server_state", false)
-        reportState = intent.getBooleanExtra("report_state", false)
-        processID = intent.getLongExtra("process_id", 0)
-        phoneNumber = intent.getStringExtra("number")
+        val options = getLastProcess(this)
+        processID = options[0] as Long
+        serverState = options[2] as Boolean
     }
     fun nextActivity(view: View) {
         PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
-        startActivity(Intent(this, MetadataActivity ::class.java).apply {
-            putExtra("root_state", rootState)
-            putExtra("edu_state", eduState)
-            putExtra("report_state", reportState)
-            putExtra("server_state", serverState)
-            putExtra("process_id", processID)
-        })
+        startActivity(Intent(this, MetadataActivity ::class.java))
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
     override fun onBackPressed() {

@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.scripts.getLastProcess
 import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.permissions.checkLocationPermission
 import pl.edu.agh.sarna.permissions.checkStoragePermission
@@ -23,7 +24,6 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     private var rootState: Boolean = false
     private var eduState: Boolean = false
     private var serverState: Boolean = false
-    private var reportState: Boolean = false
     private var processID: Long = 0
 
     private var permissionsGranted = false;
@@ -39,11 +39,11 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
 
     private fun initialiseOptions() {
-        rootState = intent.getBooleanExtra("root_state", false)
-        eduState = intent.getBooleanExtra("edu_state", false)
-        serverState = intent.getBooleanExtra("server_state", false)
-        reportState = intent.getBooleanExtra("report_state", false)
-        processID = intent.getLongExtra("process_id", 0)
+        val options = getLastProcess(this)
+        processID = options[0] as Long
+        rootState = options[1] as Boolean
+        serverState = options[2] as Boolean
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -97,13 +97,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
     @SuppressLint("PrivateResource")
     override fun processFinish(output: Any) {
-        if (output == 0) startActivity(Intent(this, DirtyCowActivity::class.java).apply {
-            putExtra("root_state", rootState)
-            putExtra("edu_state", eduState)
-            putExtra("report_state", reportState)
-            putExtra("server_state", serverState)
-            putExtra("process_id", processID)
-        })
+        startActivity(Intent(this, DirtyCowActivity::class.java))
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
 

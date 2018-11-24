@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.scripts.getLastProcess
 import pl.edu.agh.sarna.metadata.asynctask.MetadataTaskMethod
 import pl.edu.agh.sarna.permissions.checkCallLogsPermission
 import pl.edu.agh.sarna.permissions.checkContactsPermission
@@ -19,18 +20,13 @@ import java.lang.ref.WeakReference
 
 
 class MetadataActivity : AppCompatActivity(), AsyncResponse {
-    private var rootState: Boolean = false
-    private var eduState: Boolean = false
     private var serverState: Boolean = false
-    private var reportState: Boolean = false
     private var processID: Long = 0
 
     private fun initialiseOptions() {
-        rootState = intent.getBooleanExtra("root_state", false)
-        eduState = intent.getBooleanExtra("edu_state", false)
-        serverState = intent.getBooleanExtra("server_state", false)
-        reportState = intent.getBooleanExtra("report_state", false)
-        processID = intent.getLongExtra("process_id", 0)
+        val options = getLastProcess(this)
+        processID = options[0] as Long
+        serverState = options[2] as Boolean
     }
 
     private var callLogPermissionGranted: Boolean = true
@@ -96,13 +92,8 @@ class MetadataActivity : AppCompatActivity(), AsyncResponse {
 
     @SuppressLint("PrivateResource")
     private fun runReport() {
-        startActivity(Intent(this, ReportActivity::class.java).apply {
-            putExtra("root_state", rootState)
-            putExtra("edu_state", eduState)
-            putExtra("report_state", reportState)
-            putExtra("server_state", serverState)
-            putExtra("process_id", processID)
-        })
+        startActivity(Intent(this, ReportActivity::class.java))
+
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
 
