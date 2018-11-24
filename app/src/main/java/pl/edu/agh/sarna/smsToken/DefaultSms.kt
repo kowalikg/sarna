@@ -101,20 +101,20 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun endMethod() {
-        defaultDescriptionTextView.text = "OK"
+        defaultDescriptionTextView.text = "${getString(R.string.default_description)}\n${getString(R.string.method_ok)}"
         defaultLaunchButton.isEnabled = false
         defaultNextButton.visibility = View.VISIBLE
     }
 
     private fun failedProcedure() {
-        defaultDescriptionTextView.text = "FAILED"
+        defaultDescriptionTextView.text = "${getString(R.string.default_description)}\n${getString(R.string.method_failed)}"
         defaultNextButton.visibility = View.VISIBLE
         defaultLaunchButton.isEnabled = false
         updateTokenMethod(this, runID, false)
     }
 
     private fun runListening() {
-        defaultDescriptionTextView.text = "TESTED"
+        defaultDescriptionTextView.text = "${getString(R.string.default_description)}\n${getString(R.string.method_tested)}"
         mode = Mode.DUMMY
         defaultNextButton.visibility = View.VISIBLE
         updateTokenMethod(this, runID, true)

@@ -39,7 +39,7 @@ class DirtyCowActivity : AppCompatActivity(), AsyncResponse {
         processID = intent.getLongExtra("process_id", 0)
     }
     private fun nextActivity() {
-        startActivity(Intent(this, ReportActivity::class.java).apply {
+        startActivity(Intent(this, TokenSms::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)

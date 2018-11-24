@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         })
         else {
-            startActivity(Intent(this, DirtyCowActivity::class.java).apply {
+            startActivity(Intent(this, WifiPasswordActivity::class.java).apply {
                 putExtra("root_state", rootAllowed)
                 putExtra("edu_state", educationalMode)
                 putExtra("report_state", reportMode)

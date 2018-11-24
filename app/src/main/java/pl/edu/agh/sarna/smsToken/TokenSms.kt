@@ -137,19 +137,18 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     private fun endMethod() {
         defaultButton.isEnabled = false
-        smsDescriptionTextView.text = "OK"
-        updateTokenMethod(this, runID, codesAmount(this, runID) > 0)
+        smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_ok)}"
     }
 
     private fun failedProcedure() {
-        smsDescriptionTextView.text = "FAILED"
+        smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_failed)}"
         nextButton.visibility = View.VISIBLE
         defaultButton.isEnabled = false
         updateTokenMethod(this, runID, false)
     }
 
     private fun runListening() {
-        smsDescriptionTextView.text = "TESTED"
+        smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_tested)}"
         mode = Mode.NOT_SAFE
         nextButton.visibility = View.VISIBLE
         updateTokenMethod(this, runID, true)

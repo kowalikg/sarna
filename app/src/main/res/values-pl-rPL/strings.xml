@@ -17,7 +17,7 @@
     <string name="report_title">Raport</string>
     <string name="exit_button">Koniec</string>
     <string name="metadata_title">Wszystko o twoich kontaktach</string>
-    <string name="metadata_description">Tu bedzie opis</string>
+    <string name="metadata_description">Uprawnienia dostępu do spisu połączeń i kontaktów wymaga min. aplikacja Facebooka. Niegroźne?\nPrzyznaj uprawnienia i dowiesz się jakie inne dane można wyciągnąć na Twój temat za pomocą \"tylko\" połączeń.</string>
     <string name="metadata_button">Start</string>
     <string name="contacts_amount">Liczba kontaktów, które aplikacja pobrała z Twojego telefonów</string>
     <string name="call_logs_amount">Pozyskana liczba logów</string>
@@ -31,7 +31,9 @@
     <string name="dirtycow_button">Start</string>
     <string name="not_found">nie znaleziono</string>
     <string name="token_title">Autoryzacja przez sms</string>
-    <string name="token_description">Tu bedzie opis</string>
+    <string name="token_description">Istnieją aplikacje (np. WhatsApp), które wymagają weryfikacji kodu urządzenia przez SMS. Na podany numer wysyłają kod aktywacyjny,
+	który użytkownik może wpisać ręcznie albo pozwolić aplikacji samej znaleźć ten kod.\nWynikające z tego zagrożenie przedstawione zostanie w tej metodzie.\nWpisz swój numer, następnie po aktywacji, uruchom metodę jeszcze raz i spróbuj wykonać jakiś przelew, który zazwyczaj potwierdzasz przez smsa.
+    </string>
     <string name="token_button">Start</string>
     <string name="cancel">Anuluj</string>
     <string name="warning">Ostrzeżenie</string>
@@ -69,4 +71,10 @@
     <string name="cloak_title">Cloak and Dagger</string>
     <string name="cloak_description">Tu będzie opis</string>
     <string name="report_dirtycow">Test diagnozuje podatność wersji Androida na atak CVE-2016-5195, wykorzystującym błędy występujące     w implementacji mechanizmu copy-on-write jądra linuxa, pozwalających na zaistnienie race-condition.     W demonstracji aplikacja bez uprawnień może próbować przekierowywać ruch na inne witryny podszywające się po oryginalne (phishing)     oraz nadpisywać systemowe pliki konfiguracyjne.     Przy bardziej skomplikowanych założeniach pozawala na dostęp do danych innych aplikacji (np. baza cookies chrome)     poprzez napisanie plików wykonywalnych lub shared library injection - linux capabilities / suid bit.     Ostatecznie napisanie odpowiednich bibliotek spowoduje konieczność restartu z powodu utraty responsywności systemu z powodu trywialnej aplikacji.</string>
+    <string name="default_title">Aplikacje domyślne</string>
+    <string name="default_description">Co jeśli zainstalujemy aplikację, która ma zarządzać naszymi smsami? Okazuje się, że może ukrywać przed nami wiele rzeczy...\nPodobnie jak w poprzednim przypadku, zweryfikuj przyjście smsa z kodem aktywacyjnym. Następnie spróbuj wykonać przelew.</string>
+    <string name="default_button">Start</string>
+    <string name="method_tested">Autoryzacja zakończona sukcesem. Kliknij przycisk i spróbuj wykonać przelew.</string>
+    <string name="method_ok">Test metody zakończony. Przejdź do następnej metody.</string>
+    <string name="method_failed">Nie udało się uruchomić metody. Przejdź do następnej metody.</string>
 </resources>

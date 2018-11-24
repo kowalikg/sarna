@@ -29,6 +29,9 @@
     <string name="token_title">SMS token</string>
     <string name="token_description">Grant permission to let app authenticate your phone</string>
     <string name="token_button">Launch</string>
+    <string name="default_title">SMS token</string>
+    <string name="default_description">Grant permission to let app authenticate your phone</string>
+    <string name="default_button">Launch</string>
     <string name="token_mode_not_safe">Sms token: not safe mode</string>
     <string name="token_mode_for_dummies">Sms token: for dummies mode</string>
     <string name="cancel">Cancel</string>
@@ -68,6 +71,9 @@
     <string name="cloak_title">Cloak</string>
     <string name="cloak_description">Tu bedzie opis</string>
     <string name="report_dirtycow">...</string>
+    <string name="method_tested">...</string>
+    <string name="method_ok">...</string>
+    <string name="method_failed">...</string>
 
 
 </resources>

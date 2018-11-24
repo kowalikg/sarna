@@ -57,11 +57,11 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
         report?.let {
             if (getMethodStatus(contextReference.get(), runID).toBoolean()) {
                 problem.append(contextReference.get()!!.getString(R.string.test_method_worked) + "\n")
-                problem.append(contextReference.get()!!.getString(R.string.method_skipped))
+                problem.append(contextReference.get()!!.getString(R.string.method_skipped) + "\n")
             } else {
-                problem.append(contextReference.get()!!.getString(R.string.test_method_failed))
+                problem.append(contextReference.get()!!.getString(R.string.test_method_failed) + "\n")
             }
-            problem.append(contextReference.get()!!.getString(R.string.permission_list) + "\n")
+            problem.append("\n" + contextReference.get()!!.getString(R.string.permission_list))
             reportList.add(ReportEntry(problem.toString()))
 
             report.forEach { it ->
@@ -70,7 +70,7 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
             }
 
         } ?: kotlin.run {
-            problem.append(contextReference.get()!!.getString(R.string.test_method_failed))
+            problem.append(contextReference.get()!!.getString(R.string.test_method_failed) + "\n")
             reportList.add(ReportEntry(problem.toString()))
         }
         return reportList
