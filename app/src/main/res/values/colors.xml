@@ -7,5 +7,5 @@
     <color name="fail">#ff3333</color>
 
     <!-- Cloak&Dagger overlay background color -->
-    <color name="overlayBackground">#DDDDFFDD</color>
+    <color name="overlayBackground">#FFFFFF</color>
 </resources>

@@ -33,6 +33,7 @@ class WifiPasswordsReportTask(contextReference: WeakReference<Context>, response
         Thread.sleep(1000)
         val usedProjection = if (isOreo8_1()) projection8_1 else projection
         val list = generateTableReport(runID, WifiUtils.WifiUtilsEntry.TABLE_NAME, usedProjection)!!
+        if(list.isEmpty()) return skippedMethod()
         val reportList = ArrayList<ReportEntry>()
         list.forEach {
             reportList.add(ReportEntry(""))

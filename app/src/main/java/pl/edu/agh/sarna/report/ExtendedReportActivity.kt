@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.github.mikephil.charting.charts.PieChart
 import kotlinx.android.synthetic.main.activity_extended_report.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.cloak_and_dagger.task.CloakReportTask
 import pl.edu.agh.sarna.dirtycow.task.DirtyCowReportTask
 import pl.edu.agh.sarna.metadata.asynctask.MetadataReportTask
 import pl.edu.agh.sarna.smsToken.model.Mode
@@ -80,7 +81,12 @@ class ExtendedReportActivity : AppCompatActivity(), AsyncResponse {
             getString(R.string.metadata_title) -> generateExtendMetadataReport(runID)
             getString(R.string.token_mode_not_safe) -> generateExtendTokenReport(runID)
             getString(R.string.token_mode_for_dummies) -> generateExtendTokenReport(runID)
+            getString(R.string.cloak_title) -> generateCloakReport(runID)
         }
+    }
+
+    private fun generateCloakReport(runID: Long) {
+        CloakReportTask(WeakReference(this), this, runID).execute()
     }
 
 

@@ -2,27 +2,17 @@ package pl.edu.agh.sarna
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.edu.agh.sarna.cloak_and_dagger.CloakAndDaggerActivity
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
-import pl.edu.agh.sarna.metadata.MetadataActivity
+import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.wifiPasswords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import java.util.*
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.utils.ColorTemplate
-import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
-import pl.edu.agh.sarna.smsToken.DefaultSms
-import pl.edu.agh.sarna.smsToken.TokenSms
-import pl.edu.agh.sarna.utils.kotlin.PieDrawer
 
 
 class MainActivity : AppCompatActivity() {

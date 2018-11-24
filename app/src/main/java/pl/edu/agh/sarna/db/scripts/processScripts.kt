@@ -103,3 +103,25 @@ fun smsMethodReport(db: SQLiteDatabase?, processID: Long, mode: Mode, title: Str
 
     return SubtaskStatus(title, false)
 }
+
+fun getLastProcess(context: Context?) : Array<Any> {
+    val dbHelper = DbHelper.getInstance(context!!)
+    val db = dbHelper!!.writableDatabase
+    val cursor = db!!.query(
+            Processes.ProcessEntry.TABLE_NAME,
+            arrayOf(BaseColumns._ID, Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, Processes.ProcessEntry.COLUMN_NAME_REPORT),
+            null,
+            null,
+            null, null,
+            "_id DESC" ,
+            "1"
+    )
+    if (cursor.moveToFirst()) {
+        return arrayOf(
+                cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)),
+                cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED)).toBoolean(),
+                cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER)).toBoolean(),
+                cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_REPORT)).toBoolean())
+    }
+    return arrayOf()
+}

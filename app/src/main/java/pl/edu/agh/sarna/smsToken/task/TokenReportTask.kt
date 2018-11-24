@@ -33,7 +33,8 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
     override fun doInBackground(vararg p0: Void?): List<ReportEntry>? {
         val list = ArrayList<SubtaskStatus>()
         val mode = getModeByRunID(contextReference.get(), runID)
-        if (mode !in arrayOf(Mode.TEST.ordinal, Mode.TEST_DUMMY.ordinal)) {
+        if (mode == -1) return skippedMethod()
+        return if (mode !in arrayOf(Mode.TEST.ordinal, Mode.TEST_DUMMY.ordinal)) {
             list.addAll(generateTableReport(runID - 1, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission, SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID)!!)
             list.addAll(generateTableModeReport(runID - 1, TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, projectionGeneral)!!)
             list.addAll(generateTableReport(runID, SmsPermissions.SmsPermissionsEntry.TABLE_NAME, projectionPermission, SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RUN_ID)!!)
@@ -42,8 +43,8 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
             list.forEach {
                 reportList.add(ReportEntry(it.description + ":" + it.value))
             }
-            return reportList
-        } else return generateTest(mode)
+            reportList
+        } else generateTest(mode)
     }
 
     private fun generateTest(mode: Int): List<ReportEntry>? {

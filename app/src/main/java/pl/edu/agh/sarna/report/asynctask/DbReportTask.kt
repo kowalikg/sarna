@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
+import pl.edu.agh.sarna.db.model.cloak.CloakInfo
 import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowDetails
 import pl.edu.agh.sarna.db.model.wifi.WifiPasswords
 import pl.edu.agh.sarna.db.scripts.singleMethodReport
@@ -35,12 +36,21 @@ class DbReportTask(private val contextReference: WeakReference<Context>, val res
         val db = DbHelper.getInstance(contextReference.get())!!.readableDatabase
 
         list.add(wifiPassword(db)!!)
+        list.add(cloak(db)!!)
         list.add(dirtycow(db)!!)
         list.add(tokenSms(db, Mode.NOT_SAFE)!!)
         list.add(tokenSms(db, Mode.DUMMY)!!)
         list.add(metadata(db)!!)
 
         return list
+    }
+
+    private fun cloak(db: SQLiteDatabase?): SubtaskStatus? {
+        return singleMethodReport(db, processID, CloakInfo.CloakInfoEntry.TABLE_NAME,
+                CloakInfo.CloakInfoEntry.COLUMN_NAME_STATUS,
+                CloakInfo.CloakInfoEntry.COLUMN_NAME_PROCESS_ID,
+                contextReference.get()!!.getString(R.string.cloak_title)
+        )
     }
 
     private fun tokenSms(db: SQLiteDatabase?, mode: Mode): SubtaskStatus? {

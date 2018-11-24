@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.os.AsyncTask
 import android.provider.BaseColumns
+import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
 import pl.edu.agh.sarna.model.SubtaskStatus
 import pl.edu.agh.sarna.report.ReportEntry
@@ -53,5 +54,8 @@ abstract class ReportTask(protected val contextReference: WeakReference<Context>
                     cursor!!.getInt(cursor.getColumnIndex(task)).toBoolean()))
         }
         return list
+    }
+    protected fun skippedMethod(): ArrayList<ReportEntry> {
+        return arrayListOf(ReportEntry(contextReference.get()!!.getString(R.string.method_skipped)))
     }
 }

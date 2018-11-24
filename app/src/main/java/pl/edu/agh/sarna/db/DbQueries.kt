@@ -5,6 +5,8 @@ import pl.edu.agh.sarna.db.model.Processes
 import pl.edu.agh.sarna.db.model.calls.CallsDetails
 import pl.edu.agh.sarna.db.model.calls.CallsLogs
 import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo
+import pl.edu.agh.sarna.db.model.cloak.CloakInfo
+import pl.edu.agh.sarna.db.model.cloak.CloakText
 import pl.edu.agh.sarna.db.model.contacts.Contacts
 import pl.edu.agh.sarna.db.model.contacts.ContactsInfo
 import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowDetails
@@ -141,6 +143,25 @@ object DbQueries {
                     "FOREIGN KEY (${TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID}) " +
                     "REFERENCES ${Processes.ProcessEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
+    const val CREATE_CLOAK_INFO =
+            "CREATE TABLE ${CloakInfo.CloakInfoEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${CloakInfo.CloakInfoEntry.COLUMN_NAME_PROCESS_ID} integer, " +
+                    "${CloakInfo.CloakInfoEntry.COLUMN_NAME_START_TIME} text, " +
+                    "${CloakInfo.CloakInfoEntry.COLUMN_NAME_END_TIME} text, " +
+                    "${CloakInfo.CloakInfoEntry.COLUMN_NAME_STATUS} integer DEFAULT 0, " +
+                    "FOREIGN KEY (${CloakInfo.CloakInfoEntry.COLUMN_NAME_PROCESS_ID}) " +
+                    "REFERENCES ${Processes.ProcessEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
+    const val CREATE_CLOAK_TEXT =
+            "CREATE TABLE ${CloakText.CloakTextEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "${CloakText.CloakTextEntry.COLUMN_NAME_RUN_ID} integer, " +
+                    "${CloakText.CloakTextEntry.COLUMN_NAME_PACKAGE} text, " +
+                    "${CloakText.CloakTextEntry.COLUMN_NAME_TEXT} text, " +
+                    "FOREIGN KEY (${CloakText.CloakTextEntry.COLUMN_NAME_RUN_ID}) " +
+                    "REFERENCES ${CloakInfo.CloakInfoEntry.TABLE_NAME} (${BaseColumns._ID}))"
+
     const val CREATE_SMS_PERMISSIONS =
             "CREATE TABLE ${SmsPermissions.SmsPermissionsEntry.TABLE_NAME} (" +
                     "${BaseColumns._ID} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
@@ -169,7 +190,7 @@ object DbQueries {
                     "${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_END_TIME} text, " +
                     "${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_STATUS} integer DEFAULT 0, " +
                     "FOREIGN KEY (${DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_PROCESS_ID}) " +
-                    "REFERENCES ${DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
+                    "REFERENCES ${Processes.ProcessEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
     const val CREATE_DIRTYCOW_INFO =
             "CREATE TABLE ${DirtyCowInfo.DirtyCowInfoEntry.TABLE_NAME} (" +

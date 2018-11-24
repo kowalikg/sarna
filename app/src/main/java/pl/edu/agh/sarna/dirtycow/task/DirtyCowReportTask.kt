@@ -3,6 +3,7 @@ package pl.edu.agh.sarna.dirtycow.task
 import android.content.Context
 import android.database.Cursor
 import android.util.Log
+import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowDetails
 import pl.edu.agh.sarna.db.model.dirtycow.DirtyCowInfo
 import pl.edu.agh.sarna.model.SubtaskStatus
@@ -27,10 +28,13 @@ class DirtyCowReportTask(contextReference: WeakReference<Context>, response: Asy
         val list = ArrayList<SubtaskStatus>()
         list.addAll(generateTableReport(runID, DirtyCowInfo.DirtyCowInfoEntry.TABLE_NAME, projectionInfo)!!)
         list.addAll(generateTableReport(runID, DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME, projectionStatus)!!)
+        if(list.isEmpty()) return skippedMethod()
         val reportList = ArrayList<ReportEntry>()
         list.forEach {
             reportList.add(ReportEntry(it.description + " : " + it.value))
         }
+        reportList.add(ReportEntry(contextReference.get()!!.getString(R.string.report_dirtycow)))
+
         return reportList
     }
     override fun generateList(cursor: Cursor?, projection: Array<String>) : ArrayList<SubtaskStatus>{

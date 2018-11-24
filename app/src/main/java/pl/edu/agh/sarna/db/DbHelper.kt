@@ -19,6 +19,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(DbQueries.CREATE_CODES)
         db.execSQL(DbQueries.CREATE_DIRTYCOW_DETAILS)
         db.execSQL(DbQueries.CREATE_DIRTYCOW_INFO)
+        db.execSQL(DbQueries.CREATE_CLOAK_INFO)
+        db.execSQL(DbQueries.CREATE_CLOAK_TEXT)
 
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

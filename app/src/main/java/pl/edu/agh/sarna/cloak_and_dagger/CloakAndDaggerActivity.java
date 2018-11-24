@@ -12,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +24,19 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import pl.edu.agh.sarna.R;
+import pl.edu.agh.sarna.dirtycow.DirtyCowActivity;
+import pl.edu.agh.sarna.report.ReportActivity;
 
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_NAME;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_VALUE;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.LOG_TAG;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.REQUEST_CODE_ENABLE_ACCESSIBILITY_SERVICE;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.REQUEST_CODE_ENABLE_OVERLAY_PERMISSION;
+import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.getLastCloakRunID;
+import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.insertCloakQuery;
+import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.textAmount;
+import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.updateCloakMethod;
+import static pl.edu.agh.sarna.db.scripts.ProcessScriptsKt.getLastProcess;
 
 public class CloakAndDaggerActivity extends AppCompatActivity {
 
@@ -36,14 +45,47 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
 
     @InjectView(R.id.start_button)
     Button startButton;
+    private boolean eduState;
+    private boolean rootState;
+    private boolean serverState;
+    private boolean reportState;
+
+    private long processID;
+    private long runID;
 
     @OnClick(R.id.start_button)
     void buttonOnClick() {
+        runID = insertCloakQuery(this, processID);
+        startButton.setEnabled(false);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             ensureAccessibilityService();
         } else {
             capturedDataView.setText("Ta procedura wymaga Androida w wersji 6.0 lub starszej.");
+
         }
+
+    }
+
+    @InjectView(R.id.nextActivityButton)
+    Button nextButton;
+
+    @OnClick(R.id.nextActivityButton)
+    void nextActivityClick() {
+        long run = getLastCloakRunID(this);
+        long amount = textAmount(this, run);
+        updateCloakMethod(this, run, amount > 0);
+        nextActivity();
+    }
+
+    private void nextActivity() {
+        Intent i = new Intent(this, ReportActivity.class);
+        i.putExtra("root_state", rootState);
+        i.putExtra("edu_state", eduState);
+        i.putExtra("report_state", reportState);
+        i.putExtra("server_state", serverState);
+        i.putExtra("process_id", processID);
+        startActivity(i);
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
     }
 
     private OverlayManager overlayManager;
@@ -150,6 +192,16 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
         overlayManager = new OverlayManager(this);
         ButterKnife.inject(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(INTENT_NAME));
+        initialiseOptions();
+    }
+
+    private void initialiseOptions() {
+        Object[] options = getLastProcess(this);
+        processID = (long) options[0];
+        rootState = (boolean) options[1];
+        serverState = (boolean) options[2];
+        reportState = (boolean) options[3];
+
     }
 
 }

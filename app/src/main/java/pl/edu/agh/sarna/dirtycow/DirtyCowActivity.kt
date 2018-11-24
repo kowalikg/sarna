@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.dirtycow.task.DirtyCowTask
+import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.DefaultSms
 import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
@@ -38,7 +39,7 @@ class DirtyCowActivity : AppCompatActivity(), AsyncResponse {
         processID = intent.getLongExtra("process_id", 0)
     }
     private fun nextActivity() {
-        startActivity(Intent(this, TokenSms::class.java).apply {
+        startActivity(Intent(this, ReportActivity::class.java).apply {
             putExtra("root_state", rootState)
             putExtra("edu_state", eduState)
             putExtra("report_state", reportState)
