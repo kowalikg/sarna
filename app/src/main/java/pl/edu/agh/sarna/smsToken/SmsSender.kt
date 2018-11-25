@@ -24,7 +24,7 @@ class SmsSender(val contextReference: WeakReference<Context>, private val server
         else sendByYourself(phoneNumber)
     }
     
-    private fun nextPassword() = Math.abs(Random().nextInt() % 1000000)
+    private fun nextPassword() = Math.abs(Random().nextInt() % 1000000) + 1000000
 
     private fun sendViaServer(phoneNumber: String): Boolean {
         try {

@@ -74,7 +74,9 @@
     <string name="default_title">Aplikacje domyślne</string>
     <string name="default_description">Co jeśli zainstalujemy aplikację, która ma zarządzać naszymi smsami? Okazuje się, że może ukrywać przed nami wiele rzeczy...\nPodobnie jak w poprzednim przypadku, zweryfikuj przyjście smsa z kodem aktywacyjnym. Następnie spróbuj wykonać przelew.</string>
     <string name="default_button">Start</string>
-    <string name="method_tested">Autoryzacja zakończona sukcesem. Kliknij przycisk i spróbuj wykonać przelew.</string>
+    <string name="method_tested">Autoryzacja zakończona sukcesem.</string>
+    <string name="click_cash">Kliknij przycisk i spróbuj wykonać przelew.</string>
     <string name="method_ok">Test metody zakończony. Przejdź do następnej metody.</string>
     <string name="method_failed">Nie udało się uruchomić metody. Przejdź do następnej metody.</string>
+    <string name="activation_code">"Kod aktywacyjny: "</string>
 </resources>

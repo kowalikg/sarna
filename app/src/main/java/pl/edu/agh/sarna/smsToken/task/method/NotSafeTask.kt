@@ -34,11 +34,13 @@ class NotSafeTask(contextReference: WeakReference<Context>,
     private val numberColumn = if (isKitKat4_4()) 2 else 3
     private val textColumn = if (isNougat7_1_2()) 12 else 13
 
+    private var code = 0
+
     override fun doInBackground(vararg p0: Void?): Int {
         if (mode == Mode.TEST){
             if(SmsSender(contextReference, serverState).sendSms(phoneNumber)){
                 if (verifySms()){
-                    return mode.ordinal
+                    return code
                 }
                 return -1
             }
@@ -77,12 +79,14 @@ class NotSafeTask(contextReference: WeakReference<Context>,
         var found = false
         var iteration = 0
         do {
-            Thread.sleep(1)
+            Thread.sleep(1000)
             val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
             if (cursor!!.moveToFirst()) {
                 do {
                     if (containsCode(cursor.getString(numberColumn), cursor.getString(textColumn))) {
                         found = true
+                        code = Extractor(contextReference).extract(SmsMessage(0,"0", cursor.getString(textColumn)), true)!!.content.toInt()
+
                         val i = Intent("notifyService")
                             i.putExtra("command", "clearall")
                             contextReference.get()!!.sendBroadcast(i)

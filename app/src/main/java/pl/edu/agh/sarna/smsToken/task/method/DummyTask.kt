@@ -6,8 +6,10 @@ import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.scripts.insertSmsPermissions
 import pl.edu.agh.sarna.db.scripts.smsMethodProceed
 import pl.edu.agh.sarna.db.scripts.updateTokenMethod
+import pl.edu.agh.sarna.smsToken.Extractor
 import pl.edu.agh.sarna.smsToken.SmsSender
 import pl.edu.agh.sarna.smsToken.model.Mode
+import pl.edu.agh.sarna.smsToken.model.SmsMessage
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
@@ -25,6 +27,7 @@ class DummyTask(contextReference: WeakReference<Context>,
                 private val mode: Mode)
     : MethodAsyncTask(contextReference, response, processID, serverState) {
     private val sender = "+48731464100"
+    private var code = 0
     private val numberColumn = if (isKitKat4_4()) 2 else 3
     private val textColumn = if (isNougat7_1_2()) 12 else 13
     override fun doInBackground(vararg p0: Void?): Int {
@@ -32,6 +35,7 @@ class DummyTask(contextReference: WeakReference<Context>,
             if(SmsSender(contextReference, serverState).sendSms(phoneNumber)){
                 if(!waitForTestUpdate()) return -1
             }
+            return code
         }
         else {
             if (!isDefaultSmsApp(contextReference.get()!!)) updateTokenMethod(contextReference.get(), runID, false)
@@ -52,15 +56,17 @@ class DummyTask(contextReference: WeakReference<Context>,
     }
 
     private fun testSmsArrived(): Boolean {
+        Thread.sleep(2000)
         val cursor = contextReference.get()!!.contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
         var found = false
         if (cursor!!.moveToFirst()) {
             do {
                 if (containsCode(cursor.getString(numberColumn), cursor.getString(textColumn))) {
+                    code = Extractor(contextReference).extract(SmsMessage(0,"0", cursor.getString(textColumn)), true)!!.content.toInt()
                     found = true
                 }
             } while (cursor.moveToNext() and !found)
-            Thread.sleep(2000)
+
         }
         return found
     }
@@ -68,7 +74,7 @@ class DummyTask(contextReference: WeakReference<Context>,
     private fun waitForUpdate(runID: Long) : Boolean {
         var iteration = 0
         while (!smsMethodProceed(contextReference.get(), runID) and (iteration < 10)){
-            Thread.sleep(20)
+            Thread.sleep(2000)
             iteration++
         }
         if(iteration == 10) return false

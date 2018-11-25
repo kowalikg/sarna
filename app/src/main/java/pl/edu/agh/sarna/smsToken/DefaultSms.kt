@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.metadata.MetadataActivity
+import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
@@ -23,7 +24,7 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     private var serverState: Boolean = false
     private var processID: Long = 0
 
-    private var phoneNumber = ""
+    private var phoneNumber = "+48731464100"
 
     private var mode = Mode.TEST_DUMMY
     private var runID: Long = 0
@@ -67,10 +68,11 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         val options = getLastProcess(this)
         processID = options[0] as Long
         serverState = options[2] as Boolean
+        //phoneNumber = intent.getStringExtra("phone_number")
     }
     fun nextActivity(view: View) {
         PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
-        startActivity(Intent(this, MetadataActivity ::class.java))
+        startActivity(Intent(this, ReportActivity ::class.java))
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
     override fun onBackPressed() {
@@ -79,9 +81,9 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
 
     override fun processFinish(output: Any) {
         when (output) {
-            Mode.TEST_DUMMY.ordinal -> runListening()
             -1 -> failedProcedure()
             Mode.DUMMY.ordinal -> endMethod()
+            else -> runListening(output)
         }
     }
 
@@ -98,8 +100,9 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         updateTokenMethod(this, runID, false)
     }
 
-    private fun runListening() {
-        defaultDescriptionTextView.text = "${getString(R.string.default_description)}\n${getString(R.string.method_tested)}"
+    private fun runListening(output: Any) {
+        defaultDescriptionTextView.text = "${getString(R.string.default_description)}\n${getString(R.string.activation_code)}" +
+                "$output\n${getString(R.string.method_tested)}"
         mode = Mode.DUMMY
         defaultNextButton.visibility = View.VISIBLE
         updateTokenMethod(this, runID, true)

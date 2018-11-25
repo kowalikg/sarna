@@ -74,6 +74,8 @@
     <string name="method_tested">...</string>
     <string name="method_ok">...</string>
     <string name="method_failed">...</string>
+    <string name="click_cash">Kliknij przycisk i spróbuj wykonać przelew.</string>
+    <string name="activation_code">Activation code:</string>
 
 
 </resources>

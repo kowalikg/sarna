@@ -14,6 +14,7 @@ import pl.edu.agh.sarna.db.scripts.getLastProcess
 import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.permissions.checkLocationPermission
 import pl.edu.agh.sarna.permissions.checkStoragePermission
+import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.wifiPasswords.asynctask.WifiPasswordTask
@@ -97,7 +98,7 @@ class WifiPasswordActivity : AppCompatActivity(), AsyncResponse {
     }
     @SuppressLint("PrivateResource")
     override fun processFinish(output: Any) {
-        startActivity(Intent(this, DirtyCowActivity::class.java))
+        startActivity(Intent(this, ReportActivity::class.java))
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
 

@@ -6,6 +6,7 @@ import android.database.DatabaseUtils
 import android.provider.BaseColumns
 import android.util.Log
 import pl.edu.agh.sarna.db.DbHelper
+import pl.edu.agh.sarna.db.DbQueries.CODES
 import pl.edu.agh.sarna.db.model.smsToken.Codes
 import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions
 import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails
@@ -17,6 +18,8 @@ import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 fun insertTokenQuery(context: Context?, processID: Long, mode: Int) : Long? {
     val dbHelper = DbHelper.getInstance(context!!)
@@ -139,4 +142,25 @@ fun smsMethodProceed(context: Context?, runID: Long): Boolean {
         return cursor.getString(cursor.getColumnIndex(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME)) != null
     }
     return false
+}
+fun getCodes(context: Context?, runID: Long) : Map<String, String> {
+    val dbHelper = DbHelper.getInstance(context!!)
+    val db = dbHelper!!.writableDatabase
+    val cursor = db!!.query(
+            Codes.CodesEntry.TABLE_NAME,
+            arrayOf(BaseColumns._ID, Codes.CodesEntry.COLUMN_NAME_RUN_ID,Codes.CodesEntry.COLUMN_NAME_NUMBER, Codes.CodesEntry.COLUMN_NAME_CODE),
+            null,
+            null,
+            null, null,
+            null ,
+            null
+    )
+    val map = HashMap<String, String>()
+    if (cursor.moveToFirst()) {
+        while(cursor.moveToNext()){
+            map[cursor.getString(cursor.getColumnIndex(Codes.CodesEntry.COLUMN_NAME_NUMBER))] =
+                    cursor.getString(cursor.getColumnIndex(Codes.CodesEntry.COLUMN_NAME_CODE))
+        }
+    }
+    return map
 }

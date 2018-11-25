@@ -61,7 +61,7 @@ class WifiPasswordTask(contextReference: WeakReference<Context>, response: Async
         lock.lock()
         insertWifiUtilsQuery(contextReference.get()!!, runID, storagePermissionGranted, locationPermissionGranted,
                 connected, passwordFound, wifiSSID, passwordContent)
-        updateWifiMethod(contextReference.get()!!, processID, passwordFound)
+        updateWifiMethod(contextReference.get()!!, runID, passwordFound)
         lock.unlock()
     }
     @RequiresApi(Build.VERSION_CODES.M)

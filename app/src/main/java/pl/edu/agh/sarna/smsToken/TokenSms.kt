@@ -2,12 +2,9 @@ package pl.edu.agh.sarna.smsToken
 
 import android.Manifest
 import android.annotation.TargetApi
-import android.content.ContentValues
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Telephony
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -69,7 +66,9 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     fun nextActivity(view: View) {
         if (isKitKat4_4()){
-            startActivity(Intent(this, DefaultSms::class.java))
+            startActivity(Intent(this, ReportActivity::class.java).apply {
+                putExtra("phone_number", phoneNumber)
+            })
         }
         else {
             startActivity(Intent(this, MetadataActivity::class.java))
@@ -109,15 +108,16 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     override fun processFinish(output: Any) {
         when (output) {
-            Mode.TEST.ordinal -> runListening()
             -1 -> failedProcedure()
             Mode.NOT_SAFE.ordinal -> endMethod()
+            else -> runListening(output)
         }
     }
 
     private fun endMethod() {
         defaultButton.isEnabled = false
         smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_ok)}"
+        updateTokenMethod(this, runID, codesAmount(this, runID) > 0)
     }
 
     private fun failedProcedure() {
@@ -127,8 +127,9 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
         updateTokenMethod(this, runID, false)
     }
 
-    private fun runListening() {
-        smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_tested)}"
+    private fun runListening(output: Any) {
+        smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.activation_code)}" +
+                "$output\n${getString(R.string.method_tested)}"
         mode = Mode.NOT_SAFE
         nextButton.visibility = View.VISIBLE
         updateTokenMethod(this, runID, true)

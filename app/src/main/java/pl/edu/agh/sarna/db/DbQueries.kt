@@ -204,4 +204,7 @@ object DbQueries {
                     "FOREIGN KEY (${DirtyCowInfo.DirtyCowInfoEntry.COLUMN_NAME_RUN_ID}) " +
                     "REFERENCES ${DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME} (${BaseColumns._ID}))"
 
+    const val CODES = "SELECT ${Codes.CodesEntry.COLUMN_NAME_NUMBER}, ${Codes.CodesEntry.COLUMN_NAME_CODE}" +
+            " from ${Codes.CodesEntry.TABLE_NAME} where ${Codes.CodesEntry.COLUMN_NAME_RUN_ID}=?"
+
 }
