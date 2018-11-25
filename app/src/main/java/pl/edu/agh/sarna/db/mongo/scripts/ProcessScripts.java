@@ -1,13 +1,9 @@
 package pl.edu.agh.sarna.db.mongo.scripts;
 
-import android.util.Log;
-
 import org.bson.Document;
 
 import pl.edu.agh.sarna.db.model.Processes;
-import pl.edu.agh.sarna.db.model.wifi.WifiPasswords;
 import pl.edu.agh.sarna.db.mongo.MongoDb;
-import pl.edu.agh.sarna.db.mongo.MongoDbException;
 
 public class ProcessScripts {
 
@@ -24,11 +20,7 @@ public class ProcessScripts {
                 .append(Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL, educational)
                 .append(Processes.ProcessEntry.COLUMN_NAME_REPORT, report)
                 .append(Processes.ProcessEntry.COLUMN_NAME_SYSTEM_VERSION, systemVersion);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
 }

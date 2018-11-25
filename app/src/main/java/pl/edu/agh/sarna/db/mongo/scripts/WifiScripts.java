@@ -1,12 +1,10 @@
 package pl.edu.agh.sarna.db.mongo.scripts;
 
-import android.util.Log;
-
 import org.bson.Document;
 
-import pl.edu.agh.sarna.db.model.wifi.*;
+import pl.edu.agh.sarna.db.model.wifi.WifiPasswords;
+import pl.edu.agh.sarna.db.model.wifi.WifiUtils;
 import pl.edu.agh.sarna.db.mongo.MongoDb;
-import pl.edu.agh.sarna.db.mongo.MongoDbException;
 
 public class WifiScripts {
 
@@ -23,11 +21,7 @@ public class WifiScripts {
                 .append(WifiUtils.WifiUtilsEntry.COLUMN_NAME_PASSWORD_FOUND_STATUS, passwordFoundStatus)
                 .append(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_SSID, wifiSSID)
                 .append(WifiUtils.WifiUtilsEntry.COLUMN_NAME_WIFI_PASSWORD, wifiPassword);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveWifiPasswordsToMongo(long processID, long startTime, long endTime,
@@ -39,11 +33,7 @@ public class WifiScripts {
                 .append(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_START_TIME, startTime)
                 .append(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, endTime)
                 .append(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS, status);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
 }

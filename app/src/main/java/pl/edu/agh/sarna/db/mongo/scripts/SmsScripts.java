@@ -1,12 +1,11 @@
 package pl.edu.agh.sarna.db.mongo.scripts;
 
-import android.util.Log;
-
 import org.bson.Document;
 
-import pl.edu.agh.sarna.db.model.smsToken.*;
+import pl.edu.agh.sarna.db.model.smsToken.Codes;
+import pl.edu.agh.sarna.db.model.smsToken.SmsPermissions;
+import pl.edu.agh.sarna.db.model.smsToken.TokenSmsDetails;
 import pl.edu.agh.sarna.db.mongo.MongoDb;
-import pl.edu.agh.sarna.db.mongo.MongoDbException;
 
 public class SmsScripts {
 
@@ -17,11 +16,7 @@ public class SmsScripts {
                 .append(Codes.CodesEntry.COLUMN_NAME_RUN_ID, runID)
                 .append(Codes.CodesEntry.COLUMN_NAME_CODE, code)
                 .append(Codes.CodesEntry.COLUMN_NAME_NUMBER, number);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveTokenSmsDetails(long processID, long startTime, long endTime, boolean
@@ -34,11 +29,7 @@ public class SmsScripts {
                 .append(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME, endTime)
                 .append(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS, status)
                 .append(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE, mode);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveSmsPermissionsToMongo(long runID, boolean send, boolean read, boolean
@@ -51,10 +42,6 @@ public class SmsScripts {
                 .append(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_READ, read)
                 .append(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_RECEIVE, receive)
                 .append(SmsPermissions.SmsPermissionsEntry.COLUMN_NAME_DEFAULT_APP, defaultApp);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 }

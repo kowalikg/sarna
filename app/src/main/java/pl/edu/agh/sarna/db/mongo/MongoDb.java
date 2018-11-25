@@ -1,5 +1,7 @@
 package pl.edu.agh.sarna.db.mongo;
 
+import android.util.Log;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
@@ -10,8 +12,13 @@ import org.bson.Document;
 public class MongoDb {
 
     private MongoDbConnection connection;
+
     private MongoDatabase database;
+
     public static final String LOG_TAG = "mongo_db";
+
+    public static final String ERROR_MSG = "Could not connect to MongoDB. No internet connection " +
+            "or invalid credentials.";
 
     public MongoDb() {
         connection = MongoDbConnection.getDefaultConnection();
@@ -20,27 +27,14 @@ public class MongoDb {
         database = client.getDatabase(connection.getDatabaseName());
     }
 
-    public void saveData(String collectionName, Document document) throws MongoDbException {
-        try {
-            database.getCollection(collectionName).insertOne(document);
-        } catch (MongoException e) {
-            throw new MongoDbException(e);
-        }
+    public void saveData(String collectionName, Document document) {
+        new Thread(() -> {
+            try {
+                database.getCollection(collectionName).insertOne(document);
+            } catch (MongoException e) {
+                Log.e(LOG_TAG, ERROR_MSG);
+            }
+        }).start();
     }
 
-    public MongoCollection<Document> loadData(String collectionName) throws MongoDbException {
-        try {
-            return database.getCollection(collectionName);
-        } catch (MongoException e) {
-            throw new MongoDbException(e);
-        }
-    }
-
-    public MongoIterable<String> getCollections() throws MongoDbException {
-        try {
-            return database.listCollectionNames();
-        } catch (MongoException e) {
-            throw new MongoDbException(e);
-        }
-    }
 }

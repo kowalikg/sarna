@@ -1,13 +1,10 @@
 package pl.edu.agh.sarna.db.mongo.scripts;
 
-import android.util.Log;
-
 import org.bson.Document;
 
 import pl.edu.agh.sarna.db.model.cloak.CloakInfo;
 import pl.edu.agh.sarna.db.model.cloak.CloakText;
 import pl.edu.agh.sarna.db.mongo.MongoDb;
-import pl.edu.agh.sarna.db.mongo.MongoDbException;
 
 public class CloakScripts {
 
@@ -20,11 +17,7 @@ public class CloakScripts {
                 .append(CloakInfo.CloakInfoEntry.COLUMN_NAME_START_TIME, startTime)
                 .append(CloakInfo.CloakInfoEntry.COLUMN_NAME_END_TIME, endTime)
                 .append(CloakInfo.CloakInfoEntry.COLUMN_NAME_STATUS, status);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveCloakTextToMongo(long runID, String text, String package_) {
@@ -34,11 +27,7 @@ public class CloakScripts {
                 .append(CloakText.CloakTextEntry.COLUMN_NAME_RUN_ID, runID)
                 .append(CloakText.CloakTextEntry.COLUMN_NAME_TEXT, text)
                 .append(CloakText.CloakTextEntry.COLUMN_NAME_PACKAGE, package_);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
     
 }

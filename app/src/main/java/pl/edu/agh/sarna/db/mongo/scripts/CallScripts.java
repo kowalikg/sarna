@@ -1,13 +1,13 @@
 package pl.edu.agh.sarna.db.mongo.scripts;
 
-import android.util.Log;
-
 import org.bson.Document;
 
+import pl.edu.agh.sarna.db.model.calls.CallsDetails;
+import pl.edu.agh.sarna.db.model.calls.CallsLogs;
+import pl.edu.agh.sarna.db.model.calls.CallsLogsInfo;
+import pl.edu.agh.sarna.db.model.contacts.Contacts;
+import pl.edu.agh.sarna.db.model.contacts.ContactsInfo;
 import pl.edu.agh.sarna.db.mongo.MongoDb;
-import pl.edu.agh.sarna.db.model.calls.*;
-import pl.edu.agh.sarna.db.model.contacts.*;
-import pl.edu.agh.sarna.db.mongo.MongoDbException;
 
 public class CallScripts {
 
@@ -20,11 +20,7 @@ public class CallScripts {
                 .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_START_TIME, startTime)
                 .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_END_TIME, endTime)
                 .append(CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS, status);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveCallsLogsToMongo(long runID, String name, String number, int type,
@@ -38,11 +34,7 @@ public class CallScripts {
                 .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_TYPE, type)
                 .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_DATE, date)
                 .append(CallsLogs.CallsLogsEntry.COLUMN_NAME_DURATION, duration);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveCallsLogsInfoToMongo(long runID, boolean logPermission, boolean found) {
@@ -52,11 +44,7 @@ public class CallScripts {
                 .append(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_RUN_ID, runID)
                 .append(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_LOG_PERMISSION, logPermission)
                 .append(CallsLogsInfo.CallsLogsInfoEntry.COLUMN_NAME_FOUND, found);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveContactsInfoToMongo(long runID, boolean contactsPermission, boolean
@@ -67,11 +55,7 @@ public class CallScripts {
                 .append(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_RUN_ID, runID)
                 .append(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_CONTACTS_PERMISSION, contactsPermission)
                 .append(ContactsInfo.ContactsInfoEntry.COLUMN_NAME_FOUND, found);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
     public static void saveContactsToMongo(long runID, String name, String number) {
@@ -81,11 +65,7 @@ public class CallScripts {
                 .append(Contacts.ContactsEntry.COLUMN_NAME_RUN_ID, runID)
                 .append(Contacts.ContactsEntry.COLUMN_NAME_NAME, name)
                 .append(Contacts.ContactsEntry.COLUMN_NAME_NUMBER, number);
-        try {
-            mongoDb.saveData(TABLE_NAME, document);
-        } catch (MongoDbException e) {
-            Log.e(MongoDb.LOG_TAG, e.getMessage());
-        }
+        mongoDb.saveData(TABLE_NAME, document);
     }
 
 }
