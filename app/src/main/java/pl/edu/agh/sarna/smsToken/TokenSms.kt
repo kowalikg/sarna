@@ -66,12 +66,12 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
     fun nextActivity(view: View) {
         if (isKitKat4_4()){
-            startActivity(Intent(this, ReportActivity::class.java).apply {
+            startActivity(Intent(this, MetadataActivity::class.java).apply {
                 putExtra("phone_number", phoneNumber)
             })
         }
         else {
-            startActivity(Intent(this, MetadataActivity::class.java))
+            startActivity(Intent(this, DefaultSms::class.java))
         }
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }

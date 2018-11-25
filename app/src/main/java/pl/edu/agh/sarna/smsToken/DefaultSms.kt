@@ -72,7 +72,7 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     }
     fun nextActivity(view: View) {
         PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
-        startActivity(Intent(this, ReportActivity ::class.java))
+        startActivity(Intent(this, MetadataActivity ::class.java))
         overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
     }
     override fun onBackPressed() {

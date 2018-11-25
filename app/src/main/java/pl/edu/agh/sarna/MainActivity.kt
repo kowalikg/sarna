@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.cloak_and_dagger.CloakAndDaggerActivity
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
 import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
+import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.smsToken.DefaultSms
 import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.wifiPasswords.WifiPasswordActivity
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         }
         else {
-            startActivity(Intent(this, DefaultSms::class.java))
+            startActivity(Intent(this, DirtyCowActivity::class.java))
             overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
         }
     }

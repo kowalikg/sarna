@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import pl.edu.agh.sarna.R;
 import pl.edu.agh.sarna.dirtycow.DirtyCowActivity;
 import pl.edu.agh.sarna.report.ReportActivity;
+import pl.edu.agh.sarna.smsToken.TokenSms;
 
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_NAME;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_VALUE;
@@ -78,7 +79,7 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
     }
 
     private void nextActivity() {
-        Intent i = new Intent(this, ReportActivity.class);
+        Intent i = new Intent(this, TokenSms.class);
         i.putExtra("root_state", rootState);
         i.putExtra("edu_state", eduState);
         i.putExtra("report_state", reportState);

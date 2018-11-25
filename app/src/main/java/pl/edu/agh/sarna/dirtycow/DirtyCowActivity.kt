@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.cloak_and_dagger.CloakAndDaggerActivity
 import pl.edu.agh.sarna.db.scripts.getLastProcess
 import pl.edu.agh.sarna.dirtycow.task.DirtyCowTask
 import pl.edu.agh.sarna.report.ReportActivity
@@ -35,7 +36,7 @@ class DirtyCowActivity : AppCompatActivity(), AsyncResponse {
         serverState = options[2] as Boolean
     }
     private fun nextActivity() {
-        startActivity(Intent(this, TokenSms::class.java))
+        startActivity(Intent(this, CloakAndDaggerActivity::class.java))
     }
     override fun onBackPressed() {}
 }
