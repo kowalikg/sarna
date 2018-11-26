@@ -11,13 +11,13 @@ import pl.edu.agh.sarna.utils.kotlin.isOreo8_1
 import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
-fun insertWifiQuery(context: Context, processID: Long) : Long? {
+fun insertWifiQuery(context: Context, processID: Long, startTime: Long) : Long? {
     val dbHelper = DbHelper.getInstance(context)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
         put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_PROCESS_ID, processID)
-        put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
+        put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_START_TIME, startTime.toString())
     }
 
     val runID = db?.insert(WifiPasswords.WifiPasswordsEntry.TABLE_NAME, null, values)
@@ -47,10 +47,10 @@ fun insertWifiUtilsQuery(context: Context, runID: Long, storagePermissionGranted
     val tryID = db?.insert(WifiUtils.WifiUtilsEntry.TABLE_NAME, null, values)
     Log.i("ID", "New runutils ID = $tryID")
 }
-fun updateWifiMethod(context: Context, runID: Long, status: Boolean) {
+fun updateWifiMethod(context: Context, runID: Long, status: Boolean, endTime: Long) {
     val db = DbHelper.getInstance(context)!!.writableDatabase
     val cv = ContentValues()
-    cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+    cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_END_TIME, endTime.toString())
     cv.put(WifiPasswords.WifiPasswordsEntry.COLUMN_NAME_STATUS, status.toInt())
 
     db.update(WifiPasswords.WifiPasswordsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));

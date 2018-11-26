@@ -6,12 +6,14 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.support.annotation.RequiresApi
+import pl.edu.agh.sarna.db.mongo.scripts.WifiScripts
 import pl.edu.agh.sarna.db.scripts.insertWifiQuery
 import pl.edu.agh.sarna.db.scripts.insertWifiUtilsQuery
 import pl.edu.agh.sarna.db.scripts.updateWifiMethod
 import pl.edu.agh.sarna.root.tools.execCommand
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
+import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis
 import pl.edu.agh.sarna.utils.kotlin.isOreo8_0
 import pl.edu.agh.sarna.wifiPasswords.parsers.WPAParser
 import pl.edu.agh.sarna.wifiPasswords.parsers.XMLParser
@@ -43,7 +45,8 @@ class WifiPasswordTask(contextReference: WeakReference<Context>, response: Async
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun doInBackground(vararg p0: Void?): Int {
-        runID = insertWifiQuery(contextReference.get()!!, processID)!!
+        val startTime = getCurrentTimeInMillis()
+        runID = insertWifiQuery(contextReference.get()!!, processID, startTime)!!
         requestWifiSsid()
 
         if (rootState and permissionsGranted){
@@ -52,16 +55,20 @@ class WifiPasswordTask(contextReference: WeakReference<Context>, response: Async
             } else takePasswordFromWPAFile()
         }
 
-        updateDatabase();
+        updateDatabase(startTime);
         Thread.sleep(1000)
         return 0
     }
 
-    private fun updateDatabase() {
+    private fun updateDatabase(startTime: Long) {
         lock.lock()
         insertWifiUtilsQuery(contextReference.get()!!, runID, storagePermissionGranted, locationPermissionGranted,
                 connected, passwordFound, wifiSSID, passwordContent)
-        updateWifiMethod(contextReference.get()!!, runID, passwordFound)
+        WifiScripts.saveWifiUtilsToMongo(runID, storagePermissionGranted,
+                locationPermissionGranted, connected, passwordFound, wifiSSID, passwordContent)
+        val endTime = getCurrentTimeInMillis()
+        updateWifiMethod(contextReference.get()!!, runID, passwordFound, endTime)
+        WifiScripts.saveWifiPasswordsToMongo(processID, startTime, endTime, passwordFound)
         lock.unlock()
     }
     @RequiresApi(Build.VERSION_CODES.M)

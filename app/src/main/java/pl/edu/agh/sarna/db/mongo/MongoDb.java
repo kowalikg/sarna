@@ -33,6 +33,8 @@ public class MongoDb {
                 database.getCollection(collectionName).insertOne(document);
             } catch (MongoException e) {
                 Log.e(LOG_TAG, ERROR_MSG);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.getMessage());
             }
         }).start();
     }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
 import android.provider.Telephony
+import java.util.*
 
 
 fun Boolean.toInt() = if (this) 1 else 0
@@ -34,4 +35,8 @@ fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetworkInfo = connectivityManager.activeNetworkInfo
     return activeNetworkInfo != null && activeNetworkInfo.isConnected
+}
+
+fun getCurrentTimeInMillis(): Long {
+    return Calendar.getInstance().timeInMillis
 }
