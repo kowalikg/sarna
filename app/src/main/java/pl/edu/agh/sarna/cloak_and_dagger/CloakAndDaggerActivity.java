@@ -202,7 +202,7 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
         rootState = (boolean) options[1];
         serverState = (boolean) options[2];
         reportState = (boolean) options[3];
-
+        eduState = (boolean) options[4];
     }
 
 }

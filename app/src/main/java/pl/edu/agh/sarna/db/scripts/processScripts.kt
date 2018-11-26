@@ -109,7 +109,9 @@ fun getLastProcess(context: Context?) : Array<Any> {
     val db = dbHelper!!.writableDatabase
     val cursor = db!!.query(
             Processes.ProcessEntry.TABLE_NAME,
-            arrayOf(BaseColumns._ID, Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, Processes.ProcessEntry.COLUMN_NAME_REPORT),
+            arrayOf(BaseColumns._ID, Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, Processes
+                    .ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, Processes.ProcessEntry
+                    .COLUMN_NAME_REPORT, Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL),
             null,
             null,
             null, null,
@@ -121,7 +123,10 @@ fun getLastProcess(context: Context?) : Array<Any> {
                 cursor.getLong(cursor.getColumnIndex(BaseColumns._ID)),
                 cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED)).toBoolean(),
                 cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER)).toBoolean(),
-                cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_REPORT)).toBoolean())
+                cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry.COLUMN_NAME_REPORT))
+                        .toBoolean(),
+                cursor.getInt(cursor.getColumnIndex(Processes.ProcessEntry
+                        .COLUMN_NAME_EDUCATIONAL)).toBoolean())
     }
     return arrayOf()
 }
