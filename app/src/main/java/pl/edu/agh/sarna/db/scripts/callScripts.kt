@@ -21,13 +21,13 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-fun insertCallsQuery(context: Context?, processID: Long) : Long? {
+fun insertCallsQuery(context: Context?, processID: Long, startTime: Long) : Long? {
     val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
         put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_PROCESS_ID, processID)
-        put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
+        put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_START_TIME, startTime.toString())
     }
 
     val runID = db?.insert(CallsDetails.CallsDetailsEntry.TABLE_NAME, null, values)
@@ -50,10 +50,10 @@ fun insertContactsInfoQuery(context: Context?, runID: Long, contactsPermissionGr
     return tryID
 }
 
-fun updateCallsMethod(context: Context?, runID: Long, status: Boolean) {
+fun updateCallsMethod(context: Context?, runID: Long, status: Boolean, endTime: Long) {
     val db = DbHelper.getInstance(context!!)!!.writableDatabase
     val cv = ContentValues()
-    cv.put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+    cv.put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_END_TIME, endTime.toString())
     cv.put(CallsDetails.CallsDetailsEntry.COLUMN_NAME_STATUS, status.toInt())
 
     db.update(CallsDetails.CallsDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
