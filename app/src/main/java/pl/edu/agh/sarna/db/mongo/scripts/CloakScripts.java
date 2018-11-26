@@ -8,8 +8,8 @@ import pl.edu.agh.sarna.db.mongo.MongoDb;
 
 public class CloakScripts {
 
-    public static void saveCloakInfoToMongo(long processID, long startTime, long endTime, boolean
-            status) {
+    public static void saveCloakInfoToMongo(long processID, long startTime, long endTime,
+                                            boolean status) {
         final String TABLE_NAME = CloakInfo.CloakInfoEntry.TABLE_NAME;
         MongoDb mongoDb = new MongoDb();
         Document document = new Document()
@@ -20,11 +20,11 @@ public class CloakScripts {
         mongoDb.saveData(TABLE_NAME, document);
     }
 
-    public static void saveCloakTextToMongo(long runID, String text, String package_) {
+    public static void saveCloakTextToMongo(/* long runID, */ String text, String package_) {
         final String TABLE_NAME = CloakText.CloakTextEntry.TABLE_NAME;
         MongoDb mongoDb = new MongoDb();
         Document document = new Document()
-                .append(CloakText.CloakTextEntry.COLUMN_NAME_RUN_ID, runID)
+//                .append(CloakText.CloakTextEntry.COLUMN_NAME_RUN_ID, runID)
                 .append(CloakText.CloakTextEntry.COLUMN_NAME_TEXT, text)
                 .append(CloakText.CloakTextEntry.COLUMN_NAME_PACKAGE, package_);
         mongoDb.saveData(TABLE_NAME, document);
