@@ -7,14 +7,13 @@ import pl.edu.agh.sarna.db.mongo.MongoDb;
 
 public class ProcessScripts {
 
-    public static void saveProcessesToMongo(long startTime, long endTime, int externalServer,
+    public static void saveProcessesToMongo(long startTime, boolean externalServer,
                                             boolean rootAllowed, boolean educational, boolean
-                                                    report, float systemVersion) {
+                                                    report, int systemVersion) {
         final String TABLE_NAME = Processes.ProcessEntry.TABLE_NAME;
         MongoDb mongoDb = new MongoDb();
         Document document = new Document()
                 .append(Processes.ProcessEntry.COLUMN_NAME_START_TIME, startTime)
-                .append(Processes.ProcessEntry.COLUMN_NAME_END_TIME, endTime)
                 .append(Processes.ProcessEntry.COLUMN_NAME_EXTERNAL_SERVER, externalServer)
                 .append(Processes.ProcessEntry.COLUMN_NAME_ROOT_ALLOWED, rootAllowed)
                 .append(Processes.ProcessEntry.COLUMN_NAME_EDUCATIONAL, educational)

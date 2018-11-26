@@ -2,17 +2,20 @@ package pl.edu.agh.sarna
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.edu.agh.sarna.cloak_and_dagger.CloakAndDaggerActivity
+import pl.edu.agh.sarna.db.mongo.scripts.ProcessScripts.saveProcessesToMongo
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
 import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.smsToken.DefaultSms
 import pl.edu.agh.sarna.smsToken.TokenSms
+import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis
 import pl.edu.agh.sarna.wifiPasswords.WifiPasswordActivity
 import java.io.DataOutputStream
 import java.io.IOException
@@ -71,6 +74,8 @@ class MainActivity : AppCompatActivity() {
         serverMode = serverSwitch.isChecked
 
         launchDatabaseConnection(this, educationalMode, reportMode, serverMode, rootAllowed)
+        saveProcessesToMongo(getCurrentTimeInMillis(),serverMode, rootAllowed, educationalMode,
+                reportMode, Build.VERSION.SDK_INT)
 
         if (rootAllowed) {
             startActivity(Intent(this, WifiPasswordActivity::class.java))
