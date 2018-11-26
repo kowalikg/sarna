@@ -20,7 +20,7 @@ public class DirtyCowScripts {
         mongoDb.saveData(TABLE_NAME, document);
     }
 
-    public static void saveDirtyCowInfoToMongo(long runID, int eta, int seLinux, String kernel,
+    public static void saveDirtyCowInfoToMongo(long runID, long eta, boolean seLinux, String kernel,
                                                String build, String vendor) {
         final String TABLE_NAME = DirtyCowInfo.DirtyCowInfoEntry.TABLE_NAME;
         MongoDb mongoDb = new MongoDb();

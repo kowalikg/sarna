@@ -11,13 +11,13 @@ import pl.edu.agh.sarna.utils.kotlin.toInt
 import java.util.*
 
 
-fun insertDirtyCowQuery(context: Context?, processID: Long) : Long? {
+fun insertDirtyCowQuery(context: Context?, processID: Long, startTime: Long) : Long? {
     val dbHelper = DbHelper.getInstance(context)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
         put(DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_PROCESS_ID, processID)
-        put(DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
+        put(DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_START_TIME, startTime.toString())
     }
 
     val runID = db?.insert(DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME, null, values)
@@ -48,10 +48,10 @@ fun insertDirtyCowInfo(context: Context?,
     val tryID = db?.insert(DirtyCowInfo.DirtyCowInfoEntry.TABLE_NAME, null, values)
     Log.i("ID", "New runutils ID = $tryID")
 }
-fun updateDirtyCowMethod(context: Context?, runID: Long, status: Boolean) {
+fun updateDirtyCowMethod(context: Context?, runID: Long, status: Boolean, endTime: Long) {
     val db = DbHelper.getInstance(context)!!.writableDatabase
     val cv = ContentValues()
-    cv.put(DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+    cv.put(DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_END_TIME, endTime.toString())
     cv.put(DirtyCowDetails.DirtyCowDetailsEntry.COLUMN_NAME_STATUS, status.toInt())
 
     db.update(DirtyCowDetails.DirtyCowDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));
