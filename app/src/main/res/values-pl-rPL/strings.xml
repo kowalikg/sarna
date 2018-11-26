@@ -69,7 +69,17 @@
     <string name="test_method_failed">Test metody zakończony porażką.</string>
     <string name="permission_list">Statusy uprawnień:</string>
     <string name="cloak_title">Cloak and Dagger</string>
-    <string name="cloak_description">Tu będzie opis</string>
+    <string name="cloak_description">Jest to metoda opierająca się na własności
+        Androida do wersji 6.0 - możliwości rysowania nad innymi aplikacjami, również nad
+        dialogami do przyznawania uprawnień! Aplikacja dąży do uzyskania uprawnienia
+        ACCESSIBILITY_SERVICE poprzez uruchomienie odpowiedniego menu w ustawieniach a
+        następnie nakładaniu tak skomponowanej warstwy graficznej, żeby zachęcić
+        użytkownika do dotknięcia odpowiednich miejsc na ekranie.\n
+        Obsługa:\n
+        1. Naciśnij START.\n
+        2. Wykonaj podane instrukcje.\n
+        3. Zminimalizuj aplikację i zacznij pisać jakiś tekst.\n
+        4. Wróć do aplikacji. Przechwycone teksty znajdziesz w dolnym polu.</string>
     <string name="report_dirtycow">Test diagnozuje podatność wersji Androida na atak CVE-2016-5195, wykorzystującym błędy występujące     w implementacji mechanizmu copy-on-write jądra linuxa, pozwalających na zaistnienie race-condition.     W demonstracji aplikacja bez uprawnień może próbować przekierowywać ruch na inne witryny podszywające się po oryginalne (phishing)     oraz nadpisywać systemowe pliki konfiguracyjne.     Przy bardziej skomplikowanych założeniach pozawala na dostęp do danych innych aplikacji (np. baza cookies chrome)     poprzez napisanie plików wykonywalnych lub shared library injection - linux capabilities / suid bit.     Ostatecznie napisanie odpowiednich bibliotek spowoduje konieczność restartu z powodu utraty responsywności systemu z powodu trywialnej aplikacji.</string>
     <string name="default_title">Aplikacje domyślne</string>
     <string name="default_description">Co jeśli zainstalujemy aplikację, która ma zarządzać naszymi smsami? Okazuje się, że może ukrywać przed nami wiele rzeczy...\nPodobnie jak w poprzednim przypadku, zweryfikuj przyjście smsa z kodem aktywacyjnym. Następnie spróbuj wykonać przelew.</string>
@@ -79,4 +89,6 @@
     <string name="method_ok">Test metody zakończony. Przejdź do następnej metody.</string>
     <string name="method_failed">Nie udało się uruchomić metody. Przejdź do następnej metody.</string>
     <string name="activation_code">"Kod aktywacyjny: "</string>
+    <string name="cloakCapturedDataDescription">Tutaj pojawią się przechwycone dane</string>
+    <string name="cloakNextButton">Dalej</string>
 </resources>

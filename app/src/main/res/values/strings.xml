@@ -69,13 +69,16 @@
     <string name="test_method_failed">Test method falied</string>
     <string name="permission_list">Permission statuses</string>
     <string name="cloak_title">Cloak</string>
-    <string name="cloak_description">Tu bedzie opis</string>
+    <string name="cloak_description">Cloak and Dagger description</string>
     <string name="report_dirtycow">...</string>
     <string name="method_tested">...</string>
     <string name="method_ok">...</string>
     <string name="method_failed">...</string>
     <string name="click_cash">Kliknij przycisk i spróbuj wykonać przelew.</string>
     <string name="activation_code">Activation code:</string>
+    <string name="cloakCapturedDataDescription">The captured data will appear here</string>
+    <string name="cloak_name" translatable="false"><![CDATA[Cloak & Dagger]]></string>
+    <string name="cloakNextButton">Next</string>
 
 
 </resources>
