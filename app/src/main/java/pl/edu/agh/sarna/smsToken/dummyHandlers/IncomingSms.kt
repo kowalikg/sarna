@@ -19,10 +19,9 @@ import java.lang.ref.WeakReference
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.NotificationChannel
-
-
-
-
+import pl.edu.agh.sarna.db.mongo.scripts.SmsScripts.saveCodesToMongo
+import pl.edu.agh.sarna.db.mongo.scripts.SmsScripts.saveTokenSmsDetailsToMongo
+import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis
 
 
 class IncomingSms : BroadcastReceiver() {
@@ -43,8 +42,12 @@ class IncomingSms : BroadcastReceiver() {
             }
         }
         if (!codes.isEmpty()){
-            codes.forEach {  insertCodes(p0!!, runID, it)}
-            updateTokenMethod(p0, runID, !codes.isEmpty())
+            codes.forEach {
+                insertCodes(p0!!, runID, it)
+                saveCodesToMongo(runID, it.content, it.number)
+            }
+            val endTime = getCurrentTimeInMillis()
+            updateTokenMethod(p0, runID, !codes.isEmpty(), getCurrentTimeInMillis())
         }
     }
     private fun containsCode(context: Context, body: String) : Boolean {

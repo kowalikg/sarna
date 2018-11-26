@@ -11,12 +11,17 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_default_sms.*
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.mongo.scripts.SmsScripts.*
 import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.metadata.MetadataActivity
+import pl.edu.agh.sarna.permissions.checkReadSmsPermission
+import pl.edu.agh.sarna.permissions.checkReceiveSmsPermission
+import pl.edu.agh.sarna.permissions.checkSendSmsPermission
 import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.DummyTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import java.lang.ref.WeakReference
 
@@ -28,6 +33,7 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
 
     private var mode = Mode.TEST_DUMMY
     private var runID: Long = 0
+    private var startTime: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +53,20 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
     }
 
     private fun dummyTask(){
-        runID = insertTokenQuery(this, processID, mode.ordinal)!!
+        startTime = getCurrentTimeInMillis()
+        runID = insertTokenQuery(this, processID, mode.ordinal, startTime)!!
         insertSmsPermissions(this, runID)
+        saveSmsPermissionsToMongo(
+                runID,
+                checkSendSmsPermission(this),
+                checkReadSmsPermission(this),
+                checkReceiveSmsPermission(this),
+                isDefaultSmsApp(this)
+        )
         if (!isDefaultSmsApp(this)){
-            updateTokenMethod(this, runID, false)
+            val endTime = getCurrentTimeInMillis()
+            updateTokenMethod(this, runID, false, endTime)
+            saveTokenSmsDetailsToMongo(processID, startTime, endTime, false, mode.ordinal)
             endMethod()
         }
         else DummyTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
@@ -97,7 +113,9 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         defaultDescriptionTextView.text = "${getString(R.string.default_description)}\n${getString(R.string.method_failed)}"
         defaultNextButton.visibility = View.VISIBLE
         defaultLaunchButton.isEnabled = false
-        updateTokenMethod(this, runID, false)
+        val endTime = getCurrentTimeInMillis()
+        updateTokenMethod(this, runID, false, endTime)
+        saveTokenSmsDetailsToMongo(processID, startTime, endTime, false, mode.ordinal)
     }
 
     private fun runListening(output: Any) {
@@ -105,7 +123,8 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
                 "$output\n${getString(R.string.method_tested)}"
         mode = Mode.DUMMY
         defaultNextButton.visibility = View.VISIBLE
-        updateTokenMethod(this, runID, true)
-
+        val endTime = getCurrentTimeInMillis()
+        updateTokenMethod(this, runID, true, endTime)
+        saveTokenSmsDetailsToMongo(processID, startTime, endTime, false, mode.ordinal)
     }
 }

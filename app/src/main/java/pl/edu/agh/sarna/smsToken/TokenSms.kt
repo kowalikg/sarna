@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_token_sms.*
 import pl.edu.agh.sarna.R
+import pl.edu.agh.sarna.db.mongo.scripts.SmsScripts.saveTokenSmsDetailsToMongo
 import pl.edu.agh.sarna.db.scripts.*
 import pl.edu.agh.sarna.metadata.MetadataActivity
 import pl.edu.agh.sarna.permissions.checkReadSmsPermission
@@ -18,6 +19,7 @@ import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.task.method.NotSafeTask
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.isNetworkAvailable
 import java.lang.ref.WeakReference
@@ -33,6 +35,7 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private var runID: Long = 0
 
     private var phoneNumber : String = "+48731464100"
+    var startTime: Long = -1;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +103,8 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
 
 
     private fun classicTokenJob() {
-        runID = insertTokenQuery(this, processID, mode.ordinal)!!
+        startTime = getCurrentTimeInMillis()
+        runID = insertTokenQuery(this, processID, mode.ordinal, startTime)!!
         insertSmsPermissions(this, runID)
         NotSafeTask(WeakReference(this), this, processID, runID, serverState, phoneNumber, mode).execute()
     }
@@ -117,14 +121,19 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
     private fun endMethod() {
         defaultButton.isEnabled = false
         smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_ok)}"
-        updateTokenMethod(this, runID, codesAmount(this, runID) > 0)
+        val status  = codesAmount(this, runID) > 0
+        val endTime = getCurrentTimeInMillis()
+        updateTokenMethod(this, runID, status, endTime)
+        saveTokenSmsDetailsToMongo(processID, startTime, endTime, status, mode.ordinal)
     }
 
     private fun failedProcedure() {
         smsDescriptionTextView.text = "${getString(R.string.token_description)}\n${getString(R.string.method_failed)}"
         nextButton.visibility = View.VISIBLE
         defaultButton.isEnabled = false
-        updateTokenMethod(this, runID, false)
+        val endTime = getCurrentTimeInMillis()
+        updateTokenMethod(this, runID, false, endTime)
+        saveTokenSmsDetailsToMongo(processID, startTime, endTime, false, mode.ordinal)
     }
 
     private fun runListening(output: Any) {
@@ -132,8 +141,9 @@ class TokenSms : AppCompatActivity(), AsyncResponse {
                 "$output\n${getString(R.string.method_tested)}"
         mode = Mode.NOT_SAFE
         nextButton.visibility = View.VISIBLE
-        updateTokenMethod(this, runID, true)
-
+        val endTime = getCurrentTimeInMillis()
+        updateTokenMethod(this, runID, true, endTime)
+        saveTokenSmsDetailsToMongo(processID, startTime, endTime, true, mode.ordinal)
     }
 
     private fun initialiseOptions() {

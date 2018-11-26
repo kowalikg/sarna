@@ -21,14 +21,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-fun insertTokenQuery(context: Context?, processID: Long, mode: Int) : Long? {
+fun insertTokenQuery(context: Context?, processID: Long, mode: Int, startTime: Long) : Long? {
     val dbHelper = DbHelper.getInstance(context!!)
     val db = dbHelper!!.writableDatabase
 
     val values = ContentValues().apply {
         put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_PROCESS_ID, processID)
         put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_MODE, mode)
-        put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_START_TIME, Calendar.getInstance().timeInMillis.toString())
+        put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_START_TIME, startTime.toString())
     }
 
     val runID = db?.insert(TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, null, values)
@@ -36,10 +36,10 @@ fun insertTokenQuery(context: Context?, processID: Long, mode: Int) : Long? {
 
     return runID
 }
-fun updateTokenMethod(context: Context?, runID: Long, status: Boolean) {
+fun updateTokenMethod(context: Context?, runID: Long, status: Boolean, endTime: Long) {
     val db = DbHelper.getInstance(context!!)!!.writableDatabase
     val cv = ContentValues()
-    cv.put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME, Calendar.getInstance().timeInMillis.toString())
+    cv.put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_END_TIME, endTime.toString())
     cv.put(TokenSmsDetails.TokenSmsDetailsEntry.COLUMN_NAME_STATUS, status.toInt())
 
     db.update(TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME, cv, "${BaseColumns._ID} = ?", arrayOf(runID.toString()));

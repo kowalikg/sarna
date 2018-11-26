@@ -12,6 +12,7 @@ import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.smsToken.model.SmsMessage
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
 import pl.edu.agh.sarna.utils.kotlin.async.MethodAsyncTask
+import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis
 import pl.edu.agh.sarna.utils.kotlin.isDefaultSmsApp
 import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.isNougat7_1_2
@@ -38,7 +39,8 @@ class DummyTask(contextReference: WeakReference<Context>,
             return code
         }
         else {
-            if (!isDefaultSmsApp(contextReference.get()!!)) updateTokenMethod(contextReference.get(), runID, false)
+            if (!isDefaultSmsApp(contextReference.get()!!)) updateTokenMethod(contextReference
+                    .get(), runID, false, getCurrentTimeInMillis())
             else {
                 if(!waitForUpdate(runID)) return -1
             }

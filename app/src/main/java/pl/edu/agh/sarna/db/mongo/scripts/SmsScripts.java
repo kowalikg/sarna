@@ -19,8 +19,8 @@ public class SmsScripts {
         mongoDb.saveData(TABLE_NAME, document);
     }
 
-    public static void saveTokenSmsDetails(long processID, long startTime, long endTime, boolean
-            status, int mode) {
+    public static void saveTokenSmsDetailsToMongo(long processID, long startTime, long endTime,
+                                                  boolean status, int mode) {
         final String TABLE_NAME = TokenSmsDetails.TokenSmsDetailsEntry.TABLE_NAME;
         MongoDb mongoDb = new MongoDb();
         Document document = new Document()
