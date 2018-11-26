@@ -56,7 +56,7 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
 
     @OnClick(R.id.start_button)
     void buttonOnClick() {
-        runID = insertCloakQuery(this, processID);
+//        runID = insertCloakQuery(this, processID);
         startButton.setEnabled(false);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             ensureAccessibilityService();
@@ -72,9 +72,9 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
 
     @OnClick(R.id.nextActivityButton)
     void nextActivityClick() {
-        long run = getLastCloakRunID(this);
-        long amount = textAmount(this, run);
-        updateCloakMethod(this, run, amount > 0);
+//        long run = getLastCloakRunID(this);
+//        long amount = textAmount(this, run);
+//        updateCloakMethod(this, run, amount > 0);
         nextActivity();
     }
 

