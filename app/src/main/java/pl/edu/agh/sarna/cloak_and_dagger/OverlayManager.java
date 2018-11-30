@@ -36,7 +36,11 @@ public class OverlayManager {
 
     private Collection<View> overlays;
 
-    public OverlayManager(Context context) {
+    private boolean transparentMode;
+
+    private static final int TRANSPARENT_COLOR = 0x88EEEEFF;
+
+    public OverlayManager(Context context, boolean transparentMode) {
         this.context = context;
         manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         assert manager != null;
@@ -46,12 +50,16 @@ public class OverlayManager {
         displayWidth = size.x;
         displayHeight = size.y;
         overlays = new LinkedList<>();
+        this.transparentMode = transparentMode;
     }
 
     @SuppressLint("RtlHardcoded")
     private void addOverlay(@LayoutRes int layoutRes, int x, int y, int width, int height, int flags, final Runnable
             onTouch) {
         View view = View.inflate(context, layoutRes, null);
+        if (transparentMode) {
+            view.setBackgroundColor(TRANSPARENT_COLOR);
+        }
         if (onTouch != null) {
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override

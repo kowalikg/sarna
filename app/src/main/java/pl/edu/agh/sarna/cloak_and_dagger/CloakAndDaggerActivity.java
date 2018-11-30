@@ -197,10 +197,10 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cloak_and_dagger);
-        overlayManager = new OverlayManager(this);
         ButterKnife.inject(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(INTENT_NAME));
         initialiseOptions();
+        overlayManager = new OverlayManager(this, eduState);
     }
 
     private void initialiseOptions() {
