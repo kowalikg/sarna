@@ -49,25 +49,23 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
     @InjectView(R.id.start_button)
     Button startButton;
 
+    private long processID;
     private boolean eduState;
     private boolean rootState;
     private boolean serverState;
     private boolean reportState;
-
-    private long processID;
     private long runID;
 
     private static long startTime = -1;
 
     @OnClick(R.id.start_button)
     void buttonOnClick() {
-//        runID = insertCloakQuery(this, processID);
+        startTime = getCurrentTimeInMillis();
+        runID = insertCloakQuery(this, processID);
         startButton.setEnabled(false);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             ensureAccessibilityService();
         } else {
-            startTime = getCurrentTimeInMillis();
-            saveCloakInfoToMongo(processID, startTime, startTime, false);
             capturedDataView.setText("Ta procedura wymaga Androida w wersji 6.0 lub starszej.");
         }
 
@@ -78,9 +76,12 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
 
     @OnClick(R.id.nextActivityButton)
     void nextActivityClick() {
-//        long run = getLastCloakRunID(this);
-//        long amount = textAmount(this, run);
-//        updateCloakMethod(this, run, amount > 0);
+        long run = getLastCloakRunID(this);
+        long amount = textAmount(this, run);
+        boolean status = amount > 0;
+        updateCloakMethod(this, run, status);
+        saveCloakInfoToMongo(processID, startTime == -1 ? getCurrentTimeInMillis(): startTime,
+                getCurrentTimeInMillis(), status);
         nextActivity();
     }
 
@@ -111,14 +112,10 @@ public class CloakAndDaggerActivity extends AppCompatActivity {
 
     private void ensureAccessibilityService() {
         if (KeyloggerService.isRunning(this)) {
-            long endTime = getCurrentTimeInMillis();
-            saveCloakInfoToMongo(processID, startTime, endTime, true);
-
             Log.d(LOG_TAG, "Accessibility service is running.");
             startButton.setEnabled(false);
             overlayManager.clear();
         } else {
-            startTime = getCurrentTimeInMillis();
             final Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
             startActivityForResult(intent, REQUEST_CODE_ENABLE_ACCESSIBILITY_SERVICE);
             startOverlayProcedure();
