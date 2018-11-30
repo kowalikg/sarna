@@ -2,6 +2,7 @@ package pl.edu.agh.sarna.cloak_and_dagger.task
 
 import android.content.Context
 import android.database.Cursor
+import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.model.cloak.CloakInfo
 import pl.edu.agh.sarna.db.model.cloak.CloakText
 import pl.edu.agh.sarna.db.scripts.getTextByRunID
@@ -30,6 +31,7 @@ class CloakReportTask(contextReference: WeakReference<Context>,
             reportList.add(ReportEntry(it.description + ":" + it.value))
         }
         if(reportList.isEmpty()) return skippedMethod()
+        reportList.add(ReportEntry(contextReference.get()!!.getString(R.string.cloak_report)))
         return reportList
     }
 

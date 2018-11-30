@@ -68,7 +68,6 @@
     <string name="test_method_worked">Test metody zakończony pomyślnie.</string>
     <string name="test_method_failed">Test metody zakończony porażką.</string>
     <string name="permission_list">Statusy uprawnień:</string>
-    <string name="cloak_title">Cloak and Dagger</string>
     <string name="cloak_description">Jest to metoda opierająca się na własności
         Androida do wersji 6.0 - możliwości rysowania nad innymi aplikacjami, również nad
         dialogami do przyznawania uprawnień! Aplikacja dąży do uzyskania uprawnienia
@@ -80,6 +79,21 @@
         2. Wykonaj podane instrukcje.\n
         3. Zminimalizuj aplikację i zacznij pisać jakiś tekst.\n
         4. Wróć do aplikacji. Przechwycone teksty znajdziesz w dolnym polu.</string>
+    <string name="cloak_report">
+        Podatność Cloak and Dagger została zainicjowana pomyślnie!\n
+        Ten telefon jest podatny na Cloak and Dagger a to oznacza, że bez żadnych uprawnień
+        początkowych aplikacja może uruchomić usługę Accessibility Service. Wymaga to co prawda
+        wykonania przez użytkownika sekwencji kliknięć w odpowiednich miejscach interfejsu, ale
+        przykrywająca je warstwa graficzna ma skutecznie go do tego zachęcić.\n
+        Accessibility Service to potężne narzędzie. W tym przypadku przekonałeś się o jednej z
+        możliwości jego wykorzystania - mianowicie przechwytywaniu tekstów wpisywanych w polach
+        tekstowych. Niestety w praktyce ta usługa pozwala na znacznie więcej, m. in. na
+        generowanie kliknięć w określonych miejscach bez wiedzy użytkownika. W ten sposób można
+        na przykład przyznawać aplikacji kolejne uprawnienia!\n
+        Zagrożenie to dotyczy telefonów z Androidem do wersji 6.0 włącznie. Dzieje się tak
+        dlatego, że w tych wersjach system zezwala na rysowanie nad innymi aplikacjami nawet w
+        momencie gdy jest to okno dialogowe ustawień systemu do przyznawania dodatkowych uprawnień.
+    </string>
     <string name="report_dirtycow">Test diagnozuje podatność wersji Androida na atak CVE-2016-5195, wykorzystującym błędy występujące     w implementacji mechanizmu copy-on-write jądra linuxa, pozwalających na zaistnienie race-condition.     W demonstracji aplikacja bez uprawnień może próbować przekierowywać ruch na inne witryny podszywające się po oryginalne (phishing)     oraz nadpisywać systemowe pliki konfiguracyjne.     Przy bardziej skomplikowanych założeniach pozawala na dostęp do danych innych aplikacji (np. baza cookies chrome)     poprzez napisanie plików wykonywalnych lub shared library injection - linux capabilities / suid bit.     Ostatecznie napisanie odpowiednich bibliotek spowoduje konieczność restartu z powodu utraty responsywności systemu z powodu trywialnej aplikacji.</string>
     <string name="default_title">Aplikacje domyślne</string>
     <string name="default_description">Co jeśli zainstalujemy aplikację, która ma zarządzać naszymi smsami? Okazuje się, że może ukrywać przed nami wiele rzeczy...\nPodobnie jak w poprzednim przypadku, zweryfikuj przyjście smsa z kodem aktywacyjnym. Następnie spróbuj wykonać przelew.</string>
