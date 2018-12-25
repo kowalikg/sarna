@@ -13,6 +13,7 @@ import pl.edu.agh.sarna.db.mongo.scripts.ProcessScripts.saveProcessesToMongo
 import pl.edu.agh.sarna.db.scripts.launchDatabaseConnection
 import pl.edu.agh.sarna.dirtycow.DirtyCowActivity
 import pl.edu.agh.sarna.metadata.MetadataActivity
+import pl.edu.agh.sarna.report.ReportActivity
 import pl.edu.agh.sarna.smsToken.DefaultSms
 import pl.edu.agh.sarna.smsToken.TokenSms
 import pl.edu.agh.sarna.utils.kotlin.getCurrentTimeInMillis

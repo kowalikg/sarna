@@ -71,14 +71,16 @@ class WifiPasswordTask(contextReference: WeakReference<Context>, response: Async
         WifiScripts.saveWifiPasswordsToMongo(processID, startTime, endTime, passwordFound)
         lock.unlock()
     }
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun requestWifiSsid() {
-        val manager = contextReference.get()!!.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val manager = contextReference.get()!!
+                .getSystemService(Context.WIFI_SERVICE) as WifiManager
         if (manager.isWifiEnabled) {
             val wifiInfo = manager.connectionInfo
             if (wifiInfo != null) {
-                val state = WifiInfo.getDetailedStateOf(wifiInfo.supplicantState)
-                if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                val state = WifiInfo
+                        .getDetailedStateOf(wifiInfo.supplicantState)
+                if (state == NetworkInfo.DetailedState.CONNECTED
+                || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
                     connected = true
                     wifiSSID = wifiInfo.ssid
                     wifiSSID = wifiSSID.replace("\"", "")

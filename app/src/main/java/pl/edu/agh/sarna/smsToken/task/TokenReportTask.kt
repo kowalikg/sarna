@@ -2,6 +2,7 @@ package pl.edu.agh.sarna.smsToken.task
 
 import android.content.Context
 import android.database.Cursor
+import android.os.Build
 import android.provider.BaseColumns
 import pl.edu.agh.sarna.R
 import pl.edu.agh.sarna.db.DbHelper
@@ -17,6 +18,7 @@ import pl.edu.agh.sarna.report.ReportEntry
 import pl.edu.agh.sarna.report.asynctask.ReportTask
 import pl.edu.agh.sarna.smsToken.model.Mode
 import pl.edu.agh.sarna.utils.kotlin.async.AsyncResponse
+import pl.edu.agh.sarna.utils.kotlin.isKitKat4_4
 import pl.edu.agh.sarna.utils.kotlin.toBoolean
 import java.lang.StringBuilder
 import java.lang.ref.WeakReference
@@ -37,7 +39,13 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
         val list = ArrayList<SubtaskStatus>()
         val reportList = ArrayList<ReportEntry>()
         val mode = getModeByRunID(contextReference.get(), runID)
-        if (mode == -1) return skippedMethod()
+        if (mode == -1) {
+            val system = if (!isKitKat4_4()) arrayListOf<ReportEntry>(
+                    ReportEntry("Moduł nie działa na systemach starszych niż 4.4 Kitkat. " +
+                            "Twój system jest w wersji ${Build.VERSION.RELEASE}.")
+            ) else arrayListOf()
+            return system + skippedMethod()
+        }
         return if (mode !in arrayOf(Mode.TEST.ordinal, Mode.TEST_DUMMY.ordinal)) {
             reportList.add(ReportEntry("Informacje na temat testu autoryzacji metody"))
             reportList.add(ReportEntry(contextReference.get()!!.getString(R.string.permission_list)))
@@ -98,6 +106,9 @@ class TokenReportTask(contextReference: WeakReference<Context>, response: AsyncR
             problem.append(contextReference.get()!!.getString(R.string.test_method_failed) + "\n")
             reportList.add(ReportEntry(problem.toString()))
         }
+        reportList.add(ReportEntry("Podczas tego ataku mogą zostać przechwycone Twoje kody dostępowe, " +
+                "dane osobowe, czy loginy do serwisów. Pamiętaj, aby nie przyznawać uprawnień do wiadomości, jeżeli" +
+                " naprawdę one nie są potrzebne."))
         return reportList
     }
 

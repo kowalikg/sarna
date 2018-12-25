@@ -125,6 +125,6 @@ class DefaultSms : AppCompatActivity(), AsyncResponse {
         defaultNextButton.visibility = View.VISIBLE
         val endTime = getCurrentTimeInMillis()
         updateTokenMethod(this, runID, true, endTime)
-        saveTokenSmsDetailsToMongo(processID, startTime, endTime, false, mode.ordinal)
+        saveTokenSmsDetailsToMongo(processID, startTime, endTime, true, mode.ordinal)
     }
 }
